@@ -30,7 +30,7 @@ test("auth fields show inline validation and clear as corrected", async ({
   await expect(page.locator("#auth-password-error")).toHaveCount(0);
 });
 
-test("account errors are visible and signup explains email confirmation", async ({
+test("account errors are visible and signup verifies an emailed OTP", async ({
   page,
 }) => {
   await page.route("**/auth/v1/token*", (route) =>
@@ -52,6 +52,44 @@ test("account errors are visible and signup explains email confirmation", async 
         id: "00000000-0000-0000-0000-000000000001",
         email: "gardener@example.com",
         identities: [],
+      }),
+    }),
+  );
+  await page.route("**/auth/v1/resend*", (route) =>
+    route.fulfill({ status: 200, contentType: "application/json", body: "{}" }),
+  );
+  await page.route("**/auth/v1/verify*", (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        access_token: "test-access-token",
+        refresh_token: "test-refresh-token",
+        expires_in: 3600,
+        token_type: "bearer",
+        user: {
+          id: "00000000-0000-0000-0000-000000000001",
+          email: "gardener@example.com",
+          aud: "authenticated",
+          role: "authenticated",
+          app_metadata: { provider: "email", providers: ["email"] },
+          user_metadata: {},
+          identities: [],
+          created_at: "2026-10-03T00:00:00.000Z",
+          confirmed_at: "2026-10-03T00:00:00.000Z",
+        },
+      }),
+    }),
+  );
+  await page.route("**/rest/v1/rpc/garden_operation*", (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        now: "2026-10-03T00:00:00.000Z",
+        timezone: "Asia/Rangoon",
+        habits: [],
+        completed: false,
       }),
     }),
   );
@@ -79,10 +117,36 @@ test("account errors are visible and signup explains email confirmation", async 
   await page
     .getByRole("button", { name: "Create account", exact: true })
     .click();
-  await expect(page.getByRole("status")).toContainText("Check your inbox");
+  await expect(
+    page.getByRole("heading", { name: "Check your email" }),
+  ).toBeVisible();
+  await expect(page.getByRole("status")).toContainText("6-digit code");
   await expect(
     page.getByRole("link", { name: "Guest garden", exact: true }),
   ).toBeVisible();
+  const verifyButton = page.getByRole("button", { name: "Verify email" });
+  await verifyButton.click();
+  await expect(page.locator("#auth-otp-error")).toHaveText(
+    "Enter the 6-digit code from your email.",
+  );
+  await expect(page.getByLabel("Email verification code")).toBeFocused();
+  await page.getByRole("button", { name: "Change email" }).click();
+  await page.getByRole("button", { name: "Create account" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Check your email" }),
+  ).toBeVisible();
+  await expect(page.locator("#auth-otp-error")).toHaveCount(0);
+  await page.getByRole("button", { name: "Resend code" }).click();
+  await expect(page.getByRole("status")).toContainText(
+    "fresh code is on its way",
+  );
+  await page.getByLabel("Email verification code").fill("123456");
+  const verificationRequest = page.waitForRequest((request) =>
+    request.url().includes("/auth/v1/verify"),
+  );
+  await verifyButton.click();
+  await verificationRequest;
+  await expect(page).toHaveURL(/\/garden$/);
 });
 
 test("landing page links to dedicated account pages and guest garden", async ({
@@ -97,7 +161,7 @@ test("landing page links to dedicated account pages and guest garden", async ({
   ).toBeVisible();
 });
 
-test("invalid email confirmation returns to sign-in with an explanation", async ({
+test("an expired legacy confirmation link points users to the OTP flow", async ({
   page,
 }) => {
   await page.route("**/auth/v1/verify*", (route) =>
@@ -113,9 +177,7 @@ test("invalid email confirmation returns to sign-in with an explanation", async 
   await page.goto("/auth/confirm?token_hash=expired-token&type=email");
   await expect(page).toHaveURL(/\/login\?auth_error=confirmation$/);
   await expect(
-    page
-      .getByRole("alert")
-      .filter({ hasText: "This confirmation link couldn't be used" }),
+    page.getByRole("alert").filter({ hasText: "That link expired" }),
   ).toBeVisible();
 });
 

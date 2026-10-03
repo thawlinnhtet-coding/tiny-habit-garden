@@ -21,17 +21,20 @@ The migration has passed local PostgreSQL operation tests. Applying it to your h
 
 ## 3. Authentication URLs
 
-Under **Authentication → URL Configuration**, set the local Site URL to `http://127.0.0.1:3000`. Add `http://127.0.0.1:3000/auth/confirm` to Redirect URLs. If you use `localhost` instead, add that host's equivalent URL and use it consistently.
+Under **Authentication → URL Configuration**, set the local Site URL to `http://127.0.0.1:3000`. If you use `localhost` instead, use that host consistently. New sign-ups enter a code in the app and do not need an auth callback URL. You can keep `/auth/confirm` in Redirect URLs while older confirmation emails are still in circulation.
 
-Under **Authentication → Email Templates → Confirm signup**, use this confirmation link:
+Under **Authentication → Email Templates → Confirm signup**, replace the confirmation link with a code the user can enter in the app:
 
 ```html
-<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email"
-  >Confirm your garden account</a
->
+<h2>Your Tiny Habit Garden verification code</h2>
+<p>Enter this code in the app to confirm your email address:</p>
+<p style="font-size: 28px; font-weight: bold; letter-spacing: 6px">
+  {{ .Token }}
+</p>
+<p>If you did not create this account, you can ignore this email.</p>
 ```
 
-Keep email/password authentication enabled. With email confirmation enabled, sign up using an email address you can access and follow the confirmation email before signing in.
+Keep email/password authentication and email confirmation enabled. New sign-ups will show a code-entry step with options to resend the code or change the email address. Supabase's default OTP expiry applies.
 
 ## 4. Start locally
 
@@ -50,4 +53,4 @@ Sign in, create a habit, complete it, and reload. It should remain watered today
 
 Live authentication, isolation, and simultaneous check-in validation remain pending until the migration is applied. Tell the agent when the database and confirmation settings are ready; don't send passwords or confirmation tokens in chat.
 
-Sources: [Supabase Next.js quickstart](https://supabase.com/docs/guides/getting-started/quickstarts/nextjs), [SSR clients](https://supabase.com/docs/guides/auth/server-side/creating-a-client?framework=nextjs), [email templates](https://supabase.com/docs/guides/auth/auth-email-templates), and [redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls).
+Sources: [Supabase Next.js quickstart](https://supabase.com/docs/guides/getting-started/quickstarts/nextjs), [SSR clients](https://supabase.com/docs/guides/auth/server-side/creating-a-client?framework=nextjs), [email templates](https://supabase.com/docs/guides/auth/auth-email-templates), [verify OTP](https://supabase.com/docs/reference/javascript/auth-verifyotp), [resend confirmation](https://supabase.com/docs/reference/javascript/auth-resend), and [redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls).
