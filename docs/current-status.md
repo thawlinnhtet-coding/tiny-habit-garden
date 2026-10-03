@@ -11,6 +11,7 @@ GitHub remains the authoritative tracker. Parent specification #1 stays open. Ti
 ## Implemented
 
 - Next.js landing/authentication, Today, My Garden, and create/edit routes.
+- Responsive home landing page with an animated pixel-garden preview, habit-loop introduction, and account entry.
 - Original transparent PNG sprites for oak, sunflower, mushroom, cactus, wildflower, all five growth stages, and garden scenery. Local licensed Pixelify Sans font.
 - Crisp pixel scene, clouds, butterfly motion, plant sway, flower bounce, occasional sparkles, and reduced-motion support.
 - Guest habit persistence, creation, editing, and confirmed removal; damaged data preserved with visible errors.
@@ -22,6 +23,8 @@ GitHub remains the authoritative tracker. Parent specification #1 stays open. Ti
 
 ## Verification
 
+The home route (`/`) was visually checked in the browser after the landing-page update. Page typechecking, lint, Prettier, CSS parsing, and the 10 library tests pass.
+
 Ten public-operation tests pass, including real local PostgreSQL migration/operations through PGlite. They cover guest persistence/validation, local-date duplicates, streak reset, all milestones, private CRUD/check-ins, owner checks, timezone stability, and visible remote errors.
 
 Ten browser checks pass on both the development server and production build across desktop and Pixel 7: guest CRUD, persistence, removal, daily completion, keyboard access, reduced motion, authentication errors/confirmation guidance, and damaged-storage preservation. Browser authentication responses are simulated at the external service boundary; these checks do not validate hosted Auth.
@@ -32,7 +35,7 @@ Production dependency audit reports zero vulnerabilities. Development-tool advis
 
 ## Hosted setup and remaining verification
 
-Public configuration is present in the ignored `.env.local`. No service-role key is required. The user is still setting up the Supabase dashboard. Follow `docs/supabase-setup.md` and apply `supabase/migrations/202610030001_garden.sql` once to a fresh project.
+Public configuration is present in the ignored `.env.local`. No service-role key is required. The user reports Supabase setup is complete. Follow `docs/supabase-setup.md` and apply `supabase/migrations/202610030001_garden.sql` once to a fresh project.
 
 A public unauthenticated probe reached the hosted API; an anonymous RPC request returned PGRST202. This probe establishes API reachability, not successful authenticated migration validation. Successful hosted sign-up/confirmation/sign-in/sign-out, persistence across devices, direct-table RLS isolation, and simultaneous requests from independent connections have not run. PGlite executes requests on one local engine and cannot prove hosted concurrency. Keep these limits visible until verified.
 

@@ -1,7 +1,15 @@
 "use client";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Leaf } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowRight,
+  Check,
+  Heart,
+  Leaf,
+  Sparkles,
+} from "lucide-react";
 import { GardenShell } from "@/components/garden-shell";
 import { GardenScene } from "@/components/garden-scene";
 import { useGarden } from "@/components/garden-provider";
@@ -10,39 +18,114 @@ import { AuthPanel } from "@/components/auth-panel";
 export default function Page() {
   const { habits, mode } = useGarden();
   const router = useRouter();
+
   return (
     <GardenShell>
       <div className="landing-wrap">
-        <span className="eyebrow">
-          <Leaf size={13} /> WELCOME TO TINY HABIT GARDEN
-        </span>
-        <h1>
-          Little habits.
-          <br />
-          Lovely things grow.
-        </h1>
-        <p>
-          Do something kind for yourself. Water a little plant. Make a tiny
-          world more beautiful, one day at a time.
-        </p>
-        <AuthPanel />
-        <div className="landing-actions">
-          <Link href="/garden" className="pixel-button primary">
-            {mode === "private" ? "Enter my garden" : "Enter my guest garden"}{" "}
-            <ArrowRight size={16} />
-          </Link>
-          <span className="field-note">
-            {mode === "private"
-              ? "A little care, wherever you are."
-              : "Your little preview stays in this browser."}
+        <section className="landing-hero" aria-labelledby="landing-title">
+          <div className="landing-copy">
+            <span className="eyebrow landing-eyebrow">
+              <span className="landing-seed">✦</span> A LITTLE GARDEN FOR YOUR
+              EVERYDAY WINS
+            </span>
+            <h1 id="landing-title">
+              Good things grow
+              <br />
+              <span>one day at a time.</span>
+            </h1>
+            <p className="landing-description">
+              Show up for one small habit. Give your pixel garden a little love.
+              Before long, those tiny moments become a world of your own.
+            </p>
+            <div className="landing-actions">
+              <a
+                href="#your-garden"
+                className="pixel-button primary landing-start"
+              >
+                Grow your garden <ArrowDown size={16} />
+              </a>
+              <Link href="/garden" className="landing-preview-link">
+                {mode === "private" ? "Visit your garden" : "Wander the garden"}
+                <ArrowRight size={15} />
+              </Link>
+            </div>
+            <div className="landing-kindness">
+              <span className="kindness-icon">
+                <Heart size={15} fill="currentColor" />
+              </span>
+              <span>
+                <strong>No perfect streaks required.</strong>
+                <br />
+                Your garden keeps growing at your pace.
+              </span>
+            </div>
+          </div>
+
+          <div className="landing-world">
+            <div className="world-label">
+              <Sparkles size={13} /> A WORLD THAT GROWS WITH YOU
+            </div>
+            <GardenScene
+              compact
+              habits={habits}
+              onSelect={() => router.push("/garden")}
+              onPlant={() => router.push("/habits/new")}
+            />
+            <div className="world-note">
+              <span className="world-note-dot" /> YOUR NEXT LITTLE WIN IS
+              WAITING
+            </div>
+          </div>
+        </section>
+
+        <section className="landing-steps" aria-label="How your garden grows">
+          <div className="landing-step">
+            <span className="step-number">01</span>
+            <span>
+              <strong>Pick a tiny habit</strong>
+              <small>Something kind for you</small>
+            </span>
+          </div>
+          <span className="step-connector" aria-hidden="true">
+            ···
           </span>
-        </div>
-        <GardenScene
-          compact
-          habits={habits}
-          onSelect={() => router.push("/garden")}
-          onPlant={() => router.push("/habits/new")}
-        />
+          <div className="landing-step">
+            <span className="step-number">02</span>
+            <span>
+              <strong>Water it each day</strong>
+              <small>One check-in at a time</small>
+            </span>
+          </div>
+          <span className="step-connector" aria-hidden="true">
+            ···
+          </span>
+          <div className="landing-step">
+            <span className="step-number">03</span>
+            <span>
+              <strong>Watch it bloom</strong>
+              <small>Your real life, in pixels</small>
+            </span>
+            <Check className="step-check" size={15} />
+          </div>
+        </section>
+
+        <section
+          id="your-garden"
+          className="landing-join"
+          aria-label="Start your garden"
+        >
+          <div className="join-heading">
+            <span className="eyebrow">
+              <Leaf size={13} /> YOUR OWN LITTLE WORLD
+            </span>
+            <h2>Ready to plant your first seed?</h2>
+            <p>Make a private garden, or try the guest patch first.</p>
+          </div>
+          <AuthPanel />
+          <p className="landing-signoff">
+            Small steps. Soft soil. A little more you. <span>✿</span>
+          </p>
+        </section>
       </div>
     </GardenShell>
   );
