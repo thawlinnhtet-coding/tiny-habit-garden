@@ -2,18 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  ArrowDown,
-  ArrowRight,
-  Check,
-  Heart,
-  Leaf,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, Check, Heart, Leaf, Sparkles } from "lucide-react";
 import { GardenShell } from "@/components/garden-shell";
 import { GardenScene } from "@/components/garden-scene";
 import { useGarden } from "@/components/garden-provider";
-import { AuthPanel } from "@/components/auth-panel";
 
 export default function Page() {
   const { habits, mode } = useGarden();
@@ -38,12 +30,12 @@ export default function Page() {
               Before long, those tiny moments become a world of your own.
             </p>
             <div className="landing-actions">
-              <a
-                href="#your-garden"
+              <Link
+                href="/signup"
                 className="pixel-button primary landing-start"
               >
-                Grow your garden <ArrowDown size={16} />
-              </a>
+                Grow your garden <ArrowRight size={16} />
+              </Link>
               <Link href="/garden" className="landing-preview-link">
                 {mode === "private" ? "Visit your garden" : "Wander the garden"}
                 <ArrowRight size={15} />
@@ -119,9 +111,25 @@ export default function Page() {
               <Leaf size={13} /> YOUR OWN LITTLE WORLD
             </span>
             <h2>Ready to plant your first seed?</h2>
-            <p>Make a private garden, or try the guest patch first.</p>
+            <p>Make a private garden, sign in, or try the guest patch first.</p>
           </div>
-          <AuthPanel />
+          <div className="landing-account-actions">
+            <Link href="/signup" className="pixel-button primary">
+              Create your garden
+            </Link>
+            <Link href="/login" className="text-link">
+              Sign in
+            </Link>
+            {mode === "guest" ? (
+              <Link href="/garden" className="text-link">
+                Try a guest garden
+              </Link>
+            ) : mode === "private" ? (
+              <Link href="/garden" className="text-link">
+                Visit your garden
+              </Link>
+            ) : null}
+          </div>
           <p className="landing-signoff">
             Small steps. Soft soil. A little more you. <span>✿</span>
           </p>

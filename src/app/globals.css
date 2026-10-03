@@ -1020,6 +1020,14 @@ h3 {
   margin-top: 24px;
   box-shadow: 0 4px 0 #e2ddc7;
 }
+.landing-account-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin: 24px auto 0;
+}
 .landing-signoff {
   margin-top: 23px;
   color: #929780;
@@ -1561,7 +1569,7 @@ h3 {
 }
 .auth-fields {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 16px;
 }
 .auth-fields .form-field {
@@ -1577,6 +1585,48 @@ h3 {
 .auth-message {
   color: #506b3d;
 }
+.auth-switch {
+  margin: 18px 0 0;
+  text-align: center;
+  color: var(--muted-foreground);
+  font-size: var(--type-small);
+}
+.auth-switch a,
+.guest-garden-link {
+  color: #496845;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.account-page {
+  max-width: 680px;
+  margin: 0 auto;
+}
+.account-page-heading {
+  margin: 24px auto 0;
+  text-align: center;
+}
+.account-page-heading h1 {
+  margin: 12px 0 8px;
+  color: #304c3e;
+  font-family: Pixelify, monospace;
+  font-size: var(--type-heading);
+  line-height: 1.25;
+}
+.account-page-heading p {
+  margin: 0 auto;
+  color: var(--muted-foreground);
+  font-size: var(--type-small);
+}
+.account-page .auth-paper {
+  margin: 22px auto 10px;
+}
+.guest-garden-link {
+  display: block;
+  width: fit-content;
+  margin: 14px auto 0;
+  font-size: var(--type-small);
+}
 .account-menu {
   display: flex;
   flex-direction: column;
@@ -1590,11 +1640,15 @@ h3 {
   cursor: pointer;
 }
 @media (max-width: 600px) {
-  .auth-fields {
-    grid-template-columns: 1fr;
-  }
   .account-menu {
     margin-left: auto;
+  }
+  .landing-account-actions {
+    flex-direction: column;
+    gap: 14px;
+  }
+  .account-page .auth-paper {
+    padding: 20px 16px;
   }
 }
 

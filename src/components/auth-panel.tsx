@@ -7,12 +7,12 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { useGarden } from "./garden-provider";
 import { browserSupabase, supabaseConfigured } from "@/lib/supabase/client";
-import { validateAuthInput } from "@/lib/auth-input";
+import { validateAuthInput, type AuthIntent } from "@/lib/auth-input";
 
-export function AuthPanel() {
+export function AuthPanel({ intent }: { intent: AuthIntent }) {
   const garden = useGarden();
   const router = useRouter();
-  const [signUp, setSignUp] = useState(false);
+  const signUp = intent === "sign-up";
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -83,9 +83,7 @@ export function AuthPanel() {
   return (
     <form className="auth-paper" onSubmit={submit}>
       <span className="eyebrow">YOUR OWN LITTLE WORLD</span>
-      <h2>
-        {signUp ? "Make a home for your garden." : "Welcome back, gardener."}
-      </h2>
+      <h2>{signUp ? "Create your account" : "Sign in to your garden"}</h2>
       <p>Your private garden follows you across visits.</p>
       <div className="auth-fields">
         <div className="form-field">
@@ -135,19 +133,13 @@ export function AuthPanel() {
               ? "Create account"
               : "Sign in"}
         </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          disabled={pending}
-          onClick={() => {
-            setSignUp(!signUp);
-            setError("");
-            setMessage("");
-          }}
-        >
-          {signUp ? "I already have an account" : "Create an account"}
-        </Button>
       </div>
+      <p className="auth-switch">
+        {signUp ? "Already have an account?" : "New to the garden?"}{" "}
+        <Link href={signUp ? "/login" : "/signup"}>
+          {signUp ? "Sign in" : "Create an account"}
+        </Link>
+      </p>
     </form>
   );
 }

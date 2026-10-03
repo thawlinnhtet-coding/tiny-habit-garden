@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     if (!error) return response;
   }
   const failure = NextResponse.redirect(
-    new URL("/?auth_error=confirmation", request.url),
+    new URL("/login?auth_error=confirmation", request.url),
   );
   failure.headers.set("Cache-Control", "private, no-store");
   return failure;

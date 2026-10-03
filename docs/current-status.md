@@ -10,14 +10,14 @@ GitHub remains the authoritative tracker. Parent specification #1 stays open. Ti
 
 ## Implemented
 
-- Next.js landing/authentication, Today, My Garden, and create/edit routes.
+- Next.js landing page, dedicated `/login` and `/signup` pages, Today, My Garden, and create/edit routes.
 - Responsive home landing page with an animated pixel-garden preview, habit-loop introduction, and account entry.
 - Original transparent PNG sprites for oak, sunflower, mushroom, cactus, wildflower, all five growth stages, and garden scenery. Local licensed Pixelify Sans font.
 - Crisp pixel scene, clouds, butterfly motion, plant sway, flower bounce, occasional sparkles, and reduced-motion support.
 - Guest habit persistence, creation, editing, and confirmed removal; damaged data preserved with visible errors.
 - Once-per-local-date completion, streaks, retained lifetime growth, and milestones at 0/1/3/7/14.
 - Shared watering can, drops, bounce, particles, stage transformation, progress, and streak feedback on the garden, Today, and details.
-- Supabase email sign-up/sign-in/sign-out, confirmation route, and cookie session refresh through Next.js Proxy.
+- Supabase email sign-up/sign-in on dedicated account routes, sign-out, confirmation route, and cookie session refresh through Next.js Proxy.
 - Shared fluid typography tokens for responsive headings, copy, and labels while preserving browser text-size preferences; touch-sized text inputs and controls.
 - Inline habit-name validation plus shared sign-in/sign-up credential validation before Supabase requests.
 - Owner-checked PostgreSQL operations, row-level-security read policies, revoked direct client writes, fixed account timezone, server-time check-ins, and unique habit/date records.
@@ -25,13 +25,13 @@ GitHub remains the authoritative tracker. Parent specification #1 stays open. Ti
 
 ## Verification
 
-The home route (`/`) was visually checked in the browser after the landing-page update. The 15 library tests pass, including public habit validation and auth credential rules. The auth browser tests pass on desktop and Pixel 7 (4 checks) with Supabase responses mocked. Typechecking, lint, Prettier, and the production build pass for the responsive typography and validation slice.
+The home route (`/`) was visually checked in the browser after the landing-page update. The 15 library tests pass, including public habit validation and auth credential rules. The full 14-check browser suite passes on desktop and Pixel 7 using an isolated development server. It covers dedicated login/signup routes, account links, auth errors and confirmation messaging (including expired links), guest CRUD, daily completion, keyboard access, reduced motion, and damaged-storage handling. Supabase responses are mocked; these checks do not validate hosted Auth. Typechecking, lint, Prettier, and the production build pass for the responsive typography, validation, and dedicated auth-page changes.
 
 Ten public-operation tests pass, including real local PostgreSQL migration/operations through PGlite. They cover guest persistence/validation, local-date duplicates, streak reset, all milestones, private CRUD/check-ins, owner checks, timezone stability, and visible remote errors.
 
-Ten browser checks pass on both the development server and production build across desktop and Pixel 7: guest CRUD, persistence, removal, daily completion, keyboard access, reduced motion, authentication errors/confirmation guidance, and damaged-storage preservation. Browser authentication responses are simulated at the external service boundary; these checks do not validate hosted Auth.
-
 Type checking, source lint, and production build pass. The final two-axis review of `939a5d1...af27bd9` found zero Standards and zero Spec findings. Earlier findings were fixed. See `docs/reviews/final-v1.md`.
+
+The focused review of dedicated account pages from `51fda90` found zero remaining Standards or Spec findings. The review caught and fixed the expired-confirmation redirect and clarified guest/private garden links.
 
 Production dependency audit reports zero vulnerabilities. Development-tool advisories remain in the component CLI/lint toolchain; avoid blind forced downgrades.
 
