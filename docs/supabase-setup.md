@@ -26,7 +26,9 @@ Under **Authentication → URL Configuration**, set the local Site URL to `http:
 Under **Authentication → Email Templates → Confirm signup**, use this confirmation link:
 
 ```html
-<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email">Confirm your garden account</a>
+<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email"
+  >Confirm your garden account</a
+>
 ```
 
 Keep email/password authentication enabled. With email confirmation enabled, sign up using an email address you can access and follow the confirmation email before signing in.
@@ -49,4 +51,3 @@ Sign in, create a habit, complete it, and reload. It should remain watered today
 Live authentication, isolation, and simultaneous check-in validation remain pending until the migration is applied. Tell the agent when the database and confirmation settings are ready; don't send passwords or confirmation tokens in chat.
 
 Sources: [Supabase Next.js quickstart](https://supabase.com/docs/guides/getting-started/quickstarts/nextjs), [SSR clients](https://supabase.com/docs/guides/auth/server-side/creating-a-client?framework=nextjs), [email templates](https://supabase.com/docs/guides/auth/auth-email-templates), and [redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls).
-

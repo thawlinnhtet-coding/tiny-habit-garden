@@ -9,17 +9,28 @@ export async function GET(request: NextRequest) {
   const response = NextResponse.redirect(new URL("/garden", request.url));
   response.headers.set("Cache-Control", "private, no-store");
   if (url && key && tokenHash && type === "email") {
-    const supabase = createServerClient(url, key, { cookies: {
-      getAll: () => request.cookies.getAll(),
-      setAll(cookies, headers) {
-        cookies.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
-        Object.entries(headers).forEach(([name, value]) => response.headers.set(name, value));
+    const supabase = createServerClient(url, key, {
+      cookies: {
+        getAll: () => request.cookies.getAll(),
+        setAll(cookies, headers) {
+          cookies.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options),
+          );
+          Object.entries(headers).forEach(([name, value]) =>
+            response.headers.set(name, value),
+          );
+        },
       },
-    } });
-    const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: "email" });
+    });
+    const { error } = await supabase.auth.verifyOtp({
+      token_hash: tokenHash,
+      type: "email",
+    });
     if (!error) return response;
   }
-  const failure = NextResponse.redirect(new URL("/?auth_error=confirmation", request.url));
+  const failure = NextResponse.redirect(
+    new URL("/?auth_error=confirmation", request.url),
+  );
   failure.headers.set("Cache-Control", "private, no-store");
   return failure;
 }

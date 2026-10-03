@@ -46,4 +46,3 @@ The local development preview runs at `http://127.0.0.1:3000`. Bundled Node 24 i
 GitHub CLI API requests to the region's DNS address timed out; the connected GitHub app returned 403 for issue writes. Publication succeeded using existing CLI authentication with a verified alternate GitHub API route and normal hostname/certificate verification. The temporary helper is outside the repository and holds tokens only in memory. Git pushes work normally.
 
 Dependency installation reported development-tool advisories. Assess the actual dependency paths before a forced upgrade/downgrade. Runtime security and live Supabase checks remain part of final verification.
-

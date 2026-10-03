@@ -14,28 +14,121 @@ export function CompleteHabitButton({ habit }: { habit: GardenHabit }) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   async function water() {
-    setPending(true); setError("");
-    try { await complete(habit.id); }
-    catch (cause) { setError(cause instanceof Error ? cause.message : "Your check-in couldn't be saved. Please try again."); }
-    finally { setPending(false); }
+    setPending(true);
+    setError("");
+    try {
+      await complete(habit.id);
+    } catch (cause) {
+      setError(
+        cause instanceof Error
+          ? cause.message
+          : "Your check-in couldn't be saved. Please try again.",
+      );
+    } finally {
+      setPending(false);
+    }
   }
-  return <div className="water-button-wrap"><Button className={`pixel-button ${habit.completedToday ? "secondary" : "primary"}`} disabled={pending || habit.completedToday} onClick={water} aria-label={habit.completedToday ? `Completed ${habit.name} today` : `Complete ${habit.name}`}>{habit.completedToday ? <Check size={16} /> : <Droplets size={16} />}{pending ? "Saving…" : habit.completedToday ? "Watered today" : "Complete"}</Button>{error && <p role="alert" className="form-error">{error}</p>}</div>;
+  return (
+    <div className="water-button-wrap">
+      <Button
+        className={`pixel-button ${habit.completedToday ? "secondary" : "primary"}`}
+        disabled={pending || habit.completedToday}
+        onClick={water}
+        aria-label={
+          habit.completedToday
+            ? `Completed ${habit.name} today`
+            : `Complete ${habit.name}`
+        }
+      >
+        {habit.completedToday ? <Check size={16} /> : <Droplets size={16} />}
+        {pending
+          ? "Saving…"
+          : habit.completedToday
+            ? "Watered today"
+            : "Complete"}
+      </Button>
+      {error && (
+        <p role="alert" className="form-error">
+          {error}
+        </p>
+      )}
+    </div>
+  );
 }
 
-export function WateringSprites({ celebration }: { celebration: GardenCelebration }) {
-  return <span className={`watering-sprites phase-${celebration.phase}`} aria-hidden="true"><PixelSprite name="watering-can" size={96} className="watering-can" />{[0,1,2,3].map((index) => <PixelSprite key={index} name="drop" size={48} className={`water-drop drop-${index}`} />)}{[0,1,2,3].map((index) => <span key={index} className={`pixel-particle particle-${index}`} />)}</span>;
+export function WateringSprites({
+  celebration,
+}: {
+  celebration: GardenCelebration;
+}) {
+  return (
+    <span
+      className={`watering-sprites phase-${celebration.phase}`}
+      aria-hidden="true"
+    >
+      <PixelSprite name="watering-can" size={96} className="watering-can" />
+      {[0, 1, 2, 3].map((index) => (
+        <PixelSprite
+          key={index}
+          name="drop"
+          size={48}
+          className={`water-drop drop-${index}`}
+        />
+      ))}
+      {[0, 1, 2, 3].map((index) => (
+        <span key={index} className={`pixel-particle particle-${index}`} />
+      ))}
+    </span>
+  );
 }
 
-export function AnimatedPlant({ habit, size = 96 }: { habit: GardenHabit; size?: number }) {
+export function AnimatedPlant({
+  habit,
+  size = 96,
+}: {
+  habit: GardenHabit;
+  size?: number;
+}) {
   const { celebration } = useGarden();
   const event = celebration?.id === habit.id ? celebration : null;
   const stage = event?.phase === "watering" ? event.fromStage : habit.stage;
-  return <span className={`animated-plant ${event ? "celebrating-plot" : ""}`}><motion.span key={stage} initial={event ? { scale: .82, opacity: .6 } : false} animate={{ scale: 1, opacity: 1 }} transition={{ duration: .35 }}><PixelSprite name={`${habit.plantType}-${stage}`} size={size} className={`plant-sprite plant-${habit.plantType}`} /></motion.span>{event && <WateringSprites celebration={event} />}</span>;
+  return (
+    <span className={`animated-plant ${event ? "celebrating-plot" : ""}`}>
+      <motion.span
+        key={stage}
+        initial={event ? { scale: 0.82, opacity: 0.6 } : false}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.35 }}
+      >
+        <PixelSprite
+          name={`${habit.plantType}-${stage}`}
+          size={size}
+          className={`plant-sprite plant-${habit.plantType}`}
+        />
+      </motion.span>
+      {event && <WateringSprites celebration={event} />}
+    </span>
+  );
 }
 
 export function GrowthMessage() {
   const { celebration, habits } = useGarden();
   if (!celebration) return null;
   const habit = habits.find((item) => item.id === celebration.id);
-  return <div role="status" aria-live="polite" className="growth-message"><PixelSprite name="watering-can" size={48} /><span><strong><Flame size={16} />{celebration.streak} Day Streak!</strong><span>{celebration.grew && habit ? `Your ${stageNames[habit.stage - 1].toLowerCase()} is growing. Lovely work.` : "A little real-life care. A happier little garden."}</span></span></div>;
+  return (
+    <div role="status" aria-live="polite" className="growth-message">
+      <PixelSprite name="watering-can" size={48} />
+      <span>
+        <strong>
+          <Flame size={16} />
+          {celebration.streak} Day Streak!
+        </strong>
+        <span>
+          {celebration.grew && habit
+            ? `Your ${stageNames[habit.stage - 1].toLowerCase()} is growing. Lovely work.`
+            : "A little real-life care. A happier little garden."}
+        </span>
+      </span>
+    </div>
+  );
 }
