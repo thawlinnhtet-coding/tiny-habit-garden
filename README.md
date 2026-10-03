@@ -7,11 +7,13 @@ A cozy pixel-art habit garden. Complete small real-life habits to grow plants; l
 Use Node 24 LTS, then run:
 
 ```sh
-npm install
+npm ci
 npm run dev
 ```
 
-Open http://localhost:3000/garden. The guest garden stores its habits in the current browser. This is an actively developed V1; read [current status](docs/current-status.md) for implemented and remaining features.
+Open http://127.0.0.1:3000/garden (start with `npm run dev -- --hostname 127.0.0.1`). The guest garden stores habits in this browser. Sign in for a private Supabase garden. Five plant types grow at 0, 1, 3, 7, and 14 lifetime completions; streak resets preserve growth.
+
+Follow [Supabase setup](docs/supabase-setup.md) to configure `.env.local`, run the SQL migration, and configure confirmation links. The account timezone is set on the first private-garden visit and remains fixed. Guest habits are not automatically imported. Read [current status](docs/current-status.md) for verification evidence and pending hosted checks.
 
 ## Checks
 
