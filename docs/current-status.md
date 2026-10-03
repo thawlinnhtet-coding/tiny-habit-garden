@@ -9,8 +9,8 @@ The user approved the four vertical tickets, default triage labels, and public g
 GitHub is the authoritative issue tracker:
 
 - #1: V1 specification (parent; keep open).
-- #2: Plant your first habit — complete after review and validation.
-- #3: Water a habit and grow its plant; blocked by #2.
+- #2: Plant your first habit — complete.
+- #3: Water a habit and grow its plant — complete.
 - #4: Keep a private garden with Supabase; blocked by #3.
 - #5: Verify the cozy V1 experience; blocked by #4.
 
@@ -35,9 +35,9 @@ All five labels and native ticket dependencies were created. Ticket #2 is assign
 
 ## Remaining
 
-Daily completion, streak/growth logic, watering/transformation animations, Supabase Auth/database integration, and final V1 verification are the next slices. Growth thresholds are 0/1/3/7/14 lifetime completions; guest previews stay separate from private gardens.
+Daily completion, permanent growth, streaks, and watering/transformation feedback are implemented and reviewed. Seven operation tests and six browser checks pass. Supabase Auth/database integration and final V1 verification remain. Growth thresholds are 0/1/3/7/14 lifetime completions; guest previews stay separate from private gardens.
 
-No Supabase project credentials or connected Supabase tool were supplied. Implement the integration and migration with placeholder configuration, then record which live-service checks require a configured project. Keep credentials out of Git.
+Public Supabase configuration is present in the ignored .env.local file. No connected Supabase administration tool was supplied. Implement the integration and migration with placeholder configuration, then record which live-service checks require a configured project. Keep credentials out of Git.
 
 ## Environment notes
 
@@ -46,3 +46,4 @@ The local development preview runs at `http://127.0.0.1:3000`. Bundled Node 24 i
 GitHub CLI API requests to the region's DNS address timed out; the connected GitHub app returned 403 for issue writes. Publication succeeded using existing CLI authentication with a verified alternate GitHub API route and normal hostname/certificate verification. The temporary helper is outside the repository and holds tokens only in memory. Git pushes work normally.
 
 Dependency installation reported development-tool advisories. Assess the actual dependency paths before a forced upgrade/downgrade. Runtime security and live Supabase checks remain part of final verification.
+

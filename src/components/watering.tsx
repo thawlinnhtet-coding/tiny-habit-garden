@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "motion/react";
 import { Check, Droplets, Flame } from "lucide-react";
 import type { GardenHabit } from "@/lib/garden";
 import { stageNames } from "@/lib/plants";
@@ -23,6 +24,13 @@ export function CompleteHabitButton({ habit }: { habit: GardenHabit }) {
 
 export function WateringSprites({ celebration }: { celebration: GardenCelebration }) {
   return <span className={`watering-sprites phase-${celebration.phase}`} aria-hidden="true"><PixelSprite name="watering-can" size={96} className="watering-can" />{[0,1,2,3].map((index) => <PixelSprite key={index} name="drop" size={48} className={`water-drop drop-${index}`} />)}{[0,1,2,3].map((index) => <span key={index} className={`pixel-particle particle-${index}`} />)}</span>;
+}
+
+export function AnimatedPlant({ habit, size = 96 }: { habit: GardenHabit; size?: number }) {
+  const { celebration } = useGarden();
+  const event = celebration?.id === habit.id ? celebration : null;
+  const stage = event?.phase === "watering" ? event.fromStage : habit.stage;
+  return <span className={`animated-plant ${event ? "celebrating-plot" : ""}`}><motion.span key={stage} initial={event ? { scale: .82, opacity: .6 } : false} animate={{ scale: 1, opacity: 1 }} transition={{ duration: .35 }}><PixelSprite name={`${habit.plantType}-${stage}`} size={size} className={`plant-sprite plant-${habit.plantType}`} /></motion.span>{event && <WateringSprites celebration={event} />}</span>;
 }
 
 export function GrowthMessage() {
