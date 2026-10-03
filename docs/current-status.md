@@ -6,7 +6,7 @@ Updated: 2026-10-03 (Asia/Rangoon).
 
 The user approved the four vertical tickets, default triage labels, and public garden-operation/browser test seam. Final review baseline: `939a5d1`. `AGENTS.md` is canonical agent context; `CLAUDE.md` imports it.
 
-GitHub remains the authoritative tracker. Parent specification #1 stays open. Tickets #2 (first habit) and #3 (watering/growth) are complete. Ticket #4 (private Supabase garden) is implemented and reviewed; its live-service validation is explicitly pending. Ticket #5 records the final V1 checks and handoff. See `docs/tracker.json` for canonical URLs.
+GitHub remains the authoritative tracker. Parent specification #1 stays open. Tickets #2 (first habit) and #3 (watering/growth) are complete. Tickets #4 (private Supabase garden) and #5 (final verification and handoff) are implemented, reviewed, and complete. Their hosted-service validation limits remain explicitly recorded. See `docs/tracker.json` for canonical URLs.
 
 ## Implemented
 
@@ -24,7 +24,7 @@ GitHub remains the authoritative tracker. Parent specification #1 stays open. Ti
 
 Ten public-operation tests pass, including real local PostgreSQL migration/operations through PGlite. They cover guest persistence/validation, local-date duplicates, streak reset, all milestones, private CRUD/check-ins, owner checks, timezone stability, and visible remote errors.
 
-Ten browser checks pass across desktop and Pixel 7: guest CRUD, persistence, removal, daily completion, keyboard access, reduced motion, authentication errors/confirmation guidance, and damaged-storage preservation. Browser authentication responses are simulated at the external service boundary; these checks do not validate hosted Auth.
+Ten browser checks pass on both the development server and production build across desktop and Pixel 7: guest CRUD, persistence, removal, daily completion, keyboard access, reduced motion, authentication errors/confirmation guidance, and damaged-storage preservation. Browser authentication responses are simulated at the external service boundary; these checks do not validate hosted Auth.
 
 Type checking, source lint, and production build pass. The final two-axis review of `939a5d1...af27bd9` found zero Standards and zero Spec findings. Earlier findings were fixed. See `docs/reviews/final-v1.md`.
 
@@ -34,7 +34,7 @@ Production dependency audit reports zero vulnerabilities. Development-tool advis
 
 Public configuration is present in the ignored `.env.local`. No service-role key is required. The user is still setting up the Supabase dashboard. Follow `docs/supabase-setup.md` and apply `supabase/migrations/202610030001_garden.sql` once to a fresh project.
 
-A public unauthenticated probe reached the hosted API; before migration it returned PGRST202 (function absent). Successful hosted sign-up/confirmation/sign-in/sign-out, persistence across devices, direct-table RLS isolation, and simultaneous requests from independent connections have not run. PGlite executes requests on one local engine and cannot prove hosted concurrency. Keep these limits visible until verified.
+A public unauthenticated probe reached the hosted API; an anonymous RPC request returned PGRST202. This probe establishes API reachability, not successful authenticated migration validation. Successful hosted sign-up/confirmation/sign-in/sign-out, persistence across devices, direct-table RLS isolation, and simultaneous requests from independent connections have not run. PGlite executes requests on one local engine and cannot prove hosted concurrency. Keep these limits visible until verified.
 
 ## Environment notes
 

@@ -12,7 +12,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Start here
 
-This repository contains a cozy pixel-art habit game with a playable guest garden. V1 is in progress. Before implementation, read `docs/current-status.md` for completed work, verification results, and pending decisions, then `docs/product.md` for the user-authorized V1 scope.
+This repository contains a cozy pixel-art habit game with a browser guest garden and private Supabase gardens. Before implementation, read `docs/current-status.md` for completed work, verification results, and pending decisions, then `docs/product.md` for the user-authorized V1 scope.
 
 ## Product priorities
 
