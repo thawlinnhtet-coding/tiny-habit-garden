@@ -18,12 +18,14 @@ GitHub remains the authoritative tracker. Parent specification #1 stays open. Ti
 - Once-per-local-date completion, streaks, retained lifetime growth, and milestones at 0/1/3/7/14.
 - Shared watering can, drops, bounce, particles, stage transformation, progress, and streak feedback on the garden, Today, and details.
 - Supabase email sign-up/sign-in/sign-out, confirmation route, and cookie session refresh through Next.js Proxy.
+- Shared fluid typography tokens for responsive headings, copy, and labels while preserving browser text-size preferences; touch-sized text inputs and controls.
+- Inline habit-name validation plus shared sign-in/sign-up credential validation before Supabase requests.
 - Owner-checked PostgreSQL operations, row-level-security read policies, revoked direct client writes, fixed account timezone, server-time check-ins, and unique habit/date records.
 - Separate guest/private state and guards against stale responses after account changes.
 
 ## Verification
 
-The home route (`/`) was visually checked in the browser after the landing-page update. Page typechecking, lint, Prettier, CSS parsing, and the 10 library tests pass.
+The home route (`/`) was visually checked in the browser after the landing-page update. The 15 library tests pass, including public habit validation and auth credential rules. The auth browser tests pass on desktop and Pixel 7 (4 checks) with Supabase responses mocked. Typechecking, lint, Prettier, and the production build pass for the responsive typography and validation slice.
 
 Ten public-operation tests pass, including real local PostgreSQL migration/operations through PGlite. They cover guest persistence/validation, local-date duplicates, streak reset, all milestones, private CRUD/check-ins, owner checks, timezone stability, and visible remote errors.
 
@@ -43,4 +45,4 @@ A public unauthenticated probe reached the hosted API; an anonymous RPC request 
 
 Project: `D:\tiny-habit-garden`. Preview: `http://127.0.0.1:3000`. Use Node 24 LTS. The system Node is 22.12.0; the bundled Node 24 runtime was used for validation.
 
-GitHub connector issue writes returned 403, and regional CLI API routing timed out. Existing CLI authentication with an alternate verified API route published the tracker; tokens stayed in memory outside the repository. Normal Git pushes work.
+GitHub connector issue writes returned 403, and regional CLI API routing timed out. Existing CLI authentication with an alternate verified API route published the tracker; tokens stayed in memory outside the repository. The current responsive typography and input-validation slice could not be added as a new GitHub issue: issue-write connector returned 403 and the CLI API route timed out. Normal Git pushes work.

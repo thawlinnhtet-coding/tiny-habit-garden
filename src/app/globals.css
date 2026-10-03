@@ -41,6 +41,14 @@
   --muted-foreground: #6e7c6a;
   --border: #d9ddc9;
   --radius: 8px;
+  --type-caption: clamp(0.75rem, calc(0.73rem + 0.1vw), 0.8125rem);
+  --type-small: clamp(0.8rem, calc(0.77rem + 0.12vw), 0.9rem);
+  --type-body: clamp(0.9375rem, calc(0.9rem + 0.18vw), 1rem);
+  --type-large: clamp(1.0625rem, calc(1rem + 0.32vw), 1.25rem);
+  --type-heading: clamp(1.5rem, calc(1.35rem + 0.85vw), 2.125rem);
+  --type-display: clamp(2.25rem, calc(1.6rem + 4vw), 4.25rem);
+  --type-brand: clamp(1rem, calc(0.96rem + 0.35vw), 1.25rem);
+  --type-brand-title: clamp(1.375rem, calc(1.3rem + 0.45vw), 1.75rem);
 }
 * {
   box-sizing: border-box;
@@ -50,7 +58,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: "Segoe UI", Arial, sans-serif;
-  font-size: 14px;
+  font-size: var(--type-body);
   line-height: 1.6;
 }
 a {
@@ -131,12 +139,12 @@ h3 {
   align-items: center;
   gap: 5px;
   font-family: Pixelify, monospace;
-  font-size: 19px;
+  font-size: var(--type-brand);
   line-height: 1.08;
   min-width: 185px;
 }
 .brand strong {
-  font-size: 27px;
+  font-size: var(--type-brand-title);
   font-weight: 600;
 }
 .brand-dot {
@@ -209,7 +217,7 @@ h3 {
 }
 .page-heading h1 {
   margin: 10px 0 12px;
-  font-size: clamp(30px, 3.4vw, 43px);
+  font-size: var(--type-display);
   letter-spacing: -0.3px;
 }
 .page-heading p {
@@ -487,7 +495,7 @@ h3 {
   gap: 4px;
 }
 .garden-note h2 {
-  font-size: 24px;
+  font-size: var(--type-heading);
   margin: 7px 0;
 }
 .garden-note p {
@@ -555,7 +563,7 @@ h3 {
   margin: -7px auto -12px;
 }
 .paper-heading h1 {
-  font-size: 35px;
+  font-size: var(--type-heading);
   margin: 5px 0 12px;
 }
 .paper-heading p {
@@ -697,7 +705,7 @@ h3 {
 }
 .plant-dialog [data-slot="dialog-title"] {
   font-family: Pixelify;
-  font-size: 29px;
+  font-size: var(--type-heading);
   font-weight: 500;
   line-height: 1.2;
 }
@@ -787,7 +795,7 @@ h3 {
   margin: auto;
 }
 .empty-today h2 {
-  font-size: 29px;
+  font-size: var(--type-heading);
   margin: 8px 0 12px;
 }
 .empty-today p {
@@ -822,7 +830,7 @@ h3 {
 .landing-copy h1 {
   margin: 20px 0 19px;
   max-width: 570px;
-  font-size: clamp(43px, 5.2vw, 68px);
+  font-size: var(--type-display);
   letter-spacing: -1.4px;
   color: #304c3e;
 }
@@ -1002,7 +1010,7 @@ h3 {
 }
 .join-heading h2 {
   margin: 11px 0 9px;
-  font-size: clamp(25px, 3vw, 34px);
+  font-size: var(--type-heading);
 }
 .join-heading p {
   color: #7b866e;
@@ -1261,12 +1269,6 @@ h3 {
     flex-wrap: wrap;
     padding: 15px 0 10px;
   }
-  .brand {
-    font-size: 16px;
-  }
-  .brand strong {
-    font-size: 23px;
-  }
   .main-nav {
     order: 3;
     width: 100%;
@@ -1284,9 +1286,6 @@ h3 {
   }
   .page-heading {
     display: block;
-  }
-  .page-heading h1 {
-    font-size: 31px;
   }
   .page-heading .pixel-button {
     margin-top: 18px;
@@ -1350,7 +1349,7 @@ h3 {
     padding: 25px 18px;
   }
   .paper-heading h1 {
-    font-size: 29px;
+    font-size: var(--type-heading);
   }
   .plant-options {
     grid-template-columns: repeat(3, 1fr);
@@ -1386,9 +1385,6 @@ h3 {
   .landing-actions {
     flex-direction: column;
     gap: 13px;
-  }
-  .landing-wrap h1 {
-    font-size: 43px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1490,7 +1486,6 @@ h3 {
   }
   .landing-copy h1 {
     margin: 14px auto 13px;
-    font-size: clamp(39px, 11vw, 52px);
     letter-spacing: -0.8px;
   }
   .landing-description {
@@ -1544,9 +1539,6 @@ h3 {
   .landing-join {
     padding-top: 42px;
   }
-  .join-heading h2 {
-    font-size: 27px;
-  }
 }
 .auth-paper {
   max-width: 580px;
@@ -1560,7 +1552,7 @@ h3 {
 }
 .auth-paper h2 {
   font-family: Pixelify;
-  font-size: 27px;
+  font-size: var(--type-heading);
   margin: 10px 0;
 }
 .auth-paper p {
@@ -1604,4 +1596,70 @@ h3 {
   .account-menu {
     margin-left: auto;
   }
+}
+
+/* One fluid type scale keeps labels, forms, and page copy readable at every width. */
+.main-nav a,
+.page-heading p,
+.pixel-button,
+.scene-caption span:last-child,
+.garden-note p,
+.today-link strong,
+.back-link,
+.paper-heading p,
+.form-field label,
+.field-note,
+.plant-picker legend,
+.text-link,
+.form-error,
+.plant-dialog [data-slot="dialog-description"],
+.plant-facts,
+.delete-button,
+.delete-confirm p,
+.habit-row p,
+.landing-description,
+.landing-seed,
+.habit-row h2,
+.empty-today p,
+.landing-preview-link,
+.landing-kindness,
+.landing-kindness strong,
+.landing-step strong,
+.join-heading p,
+.growth-message span span,
+.auth-paper p,
+.landing-signoff {
+  font-size: var(--type-small);
+}
+.nav-count,
+.eyebrow,
+.guest-badge,
+.scene-topline,
+.scene-topline span:last-child,
+.plant-name-tag,
+.scene-caption,
+.site-footer,
+.guest-note,
+.plant-choice strong,
+.world-note,
+.landing-eyebrow,
+.world-label,
+.landing-step small,
+.growth-progress p,
+.signout-button,
+.form-actions .text-link,
+.form-actions .pixel-button,
+.habit-row .pixel-button {
+  font-size: var(--type-caption);
+}
+.form-field input:not([type="radio"]) {
+  min-height: 44px;
+  font-size: max(16px, var(--type-body));
+}
+.garden-loading,
+.growth-message strong {
+  font-size: var(--type-heading);
+}
+.step-connector {
+  font-size: var(--type-large);
 }

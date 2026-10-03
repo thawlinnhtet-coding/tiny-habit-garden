@@ -4,7 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ArrowLeft, Check, Sprout } from "lucide-react";
-import { plantTypes, type PlantType, type GardenHabit } from "@/lib/garden";
+import {
+  plantTypes,
+  type PlantType,
+  type GardenHabit,
+  type HabitInput,
+  validateHabit,
+} from "@/lib/garden";
 import { plants } from "@/lib/plants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,16 +25,30 @@ function EditorForm({ habit }: { habit?: GardenHabit }) {
     habit?.plantType ?? "oak",
   );
   const [error, setError] = useState("");
+  const [nameError, setNameError] = useState("");
   const [pending, setPending] = useState(false);
   const garden = useGarden();
   const router = useRouter();
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setPending(true);
     setError("");
+    setNameError("");
+    let input: HabitInput;
     try {
-      if (habit) await garden.edit(habit.id, { name, plantType });
-      else await garden.create({ name, plantType });
+      input = validateHabit({ name, plantType });
+    } catch (cause) {
+      setNameError(
+        cause instanceof Error
+          ? cause.message
+          : "Give your habit a name between 1 and 80 characters.",
+      );
+      document.getElementById("habit-name")?.focus();
+      return;
+    }
+    setPending(true);
+    try {
+      if (habit) await garden.edit(habit.id, input);
+      else await garden.create(input);
       router.push("/garden");
     } catch (cause) {
       setError(
@@ -60,13 +80,26 @@ function EditorForm({ habit }: { habit?: GardenHabit }) {
           name="name"
           placeholder="e.g. Read 10 pages"
           maxLength={80}
+          aria-invalid={Boolean(nameError)}
+          aria-describedby={
+            nameError ? "habit-name-help habit-name-error" : "habit-name-help"
+          }
           required
           value={name}
-          onChange={(event) => setName(event.target.value)}
+          onChange={(event) => {
+            const nextName = event.target.value;
+            setName(nextName);
+            if (nameError && nextName.trim()) setNameError("");
+          }}
         />
-        <span className="field-note">
-          Small and specific is a lovely place to start.
+        <span id="habit-name-help" className="field-note">
+          Small and specific is a lovely place to start. Up to 80 characters.
         </span>
+        {nameError && (
+          <p id="habit-name-error" role="alert" className="form-error">
+            {nameError}
+          </p>
+        )}
       </div>
       <fieldset className="plant-picker">
         <legend>Choose your plant</legend>

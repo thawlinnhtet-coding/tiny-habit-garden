@@ -7,6 +7,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { useGarden } from "./garden-provider";
 import { browserSupabase, supabaseConfigured } from "@/lib/supabase/client";
+import { validateAuthInput } from "@/lib/auth-input";
 
 export function AuthPanel() {
   const garden = useGarden();
@@ -29,11 +30,14 @@ export function AuthPanel() {
     setError("");
     setMessage("");
     const fields = new FormData(event.currentTarget);
-    const credentials = {
-      email: String(fields.get("email")).trim(),
-      password: String(fields.get("password")),
-    };
     try {
+      const credentials = validateAuthInput(
+        {
+          email: String(fields.get("email") ?? ""),
+          password: String(fields.get("password") ?? ""),
+        },
+        signUp ? "sign-up" : "sign-in",
+      );
       const client = browserSupabase();
       const result = signUp
         ? await client.auth.signUp({
@@ -91,6 +95,9 @@ export function AuthPanel() {
             name="email"
             type="email"
             autoComplete="email"
+            autoCapitalize="none"
+            spellCheck={false}
+            maxLength={254}
             required
           />
         </div>

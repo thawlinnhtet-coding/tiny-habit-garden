@@ -59,6 +59,18 @@ describe("guest garden operations", () => {
     ).rejects.toThrow("plant");
     expect(await garden.read()).toEqual([]);
   });
+  it("trims valid habit names and enforces the 80-character limit", async () => {
+    const garden = createGuestGarden(memoryStorage());
+    const habit = await garden.create({
+      name: ` ${"a".repeat(80)} `,
+      plantType: "oak",
+    });
+    expect(habit.name).toBe("a".repeat(80));
+    await expect(
+      garden.create({ name: "a".repeat(81), plantType: "oak" }),
+    ).rejects.toThrow("1 and 80 characters");
+    expect(await garden.read()).toHaveLength(1);
+  });
   it("reports damaged saved records without overwriting recoverable data", async () => {
     const values = new Map<string, string>();
     const storage = {
