@@ -35,7 +35,7 @@ function EditorForm({ habit }: { habit?: GardenHabit }) {
     <fieldset className="plant-picker"><legend>Choose your plant</legend><div className="plant-options">{plantTypes.map((type) => <label key={type} className={`plant-choice ${plantType === type ? "selected" : ""}`}><input type="radio" name="plantType" value={type} checked={plantType === type} onChange={() => setPlantType(type)} /><PixelSprite name={`${type}-5`} size={96} /><strong>{plants[type].name}</strong>{plantType === type && <Check size={15} className="choice-check" />}</label>)}</div><p className="field-note">{plants[plantType].description}</p></fieldset>
     {error && <p role="alert" className="form-error">{error}</p>}
     <div className="form-actions"><Link href="/garden" className="text-link">Back to the garden</Link><Button type="submit" className="pixel-button primary" disabled={pending || garden.loading || !!garden.error}><Sprout size={17} />{pending ? "Saving…" : habit ? "Save changes" : "Plant my habit"}</Button></div>
-    <p className="guest-note">Guest garden · Saved in this browser.</p>
+    <p className="guest-note">{garden.mode === "private" ? "Private garden · Saved to your account." : "Guest garden · Saved in this browser."}</p>
   </form>;
 }
 
@@ -44,3 +44,4 @@ export function HabitEditor({ id }: { id?: string }) {
   const habit = id ? habits.find((item) => item.id === id) : undefined;
   return <GardenShell><div className="editor-wrap"><Link href="/garden" className="back-link"><ArrowLeft size={16} /> My Garden</Link>{loading ? <p role="status">Opening your garden…</p> : id && !habit ? <div className="editor-paper"><h1>This plant isn&apos;t here.</h1><p>The habit may have been removed.</p><Link href="/garden" className="text-link">Return to your garden</Link></div> : <EditorForm key={id ?? "new"} habit={habit} />}</div></GardenShell>;
 }
+

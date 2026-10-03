@@ -15,9 +15,9 @@ Only the public publishable key belongs here. The application does not need a se
 
 ## 2. Database
 
-Once the migration is ready, open **SQL Editor → New query**. Paste the entire file `supabase/migrations/202610030001_garden.sql` from this repository and click **Run**. Run it once on a fresh project. It creates private habits, timezone profiles, daily completion records, row-level security, and the server-time check-in functions.
+Open **SQL Editor → New query**. Paste the entire file `supabase/migrations/202610030001_garden.sql` from this repository and click **Run**. Run it once on a fresh project. It creates private habits, timezone profiles, daily completion records, row-level security, and the server-time check-in functions.
 
-The migration is still being implemented; wait for the finished file before this step.
+The migration has passed local PostgreSQL operation tests. Applying it to your hosted project is still required.
 
 ## 3. Authentication URLs
 
@@ -49,3 +49,4 @@ Sign in, create a habit, complete it, and reload. It should remain watered today
 Live authentication, isolation, and simultaneous check-in validation remain pending until the migration is applied. Tell the agent when the database and confirmation settings are ready; don't send passwords or confirmation tokens in chat.
 
 Sources: [Supabase Next.js quickstart](https://supabase.com/docs/guides/getting-started/quickstarts/nextjs), [SSR clients](https://supabase.com/docs/guides/auth/server-side/creating-a-client?framework=nextjs), [email templates](https://supabase.com/docs/guides/auth/auth-email-templates), and [redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls).
+
