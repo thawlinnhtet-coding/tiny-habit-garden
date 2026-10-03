@@ -23,10 +23,13 @@ export function validateHabit(input: HabitInput): HabitInput {
   return { name, plantType: input.plantType };
 }
 
-export function createGuestGarden(storage: GardenStorage, now: () => Date = () => new Date(), timezone = Intl.DateTimeFormat().resolvedOptions().timeZone): GardenOperations {
-  new Intl.DateTimeFormat("en-CA", { timeZone: timezone });
+export function createGuestGarden(storage: GardenStorage, now: () => Date = () => new Date()): GardenOperations {
   function load(): Habit[] {
-    return JSON.parse(storage.getItem(storageKey) ?? "[]") as Habit[];
+    const parsed: unknown = JSON.parse(storage.getItem(storageKey) ?? "[]");
+    if (!Array.isArray(parsed) || parsed.some((habit) => !habit || typeof habit.id !== "string" || !habit.id || typeof habit.name !== "string" || !habit.name.trim() || habit.name.length > 80 || !plantTypes.includes(habit.plantType) || !Array.isArray(habit.completionDates) || habit.completionDates.some((date: unknown) => typeof date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(date)) || typeof habit.createdAt !== "string" || !Number.isFinite(Date.parse(habit.createdAt)))) {
+      throw new Error("Your saved garden contains damaged data. Its original contents have been preserved.");
+    }
+    return parsed as Habit[];
   }
   function view(habit: Habit): GardenHabit {
     return { ...habit, stage: 1, totalCompletions: 0, streak: 0, completedToday: false, progress: 0, nextStageIn: 1 };

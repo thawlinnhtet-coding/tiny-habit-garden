@@ -22,6 +22,7 @@ button:not(:disabled), label { cursor: pointer; } button:disabled { cursor: wait
 :focus-visible { outline: 3px solid #8c9f51; outline-offset: 4px; }
 h1,h2,h3,p { margin: 0; } h1,h2,h3 { font-family: Pixelify, monospace; font-weight: 500; line-height: 1.15; }
 .pixel-sprite { image-rendering: pixelated; object-fit: contain; flex-shrink: 0; user-select: none; }
+.garden-scene { image-rendering: pixelated; }
 .app-frame { max-width: 1264px; margin: auto; padding: 0 56px; min-height: 100vh; display: flex; flex-direction: column; }
 .skip-link { position: fixed; top: -100px; left: 10px; z-index: 100; background: #fffdf0; padding: 12px; } .skip-link:focus { top: 10px; }
 .site-header { min-height: 112px; display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid var(--border); }

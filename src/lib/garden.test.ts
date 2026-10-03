@@ -12,9 +12,9 @@ function memoryStorage() {
 describe("guest garden operations", () => {
   it("plants a named habit as a seed and keeps it across visits", async () => {
     const storage = memoryStorage();
-    const garden = createGuestGarden(storage, () => new Date("2026-10-03T06:00:00Z"), "Asia/Rangoon");
+    const garden = createGuestGarden(storage, () => new Date("2026-10-03T06:00:00Z"));
     const habit = await garden.create({ name: "Study 30 minutes", plantType: "oak" });
-    const returningGarden = createGuestGarden(storage, () => new Date("2026-10-03T06:00:00Z"), "Asia/Rangoon");
+    const returningGarden = createGuestGarden(storage, () => new Date("2026-10-03T06:00:00Z"));
     expect(await returningGarden.read()).toMatchObject([{ id: habit.id, name: "Study 30 minutes", plantType: "oak", stage: 1, totalCompletions: 0 }]);
   });
   it("edits the habit and plant while keeping its identity, then removes it", async () => {
@@ -30,5 +30,15 @@ describe("guest garden operations", () => {
     await expect(garden.create({ name: "   ", plantType: "oak" })).rejects.toThrow("name");
     await expect(garden.create({ name: "Read", plantType: "dragon" as "oak" })).rejects.toThrow("plant");
     expect(await garden.read()).toEqual([]);
+  });
+  it("reports damaged saved records without overwriting recoverable data", async () => {
+    const values = new Map<string, string>();
+    const storage = { getItem: (key: string) => values.get(key) ?? null, setItem: (key: string, value: string) => { values.set(key, value); } };
+    const garden = createGuestGarden(storage);
+    await garden.create({ name: "Read", plantType: "mushroom" });
+    for (const [key, value] of values) values.set(key, value.replace('"mushroom"', '"unsupported"'));
+    const before = [...values.values()];
+    await expect(garden.read()).rejects.toThrow("saved garden");
+    expect([...values.values()]).toEqual(before);
   });
 });

@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { MotionConfig } from "motion/react";
 import { createGuestGarden, type GardenHabit, type GardenOperations, type HabitInput } from "@/lib/garden";
 
 type GardenContextValue = {
@@ -39,7 +40,7 @@ export function GardenProvider({ children }: { children: React.ReactNode }) {
     await action(state.operations);
     await refresh();
   }
-  return <GardenContext.Provider value={{ habits: state.habits, loading: state.loading, error: state.error, refresh, create: (input) => mutate((operations) => operations.create(input)), edit: (id, input) => mutate((operations) => operations.edit(id, input)), remove: (id) => mutate((operations) => operations.remove(id)) }}>{children}</GardenContext.Provider>;
+  return <MotionConfig reducedMotion="user"><GardenContext.Provider value={{ habits: state.habits, loading: state.loading, error: state.error, refresh, create: (input) => mutate((operations) => operations.create(input)), edit: (id, input) => mutate((operations) => operations.edit(id, input)), remove: (id) => mutate((operations) => operations.remove(id)) }}>{children}</GardenContext.Provider></MotionConfig>;
 }
 
 export function useGarden() {
