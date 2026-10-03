@@ -40,7 +40,13 @@ The focused review of dedicated account pages from `51fda90` found zero remainin
 
 Production dependency audit reports zero vulnerabilities. Development-tool advisories remain in the component CLI/lint toolchain; avoid blind forced downgrades.
 
-## Hosted setup and remaining verification
+## Vercel deployment
+
+The user authorized public Vercel deployment on 2026-10-03. Production is live at [tiny-habit-garden.vercel.app](https://tiny-habit-garden.vercel.app) under `thawlinnhtet52-2489s-projects/tiny-habit-garden`, connected to this GitHub repository. Vercel uses Next.js, Node 24.x, `npm ci`, and `npm run build`. Both public Supabase variables are set for Production and Preview. `.vercelignore` excludes local environment files, generated builds, and test artifacts; all 35 pixel sprites are included.
+
+The first production build passed. Anonymous HTTP checks returned 200 for home, garden, Today, login, signup, and a plant sprite. Desktop/mobile landing checks passed with no mobile horizontal overflow. The live guest flow passed creation, daily completion, seed-to-sprout growth, retained completion after reload, and removal of the temporary test habit. The production dependency audit found zero vulnerabilities. Supabase's public Auth settings report email signup enabled and auto-confirmation enabled; the user reports both production auth URLs are saved. Private-account persistence/sign-out, cross-account isolation, and hosted concurrent check-ins remain unverified pending an accessible signed-in session. See [Vercel deployment notes](vercel-deployment.md).
+
+## Supabase setup
 
 Public configuration is present in the ignored `.env.local`. No service-role key is required. The user reports Supabase setup is complete. The app works with Supabase's default link template. Supabase's built-in mail provider restricts delivery and customization; see `docs/supabase-setup.md` if the project later configures custom SMTP. Apply `supabase/migrations/202610030001_garden.sql` once to a fresh project.
 
