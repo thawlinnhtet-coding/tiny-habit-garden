@@ -147,7 +147,9 @@ function EditorForm({ habit }: { habit?: GardenHabit }) {
       <p className="guest-note">
         {garden.mode === "private"
           ? "Private garden · Saved to your account."
-          : "Guest garden · Saved in this browser."}
+          : garden.mode === "guest"
+            ? "Guest garden · Saved in this browser."
+            : "Garden unavailable · Check your connection and try again."}
       </p>
     </form>
   );
