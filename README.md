@@ -98,6 +98,8 @@ npm run test:e2e
 npm run build
 ```
 
+The full browser suite requires both public Supabase variables in `.env.local` so the account forms are enabled. Restart the development server after setting them. The guest app and library tests can run without this configuration.
+
 Library tests cover public garden operations, growth milestones, daily completion, streak resets, validation, and local PostgreSQL behavior through PGlite. Playwright covers desktop and mobile user flows using disposable browser data and mocked Supabase Auth responses.
 
 The live production build and guest planting/watering flow have passed. Hosted private-account persistence, sign-out, account isolation, and concurrent check-ins still require live verification. See [current status](docs/current-status.md) for the precise evidence and remaining checks.
