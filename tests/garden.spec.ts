@@ -2,6 +2,23 @@ import { test, expect } from "@playwright/test";
 import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
 
+test("water once, grow, and retain progress after reload", async ({ page }) => {
+  test.setTimeout(60000);
+  await page.goto("/habits/new");
+  await page.getByLabel("What's your tiny habit?").fill("Read a page");
+  await page.getByRole("button", { name: "Plant my habit" }).click();
+  await page.waitForURL("**/garden");
+  await page.getByRole("link", { name: /Today/ }).click();
+  await page.getByRole("button", { name: "Complete Read a page", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Completed Read a page today" })).toBeDisabled();
+  await expect(page.getByRole("status")).toContainText("1 Day Streak!");
+  await page.reload();
+  await expect(page.getByRole("button", { name: "Completed Read a page today" })).toBeDisabled();
+  await page.getByRole("link", { name: "My Garden", exact: true }).click();
+  await page.getByRole("button", { name: "Read a page, Oak tree, Sprout" }).click();
+  await expect(page.getByRole("dialog")).toContainText("1 total completions");
+});
+
 test("plant, inspect, edit, persist, and intentionally remove a habit", async ({ page }) => {
   await page.goto("/garden");
   await page.getByRole("link", { name: "Plant a habit", exact: true }).click();
@@ -43,3 +60,4 @@ test("keyboard planting works with reduced motion", async ({ page }) => {
   expect(await page.locator(".plant-sprite").evaluate((element) => getComputedStyle(element).animationName)).toBe("none");
   expect(await page.locator(".garden-plot").first().evaluate((element) => getComputedStyle(element).imageRendering)).toBe("pixelated");
 });
+
