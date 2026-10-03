@@ -30,7 +30,7 @@ test("auth fields show inline validation and clear as corrected", async ({
   await expect(page.locator("#auth-password-error")).toHaveCount(0);
 });
 
-test("account errors are visible and signup verifies an emailed OTP", async ({
+test("account errors are visible and signup sends the confirmation link home", async ({
   page,
 }) => {
   await page.route("**/auth/v1/token*", (route) =>
@@ -55,44 +55,6 @@ test("account errors are visible and signup verifies an emailed OTP", async ({
       }),
     }),
   );
-  await page.route("**/auth/v1/resend*", (route) =>
-    route.fulfill({ status: 200, contentType: "application/json", body: "{}" }),
-  );
-  await page.route("**/auth/v1/verify*", (route) =>
-    route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({
-        access_token: "test-access-token",
-        refresh_token: "test-refresh-token",
-        expires_in: 3600,
-        token_type: "bearer",
-        user: {
-          id: "00000000-0000-0000-0000-000000000001",
-          email: "gardener@example.com",
-          aud: "authenticated",
-          role: "authenticated",
-          app_metadata: { provider: "email", providers: ["email"] },
-          user_metadata: {},
-          identities: [],
-          created_at: "2026-10-03T00:00:00.000Z",
-          confirmed_at: "2026-10-03T00:00:00.000Z",
-        },
-      }),
-    }),
-  );
-  await page.route("**/rest/v1/rpc/garden_operation*", (route) =>
-    route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({
-        now: "2026-10-03T00:00:00.000Z",
-        timezone: "Asia/Rangoon",
-        habits: [],
-        completed: false,
-      }),
-    }),
-  );
   await page.goto("/login");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Welcome back, gardener.",
@@ -114,39 +76,20 @@ test("account errors are visible and signup verifies an emailed OTP", async ({
   );
   await page.getByLabel("Email", { exact: true }).fill("gardener@example.com");
   await page.getByLabel("Password", { exact: true }).fill("test-password-123");
+  const signupRequest = page.waitForRequest((request) =>
+    request.url().includes("/auth/v1/signup"),
+  );
   await page
     .getByRole("button", { name: "Create account", exact: true })
     .click();
-  await expect(
-    page.getByRole("heading", { name: "Check your email" }),
-  ).toBeVisible();
-  await expect(page.getByRole("status")).toContainText("6-digit code");
+  const signup = await signupRequest;
+  expect(new URL(signup.url()).searchParams.get("redirect_to")).toBe(
+    new URL("/auth/confirm", page.url()).toString(),
+  );
+  await expect(page.getByRole("status")).toContainText("confirmation link");
   await expect(
     page.getByRole("link", { name: "Guest garden", exact: true }),
   ).toBeVisible();
-  const verifyButton = page.getByRole("button", { name: "Verify email" });
-  await verifyButton.click();
-  await expect(page.locator("#auth-otp-error")).toHaveText(
-    "Enter the 6-digit code from your email.",
-  );
-  await expect(page.getByLabel("Email verification code")).toBeFocused();
-  await page.getByRole("button", { name: "Change email" }).click();
-  await page.getByRole("button", { name: "Create account" }).click();
-  await expect(
-    page.getByRole("heading", { name: "Check your email" }),
-  ).toBeVisible();
-  await expect(page.locator("#auth-otp-error")).toHaveCount(0);
-  await page.getByRole("button", { name: "Resend code" }).click();
-  await expect(page.getByRole("status")).toContainText(
-    "fresh code is on its way",
-  );
-  await page.getByLabel("Email verification code").fill("123456");
-  const verificationRequest = page.waitForRequest((request) =>
-    request.url().includes("/auth/v1/verify"),
-  );
-  await verifyButton.click();
-  await verificationRequest;
-  await expect(page).toHaveURL(/\/garden$/);
 });
 
 test("landing page links to dedicated account pages and guest garden", async ({
@@ -161,7 +104,7 @@ test("landing page links to dedicated account pages and guest garden", async ({
   ).toBeVisible();
 });
 
-test("an expired legacy confirmation link points users to the OTP flow", async ({
+test("an expired confirmation link points users back to sign-up", async ({
   page,
 }) => {
   await page.route("**/auth/v1/verify*", (route) =>

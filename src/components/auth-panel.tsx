@@ -20,16 +20,11 @@ export function AuthPanel({ intent }: { intent: AuthIntent }) {
   const signUp = intent === "sign-up";
   const emailInput = useRef<HTMLInputElement>(null);
   const passwordInput = useRef<HTMLInputElement>(null);
-  const otpInput = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fieldErrors, setFieldErrors] = useState<AuthInputErrors>({});
   const [touched, setTouched] = useState({ email: false, password: false });
   const [pending, setPending] = useState(false);
-  const [verificationEmail, setVerificationEmail] = useState("");
-  const [otp, setOtp] = useState("");
-  const [otpError, setOtpError] = useState("");
-  const [resending, setResending] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   function readFieldErrors(
@@ -55,7 +50,7 @@ export function AuthPanel({ intent }: { intent: AuthIntent }) {
     if (new URLSearchParams(window.location.search).get("auth_error"))
       queueMicrotask(() =>
         setError(
-          "That link expired. Go back to sign up for a fresh code, or sign in if your email is already confirmed.",
+          "That link expired. Sign up again to request a fresh confirmation email, or sign in if your email is already confirmed.",
         ),
       );
   }, []);
@@ -76,15 +71,19 @@ export function AuthPanel({ intent }: { intent: AuthIntent }) {
       const credentials = validateAuthInput({ email, password }, intent);
       const client = browserSupabase();
       const result = signUp
-        ? await client.auth.signUp(credentials)
+        ? await client.auth.signUp({
+            ...credentials,
+            options: {
+              emailRedirectTo: `${window.location.origin}/auth/confirm`,
+            },
+          })
         : await client.auth.signInWithPassword(credentials);
       if (result.error) throw result.error;
-      if (signUp && !result.data.session) {
-        setVerificationEmail(credentials.email);
+      if (signUp && !result.data.session)
         setMessage(
-          "A 6-digit code is on its way. Enter it below to confirm your email and open your private garden.",
+          "Check your inbox and follow the confirmation link to activate your account and open your private garden.",
         );
-      } else router.push("/garden");
+      else router.push("/garden");
     } catch (cause) {
       setError(
         cause instanceof Error
@@ -92,59 +91,6 @@ export function AuthPanel({ intent }: { intent: AuthIntent }) {
           : "We couldn't connect. Please try again.",
       );
     } finally {
-      setPending(false);
-    }
-  }
-  async function verifyCode(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError("");
-    setMessage("");
-    if (!/^\d{6}$/.test(otp)) {
-      setOtpError("Enter the 6-digit code from your email.");
-      otpInput.current?.focus();
-      return;
-    }
-    setOtpError("");
-    setPending(true);
-    try {
-      const { error: verificationError } =
-        await browserSupabase().auth.verifyOtp({
-          email: verificationEmail,
-          token: otp,
-          type: "email",
-        });
-      if (verificationError) throw verificationError;
-      router.push("/garden");
-    } catch {
-      setError(
-        "That code didn't work. Check the digits or request a new code.",
-      );
-    } finally {
-      setPending(false);
-    }
-  }
-  async function resendCode() {
-    setError("");
-    setMessage("");
-    setPending(true);
-    setResending(true);
-    try {
-      const { error: resendError } = await browserSupabase().auth.resend({
-        type: "signup",
-        email: verificationEmail,
-      });
-      if (resendError) throw resendError;
-      setOtp("");
-      setOtpError("");
-      setMessage("A fresh code is on its way to your inbox.");
-    } catch (cause) {
-      setError(
-        cause instanceof Error
-          ? cause.message
-          : "We couldn't send a new code. Please try again.",
-      );
-    } finally {
-      setResending(false);
       setPending(false);
     }
   }
@@ -164,89 +110,6 @@ export function AuthPanel({ intent }: { intent: AuthIntent }) {
         Account gardens are being prepared. Try your little guest garden for
         now.
       </p>
-    );
-  if (verificationEmail)
-    return (
-      <form className="auth-paper" onSubmit={verifyCode} noValidate>
-        <span className="eyebrow">ONE LAST LITTLE STEP</span>
-        <h2>Check your email</h2>
-        <p>
-          Enter the 6-digit verification code we sent to {verificationEmail}.
-        </p>
-        <div className="form-field">
-          <Label htmlFor="auth-otp">Email verification code</Label>
-          <Input
-            ref={otpInput}
-            id="auth-otp"
-            name="otp"
-            type="text"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            pattern="[0-9]{6}"
-            maxLength={6}
-            value={otp}
-            aria-invalid={Boolean(otpError)}
-            aria-describedby={otpError ? "auth-otp-error" : undefined}
-            required
-            onChange={(event) => {
-              setOtp(event.currentTarget.value.replace(/\D/g, "").slice(0, 6));
-              setOtpError("");
-              setError("");
-            }}
-          />
-          {otpError && (
-            <p id="auth-otp-error" role="alert" className="form-error">
-              {otpError}
-            </p>
-          )}
-        </div>
-        {error && (
-          <p role="alert" className="form-error">
-            {error}
-          </p>
-        )}
-        {message && (
-          <p role="status" className="auth-message">
-            {message}
-          </p>
-        )}
-        <div className="auth-actions">
-          <Button
-            className="pixel-button primary"
-            type="submit"
-            disabled={pending}
-          >
-            {pending && !resending ? "Checking your code…" : "Verify email"}
-          </Button>
-        </div>
-        <p className="auth-switch">
-          <Button
-            type="button"
-            variant="link"
-            className="auth-inline-button"
-            disabled={pending}
-            onClick={resendCode}
-          >
-            {resending ? "Sending code…" : "Resend code"}
-          </Button>
-          <span aria-hidden="true"> · </span>
-          <Button
-            type="button"
-            variant="link"
-            className="auth-inline-button"
-            disabled={pending}
-            onClick={() => {
-              setVerificationEmail("");
-              setOtp("");
-              setOtpError("");
-              setError("");
-              setMessage("");
-            }}
-          >
-            Change email
-          </Button>
-        </p>
-      </form>
     );
   return (
     <form className="auth-paper" onSubmit={submit} noValidate>
