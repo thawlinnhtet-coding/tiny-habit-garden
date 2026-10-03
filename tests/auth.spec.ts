@@ -92,6 +92,53 @@ test("account errors are visible and signup sends the confirmation link home", a
   ).toBeVisible();
 });
 
+test("signup opens the garden immediately when email confirmation is disabled", async ({
+  page,
+}) => {
+  await page.route("**/auth/v1/signup*", (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        access_token: "test-access-token",
+        refresh_token: "test-refresh-token",
+        expires_in: 3600,
+        token_type: "bearer",
+        user: {
+          id: "00000000-0000-0000-0000-000000000002",
+          email: "gardener@example.com",
+          aud: "authenticated",
+          role: "authenticated",
+          app_metadata: { provider: "email", providers: ["email"] },
+          user_metadata: {},
+          identities: [],
+          created_at: "2026-10-03T00:00:00.000Z",
+          confirmed_at: "2026-10-03T00:00:00.000Z",
+        },
+      }),
+    }),
+  );
+  await page.route("**/rest/v1/rpc/garden_operation*", (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        now: "2026-10-03T00:00:00.000Z",
+        timezone: "Asia/Rangoon",
+        habits: [],
+        completed: false,
+      }),
+    }),
+  );
+
+  await page.goto("/signup");
+  await page.getByLabel("Email", { exact: true }).fill("gardener@example.com");
+  await page.getByLabel("Password", { exact: true }).fill("test-password-123");
+  await page.getByRole("button", { name: "Create account" }).click();
+
+  await expect(page).toHaveURL(/\/garden$/);
+});
+
 test("landing page links to dedicated account pages and guest garden", async ({
   page,
 }) => {

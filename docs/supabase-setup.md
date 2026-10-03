@@ -25,7 +25,9 @@ Under **Authentication → URL Configuration**, set the local Site URL to `http:
 
 The default **Authentication → Email Templates → Confirm signup** email already uses a confirmation link. Newer free-tier projects using Supabase's default SMTP may show “Set up custom SMTP to edit templates”; this is expected, and the default link works with the app. The app also accepts PKCE callback links and older token-hash links.
 
-Keep email/password authentication and email confirmation enabled. Sign up using an email address you can access and follow the link in the confirmation email before signing in. Supabase's built-in email service is for testing: it only delivers to project team addresses and is currently limited to two emails per hour. Sending to the public requires custom SMTP. OTP entry also requires customizable email templates, available with custom SMTP or an eligible plan.
+To remove email confirmation, open **Authentication → Sign In / Providers → Email** and turn off **Confirm email**. Save the change. Sign-ups will then create a session immediately and the app will open the garden without sending a confirmation email. This also means Supabase does not check that a user owns the email address; users should enter an address they control so password recovery can reach them.
+
+If you leave **Confirm email** on, sign up using an email address you can access and follow the default confirmation link before signing in. Supabase's built-in email service is for testing: it only delivers to project team addresses and is currently limited to two emails per hour. Sending to the public requires custom SMTP. OTP entry also requires customizable email templates, available with custom SMTP or an eligible plan.
 
 ## 4. Start locally
 
