@@ -46,6 +46,8 @@ The user authorized public Vercel deployment on 2026-10-03. Production is live a
 
 The first production build passed. Anonymous HTTP checks returned 200 for home, garden, Today, login, signup, and a plant sprite. Desktop/mobile landing checks passed with no mobile horizontal overflow. The live guest flow passed creation, daily completion, seed-to-sprout growth, retained completion after reload, and removal of the temporary test habit. The production dependency audit found zero vulnerabilities. Supabase's public Auth settings report email signup enabled and auto-confirmation enabled; the user reports both production auth URLs are saved. Private-account persistence/sign-out, cross-account isolation, and hosted concurrent check-ins remain unverified pending an accessible signed-in session. See [Vercel deployment notes](vercel-deployment.md).
 
+The final deployment slice at `8169969` passed both review axes against the agreed baseline, reusing the completed application review: zero Standards breaches, zero actionable smells, and zero Spec findings. Deployment notes pass Prettier and the diff has no whitespace errors.
+
 ## Supabase setup
 
 Public configuration is present in the ignored `.env.local`. No service-role key is required. The user reports Supabase setup is complete. The app works with Supabase's default link template. Supabase's built-in mail provider restricts delivery and customization; see `docs/supabase-setup.md` if the project later configures custom SMTP. Apply `supabase/migrations/202610030001_garden.sql` once to a fresh project.
