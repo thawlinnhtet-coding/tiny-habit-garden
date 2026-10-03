@@ -1,7 +1,20 @@
 import { describe, expect, it } from "vitest";
-import { validateAuthInput } from "./auth-input";
+import { getAuthInputErrors, validateAuthInput } from "./auth-input";
 
 describe("auth input validation", () => {
+  it("returns an inline message for each invalid field", () => {
+    expect(getAuthInputErrors({ email: "", password: "" }, "sign-up")).toEqual({
+      email: "Enter your email address.",
+      password: "Enter your password.",
+    });
+    expect(
+      getAuthInputErrors(
+        { email: "gardener@example.com", password: "short" },
+        "sign-up",
+      ),
+    ).toEqual({ password: "Choose a password with at least 8 characters." });
+  });
+
   it("trims the email while preserving the password exactly", () => {
     expect(
       validateAuthInput(

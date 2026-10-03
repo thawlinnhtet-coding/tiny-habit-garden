@@ -1,21 +1,51 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { useGarden } from "./garden-provider";
 import { browserSupabase, supabaseConfigured } from "@/lib/supabase/client";
-import { validateAuthInput, type AuthIntent } from "@/lib/auth-input";
+import {
+  getAuthInputErrors,
+  validateAuthInput,
+  type AuthInputErrors,
+  type AuthIntent,
+} from "@/lib/auth-input";
 
 export function AuthPanel({ intent }: { intent: AuthIntent }) {
   const garden = useGarden();
   const router = useRouter();
   const signUp = intent === "sign-up";
+  const emailInput = useRef<HTMLInputElement>(null);
+  const passwordInput = useRef<HTMLInputElement>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<AuthInputErrors>({});
+  const [touched, setTouched] = useState({ email: false, password: false });
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  function readFieldErrors(
+    nextEmail = email,
+    nextPassword = password,
+  ): AuthInputErrors {
+    const errors = getAuthInputErrors(
+      { email: nextEmail, password: nextPassword },
+      intent,
+    );
+    if (!errors.email && emailInput.current?.validity.typeMismatch)
+      errors.email = "Enter a valid email address.";
+    return errors;
+  }
+  function blurField(field: "email" | "password") {
+    setTouched((current) => ({ ...current, [field]: true }));
+    setFieldErrors((current) => ({
+      ...current,
+      [field]: readFieldErrors()[field],
+    }));
+  }
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("auth_error"))
       queueMicrotask(() =>
@@ -26,18 +56,19 @@ export function AuthPanel({ intent }: { intent: AuthIntent }) {
   }, []);
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setPending(true);
     setError("");
     setMessage("");
-    const fields = new FormData(event.currentTarget);
+    setTouched({ email: true, password: true });
+    const validationErrors = readFieldErrors();
+    setFieldErrors(validationErrors);
+    if (validationErrors.email || validationErrors.password) {
+      if (validationErrors.email) emailInput.current?.focus();
+      else passwordInput.current?.focus();
+      return;
+    }
+    setPending(true);
     try {
-      const credentials = validateAuthInput(
-        {
-          email: String(fields.get("email") ?? ""),
-          password: String(fields.get("password") ?? ""),
-        },
-        signUp ? "sign-up" : "sign-in",
-      );
+      const credentials = validateAuthInput({ email, password }, intent);
       const client = browserSupabase();
       const result = signUp
         ? await client.auth.signUp({
@@ -81,7 +112,7 @@ export function AuthPanel({ intent }: { intent: AuthIntent }) {
       </p>
     );
   return (
-    <form className="auth-paper" onSubmit={submit}>
+    <form className="auth-paper" onSubmit={submit} noValidate>
       <span className="eyebrow">YOUR OWN LITTLE WORLD</span>
       <h2>{signUp ? "Create your account" : "Sign in to your garden"}</h2>
       <p>Your private garden follows you across visits.</p>
@@ -89,6 +120,7 @@ export function AuthPanel({ intent }: { intent: AuthIntent }) {
         <div className="form-field">
           <Label htmlFor="auth-email">Email</Label>
           <Input
+            ref={emailInput}
             id="auth-email"
             name="email"
             type="email"
@@ -96,19 +128,64 @@ export function AuthPanel({ intent }: { intent: AuthIntent }) {
             autoCapitalize="none"
             spellCheck={false}
             maxLength={254}
+            value={email}
+            aria-invalid={Boolean(fieldErrors.email)}
+            aria-describedby={
+              fieldErrors.email ? "auth-email-error" : undefined
+            }
             required
+            onBlur={() => blurField("email")}
+            onChange={(event) => {
+              const nextEmail = event.currentTarget.value;
+              setEmail(nextEmail);
+              setError("");
+              setMessage("");
+              if (touched.email)
+                setFieldErrors((current) => ({
+                  ...current,
+                  email: readFieldErrors(nextEmail).email,
+                }));
+            }}
           />
+          {fieldErrors.email && (
+            <p id="auth-email-error" role="alert" className="form-error">
+              {fieldErrors.email}
+            </p>
+          )}
         </div>
         <div className="form-field">
           <Label htmlFor="auth-password">Password</Label>
           <Input
+            ref={passwordInput}
             id="auth-password"
             name="password"
             type="password"
             autoComplete={signUp ? "new-password" : "current-password"}
             minLength={signUp ? 8 : 1}
+            value={password}
+            aria-invalid={Boolean(fieldErrors.password)}
+            aria-describedby={
+              fieldErrors.password ? "auth-password-error" : undefined
+            }
             required
+            onBlur={() => blurField("password")}
+            onChange={(event) => {
+              const nextPassword = event.currentTarget.value;
+              setPassword(nextPassword);
+              setError("");
+              setMessage("");
+              if (touched.password)
+                setFieldErrors((current) => ({
+                  ...current,
+                  password: readFieldErrors(email, nextPassword).password,
+                }));
+            }}
           />
+          {fieldErrors.password && (
+            <p id="auth-password-error" role="alert" className="form-error">
+              {fieldErrors.password}
+            </p>
+          )}
         </div>
       </div>
       {error && (

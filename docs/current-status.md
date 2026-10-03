@@ -19,13 +19,13 @@ GitHub remains the authoritative tracker. Parent specification #1 stays open. Ti
 - Shared watering can, drops, bounce, particles, stage transformation, progress, and streak feedback on the garden, Today, and details.
 - Supabase email sign-up/sign-in on dedicated account routes, sign-out, confirmation route, and cookie session refresh through Next.js Proxy.
 - Shared fluid typography tokens for responsive headings, copy, and labels while preserving browser text-size preferences; touch-sized text inputs and controls.
-- Inline habit-name validation plus shared sign-in/sign-up credential validation before Supabase requests.
+- Inline validation on the dedicated auth pages: each email/password field reports its own error on blur or submit, clears as corrected, and focuses the first invalid field before any Supabase request.
 - Owner-checked PostgreSQL operations, row-level-security read policies, revoked direct client writes, fixed account timezone, server-time check-ins, and unique habit/date records.
 - Separate guest/private state and guards against stale responses after account changes.
 
 ## Verification
 
-The home route (`/`) was visually checked in the browser after the landing-page update. The 15 library tests pass, including public habit validation and auth credential rules. The full 14-check browser suite passes on desktop and Pixel 7 using an isolated development server. It covers dedicated login/signup routes, account links, auth errors and confirmation messaging (including expired links), guest CRUD, daily completion, keyboard access, reduced motion, and damaged-storage handling. Supabase responses are mocked; these checks do not validate hosted Auth. Typechecking, lint, Prettier, and the production build pass for the responsive typography, validation, and dedicated auth-page changes.
+The home route (`/`) was visually checked in the browser after the landing-page update. The 16 library tests pass, including public habit validation and auth credential rules. The full 16-check browser suite passes on desktop and Pixel 7 using an isolated development server. It covers inline auth errors and clearing corrected fields, dedicated login/signup routes, account links, auth errors and confirmation messaging (including expired links), guest CRUD, daily completion, keyboard access, reduced motion, and damaged-storage handling. Supabase responses are mocked; these checks do not validate hosted Auth. Typechecking, lint, Prettier, and the production build pass for the responsive typography, validation, and dedicated auth-page changes.
 
 Ten public-operation tests pass, including real local PostgreSQL migration/operations through PGlite. They cover guest persistence/validation, local-date duplicates, streak reset, all milestones, private CRUD/check-ins, owner checks, timezone stability, and visible remote errors.
 

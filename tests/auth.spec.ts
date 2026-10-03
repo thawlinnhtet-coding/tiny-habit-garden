@@ -1,5 +1,35 @@
 import { test, expect } from "@playwright/test";
 
+test("auth fields show inline validation and clear as corrected", async ({
+  page,
+}) => {
+  await page.goto("/signup");
+
+  await page.getByRole("button", { name: "Create account" }).click();
+  await expect(page.locator("#auth-email-error")).toHaveText(
+    "Enter your email address.",
+  );
+  await expect(page.locator("#auth-password-error")).toHaveText(
+    "Enter your password.",
+  );
+
+  const email = page.getByLabel("Email", { exact: true });
+  await email.fill("not-an-email");
+  await expect(page.locator("#auth-email-error")).toHaveText(
+    "Enter a valid email address.",
+  );
+  await email.fill("gardener@example.com");
+  await expect(page.locator("#auth-email-error")).toHaveCount(0);
+
+  const password = page.getByLabel("Password", { exact: true });
+  await password.fill("short");
+  await expect(page.locator("#auth-password-error")).toHaveText(
+    "Choose a password with at least 8 characters.",
+  );
+  await password.fill("long-enough-password");
+  await expect(page.locator("#auth-password-error")).toHaveCount(0);
+});
+
 test("account errors are visible and signup explains email confirmation", async ({
   page,
 }) => {
