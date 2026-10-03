@@ -24,7 +24,7 @@ export function TodayView() {
                 : "Your next small step can start right here."}
             </p>
           </div>
-          <NewHabitLink />
+          {habits.length > 0 && <NewHabitLink />}
         </div>
         {loading ? (
           <p role="status">Opening your garden…</p>

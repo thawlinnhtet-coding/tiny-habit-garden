@@ -3,13 +3,24 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { CalendarDays, Flower2, Leaf, Plus, Sun } from "lucide-react";
+import { Menu } from "@base-ui/react/menu";
+import {
+  CalendarDays,
+  ChevronDown,
+  Flower2,
+  Home,
+  Leaf,
+  LogOut,
+  Plus,
+  Sun,
+  UserRound,
+} from "lucide-react";
 import { PixelSprite } from "./pixel-sprite";
 import { useGarden } from "./garden-provider";
 
 export function GardenShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { error, habits, mode, signOut, loading } = useGarden();
+  const { error, habits, mode, email, signOut, loading } = useGarden();
   const [accountError, setAccountError] = useState("");
   const [signingOut, setSigningOut] = useState(false);
   async function leave() {
@@ -59,25 +70,90 @@ export function GardenShell({ children }: { children: React.ReactNode }) {
           </Link>
         </nav>
         <div className="account-menu">
-          <Link href="/" className="guest-badge">
-            <span className="status-dot" />
-            {loading
-              ? "Opening…"
-              : mode === "private"
-                ? "Private garden"
-                : mode === "guest"
-                  ? "Guest garden"
-                  : "Account unavailable"}
-          </Link>
-          {mode === "private" && (
-            <button
-              onClick={leave}
-              disabled={signingOut}
-              className="signout-button"
+          <Menu.Root>
+            <Menu.Trigger
+              className="account-trigger"
+              aria-label="Account menu"
+              disabled={loading || signingOut}
             >
-              {signingOut ? "Signing out…" : "Sign out"}
-            </button>
-          )}
+              <span className="account-avatar">
+                <UserRound size={17} />
+              </span>
+              <span>
+                {loading
+                  ? "Opening…"
+                  : signingOut
+                    ? "Signing out…"
+                    : mode === "guest"
+                      ? "Guest"
+                      : "Account"}
+              </span>
+              <ChevronDown size={14} className="account-chevron" />
+            </Menu.Trigger>
+            <Menu.Portal>
+              <Menu.Positioner
+                align="end"
+                sideOffset={8}
+                className="account-positioner"
+              >
+                <Menu.Popup className="account-popup" aria-label="Account">
+                  <div className="account-summary">
+                    <strong>
+                      {mode === "private"
+                        ? "Your account"
+                        : mode === "guest"
+                          ? "Guest garden"
+                          : "Account unavailable"}
+                    </strong>
+                    {mode === "private" && email && (
+                      <span className="account-email">{email}</span>
+                    )}
+                    <p>
+                      {mode === "private"
+                        ? "Your garden is saved to your account."
+                        : mode === "guest"
+                          ? "Your garden is saved in this browser."
+                          : "Check your connection and reload."}
+                    </p>
+                  </div>
+                  {mode === "guest" && (
+                    <>
+                      <Menu.LinkItem
+                        render={<Link href="/login" />}
+                        closeOnClick
+                        className="account-menu-item"
+                      >
+                        <UserRound size={16} /> Sign in
+                      </Menu.LinkItem>
+                      <Menu.LinkItem
+                        render={<Link href="/signup" />}
+                        closeOnClick
+                        className="account-menu-item"
+                      >
+                        <Leaf size={16} /> Create an account
+                      </Menu.LinkItem>
+                    </>
+                  )}
+                  <Menu.LinkItem
+                    render={<Link href="/" />}
+                    closeOnClick
+                    className="account-menu-item"
+                  >
+                    <Home size={16} /> Back to home
+                  </Menu.LinkItem>
+                  {mode === "private" && (
+                    <Menu.Item
+                      onClick={leave}
+                      disabled={signingOut}
+                      className="account-menu-item"
+                    >
+                      <LogOut size={16} /> Sign out
+                    </Menu.Item>
+                  )}
+                </Menu.Popup>
+              </Menu.Positioner>
+            </Menu.Portal>
+          </Menu.Root>
         </div>
       </header>
       <main id="main-content" className="main-content">

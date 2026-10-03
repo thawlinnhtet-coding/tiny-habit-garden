@@ -88,7 +88,10 @@ test("account errors are visible and signup sends the confirmation link home", a
   );
   await expect(page.getByRole("status")).toContainText("confirmation link");
   await expect(
-    page.getByRole("link", { name: "Guest garden", exact: true }),
+    page.getByRole("link", {
+      name: "Continue with a guest garden",
+      exact: true,
+    }),
   ).toBeVisible();
 });
 
@@ -130,6 +133,9 @@ test("signup opens the garden immediately when email confirmation is disabled", 
       }),
     }),
   );
+  await page.route("**/auth/v1/logout*", (route) =>
+    route.fulfill({ status: 204 }),
+  );
 
   await page.goto("/signup");
   await page.getByLabel("Email", { exact: true }).fill("gardener@example.com");
@@ -137,6 +143,48 @@ test("signup opens the garden immediately when email confirmation is disabled", 
   await page.getByRole("button", { name: "Create account" }).click();
 
   await expect(page).toHaveURL(/\/garden$/);
+  await expect(page.getByText("Private garden", { exact: true })).toHaveCount(
+    0,
+  );
+  await expect(page.getByRole("menuitem", { name: "Sign out" })).toHaveCount(0);
+  const account = page.getByRole("button", { name: "Account menu" });
+  await account.press("Enter");
+  await expect(page.getByRole("menu")).toContainText("gardener@example.com");
+  await expect(page.getByRole("menu")).toContainText("saved to your account");
+  await page.screenshot({
+    path: test.info().outputPath("private-account-menu.png"),
+    fullPage: true,
+  });
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("menu")).toHaveCount(0);
+  await expect(account).toBeFocused();
+  await account.click();
+  await page.getByRole("menuitem", { name: "Sign out" }).click();
+  await expect(account).toContainText("Guest");
+});
+
+test("empty Today has one planting action and a keyboard-accessible guest menu", async ({
+  page,
+}) => {
+  await page.goto("/today");
+  await expect(
+    page.getByRole("link", { name: "Plant my first habit", exact: true }),
+  ).toHaveCount(1);
+  await expect(
+    page.getByRole("link", { name: "Plant a habit", exact: true }),
+  ).toHaveCount(0);
+  const account = page.getByRole("button", { name: "Account menu" });
+  await expect(account).toContainText("Guest");
+  await account.press("Enter");
+  await expect(page.getByRole("menu")).toContainText("saved in this browser");
+  await page.screenshot({
+    path: test.info().outputPath("empty-today-account-menu.png"),
+    fullPage: true,
+  });
+  await page
+    .getByRole("menuitem", { name: "Sign in", exact: true })
+    .press("Enter");
+  await expect(page).toHaveURL(/\/login$/);
 });
 
 test("landing page links to dedicated account pages and guest garden", async ({

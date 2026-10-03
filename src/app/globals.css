@@ -178,16 +178,6 @@ h3 {
   border-radius: 3px;
   padding: 1px 5px;
 }
-.guest-badge {
-  font-size: 11px;
-  padding: 7px 11px;
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: #68765d;
-}
 .status-dot {
   display: inline-block;
   width: 6px;
@@ -1260,9 +1250,6 @@ h3 {
   .garden-below {
     gap: 18px;
   }
-  .guest-badge {
-    font-size: 10px;
-  }
   .brand {
     min-width: auto;
   }
@@ -1285,9 +1272,6 @@ h3 {
   }
   .main-nav a {
     padding: 8px 16px;
-  }
-  .guest-badge {
-    margin-left: auto;
   }
   .main-content {
     padding-top: 29px;
@@ -1629,15 +1613,86 @@ h3 {
 }
 .account-menu {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
   align-items: center;
 }
-.signout-button {
-  font-size: 10px;
-  color: #61754d;
-  text-decoration: underline;
+.account-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: var(--type-small);
+  color: var(--foreground);
   cursor: pointer;
+}
+.account-trigger:hover,
+.account-trigger[data-popup-open] {
+  background: var(--secondary);
+}
+.account-trigger:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+.account-avatar {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  background: #e6ebd8;
+  border-radius: 50%;
+}
+.account-chevron {
+  color: var(--muted-foreground);
+}
+.account-positioner {
+  z-index: 60;
+}
+.account-popup {
+  width: 270px;
+  max-width: calc(100vw - 32px);
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fffdf5;
+  color: var(--foreground);
+  box-shadow:
+    0 4px 0 #304c3e14,
+    0 12px 24px #304c3e12;
+}
+.account-summary {
+  display: grid;
+  gap: 6px;
+  padding: 12px 10px 14px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--type-small);
+}
+.account-email {
+  overflow-wrap: anywhere;
+}
+.account-summary p {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: var(--type-caption);
+  line-height: 1.6;
+}
+.account-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: var(--type-small);
+  cursor: pointer;
+}
+.account-menu-item[data-highlighted] {
+  background: var(--secondary);
+}
+.account-menu-item[data-disabled] {
+  cursor: wait;
+  opacity: 0.65;
 }
 @media (max-width: 600px) {
   .account-menu {
@@ -1687,7 +1742,6 @@ h3 {
 }
 .nav-count,
 .eyebrow,
-.guest-badge,
 .scene-topline,
 .scene-topline span:last-child,
 .plant-name-tag,
@@ -1700,7 +1754,6 @@ h3 {
 .world-label,
 .landing-step small,
 .growth-progress p,
-.signout-button,
 .form-actions .text-link,
 .form-actions .pixel-button,
 .habit-row .pixel-button {
