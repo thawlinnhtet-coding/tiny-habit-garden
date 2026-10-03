@@ -10,6 +10,8 @@ GitHub remains the authoritative tracker. Parent specification #1 stays open. Ti
 
 ## Implemented
 
+The README now introduces the project, live app, features, stack, local setup, deployment, and assets. It explains daily availability, consecutive-day streaks, permanent lifetime growth, missed-day examples, and all five growth milestones. This documents existing behavior; no growth or streak rules changed. All eight existing guest-garden tests passed, including next-day availability, missed-day streak reset with retained growth, and growth milestones. Documentation formatting and whitespace checks passed.
+
 - Next.js landing page, dedicated `/login` and `/signup` pages, Today, My Garden, and create/edit routes.
 - Responsive home landing page with an animated pixel-garden preview, habit-loop introduction, and account entry.
 - Original transparent PNG sprites for oak, sunflower, mushroom, cactus, wildflower, all five growth stages, and garden scenery. Local licensed Pixelify Sans font.
