@@ -23,7 +23,7 @@ Follow `to-spec` to synthesize the user requirements. Follow `to-tickets` to dra
 
 Use native blocking dependencies when available. Each native edge refers to the blocker's numeric database ID, not its issue number. If dependencies are unavailable, list real blocking issue references in the issue body. Work only on tickets whose blockers are resolved.
 
-Use the confirmed triage vocabulary. The five default labels are currently proposed; see `../current-status.md` for approval status. Once confirmed, record the mapping in `triage-labels.md` and apply `ready-for-agent` to fully specified specs and tickets.
+Use the confirmed triage vocabulary in `triage-labels.md`. Apply `ready-for-agent` to fully specified specs and tickets.
 
 When a skill says publish to the issue tracker, create a GitHub issue. When a skill says fetch a ticket, read its body and comments from GitHub. Local notes supplement the tracker rather than replace it.
 

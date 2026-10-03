@@ -12,7 +12,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Start here
 
-This repository contains a Next.js scaffold for a cozy pixel-art habit game. The product is still being built. Before implementation, read `docs/current-status.md` for completed work, verification results, and pending decisions, then `docs/product.md` for the user-authorized V1 scope.
+This repository contains a cozy pixel-art habit game with a playable guest garden. V1 is in progress. Before implementation, read `docs/current-status.md` for completed work, verification results, and pending decisions, then `docs/product.md` for the user-authorized V1 scope.
 
 ## Product priorities
 
@@ -43,6 +43,10 @@ Before implementing growth thresholds or the timezone model, check `docs/current
 ### Issue tracker
 
 Use GitHub Issues in `thawlinnhtet-coding/tiny-habit-garden`. Before creating, reading, updating, or closing tickets, read `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Use the confirmed five-role mapping. Before applying triage labels, read `docs/agents/triage-labels.md`.
 
 ### Domain docs
 

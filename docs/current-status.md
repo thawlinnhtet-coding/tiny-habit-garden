@@ -2,38 +2,47 @@
 
 Updated: 2026-10-03 (Asia/Rangoon).
 
-## Completed
+## Approved workflow
 
-- Created `D:\tiny-habit-garden`.
-- Scaffolded Next.js App Router, TypeScript, Tailwind CSS, and ESLint.
-- Initialized shadcn/ui and its button component.
-- Installed Supabase client/SSR packages, Motion, Lucide, Vitest, and Playwright.
-- Created 35 original transparent pixel-art PNGs, including five growth stages for oak, sunflower, mushroom, cactus, and wildflower, plus scenery and watering assets.
-- Added the sprite-generation source and a contact sheet.
-- Initialized Git; scaffold baseline commit: `939a5d1`.
-- The user supplied `thawlinnhtet-coding/tiny-habit-garden` as the remote and issue tracker. It was empty when inspected.
-- Added durable product and workflow context in `AGENTS.md`. Preserved the generated Next.js instructions and existing `CLAUDE.md` import.
+The user approved the four vertical tickets, default triage labels, and public garden-operation/browser test seam with “go ahead.” The final review baseline is `939a5d1`, explicitly confirmed by the user. Agent context lives in `AGENTS.md`; `CLAUDE.md` imports it.
 
-## Verification so far
+GitHub is the authoritative issue tracker:
 
-- Scaffold TypeScript check passed before this documentation update.
-- Broad and source-targeted ESLint runs stalled without output and were interrupted. Lint is unverified.
-- No app behavior tests or browser flows have been implemented or run.
-- Dependency installation reported development-tool advisories. Assess the actual dependency paths before any forced upgrade or downgrade.
+- #1: V1 specification (parent; keep open).
+- #2: Plant your first habit.
+- #3: Water a habit and grow its plant; blocked by #2.
+- #4: Keep a private garden with Supabase; blocked by #3.
+- #5: Verify the cozy V1 experience; blocked by #4.
 
-## Remaining product work
+All five labels and native ticket dependencies were created. Ticket #2 is assigned to the owner. `docs/tracker.json` records canonical URLs and GitHub database IDs.
 
-The application pages still contain starter content. Habit CRUD, daily check-ins, streaks, growth logic, animated garden UI, Supabase authentication, database schema and policies, and end-to-end verification are not implemented yet.
+## Implemented first slice
 
-No Supabase project credentials or connected Supabase tool were supplied. Implement the integration and migration, then document the configuration needed for live verification. Keep credentials out of Git.
+- Next.js App Router with landing, My Garden, Today, and create/edit habit routes.
+- Original transparent pixel sprites for five plant types and garden scenery, plus a reproducible generation script.
+- Crisp rendering, local pixel typography with its license, ambient plant/cloud/butterfly animation, and reduced-motion CSS.
+- Persistent guest garden with public create/read/edit/remove operations and validated names/plant types.
+- Pixel garden scene with clickable plants, habit details, edit links, and confirmed removal.
+- Responsive layouts and shadcn dialog/form controls.
 
-## Pending workflow review
+## Verified first slice
 
-The user has approved the product requirements, project directory, GitHub repository, and `AGENTS.md` context location. The earlier setup/ticket/test review has not received an explicit answer.
+- Three public-operation tests pass.
+- Desktop and mobile browser CRUD/persistence/removal flows pass in isolated test contexts.
+- Browser inspection checked the rendered scene, details, editing, persistence, and cancellation of removal.
+- Type checking, source lint, and production build pass.
+- Two-axis code review is the next check before closing #2.
 
-- Default triage labels are proposed: needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix. Their GitHub creation is pending.
-- Proposed vertical tickets: (1) Plant your first habit; (2) Water a habit and grow its plant, blocked by 1; (3) Keep a private garden with Supabase, blocked by 2; (4) Verify the cozy V1 experience, blocked by 3. Publishing awaits the to-tickets review.
-- Proposed test boundary: public garden operations (create/edit/delete/read/complete) and user-visible browser flows. Confirm before writing TDD tests.
-- Proposed implementation choices: growth at 0/1/3/7/14 lifetime completions, an account IANA timezone, and an explicitly labeled local guest preview. These choices are not user-specified requirements.
+## Remaining
 
-The setup review is also available in the originating chat's outputs. This document records its relevant decisions so future sessions can resume from the repository.
+Daily completion, streak/growth logic, watering/transformation animations, Supabase Auth/database integration, and final V1 verification are the next slices. Growth thresholds are 0/1/3/7/14 lifetime completions; guest previews stay separate from private gardens.
+
+No Supabase project credentials or connected Supabase tool were supplied. Implement the integration and migration with placeholder configuration, then record which live-service checks require a configured project. Keep credentials out of Git.
+
+## Environment notes
+
+The local development preview runs at `http://127.0.0.1:3000`. Bundled Node 24 is available; the system Node version is 22.12.0. Use a supported Node runtime for developer tooling.
+
+GitHub CLI API requests to the region's DNS address timed out; the connected GitHub app returned 403 for issue writes. Publication succeeded using existing CLI authentication with a verified alternate GitHub API route and normal hostname/certificate verification. The temporary helper is outside the repository and holds tokens only in memory. Git pushes work normally.
+
+Dependency installation reported development-tool advisories. Assess the actual dependency paths before a forced upgrade/downgrade. Runtime security and live Supabase checks remain part of final verification.

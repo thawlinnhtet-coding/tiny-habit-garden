@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tiny Habit Garden
 
-## Getting Started
+A cozy pixel-art habit garden. Complete small real-life habits to grow plants; lifetime growth remains when a streak resets.
 
-First, run the development server:
+## Development
 
-```bash
+Use Node 24 LTS, then run:
+
+```sh
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000/garden. The guest garden stores its habits in the current browser. This is an actively developed V1; read [current status](docs/current-status.md) for implemented and remaining features.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Checks
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```sh
+npm run typecheck
+npm run lint
+npm test
+npm run test:e2e
+npm run build
+```
 
-## Learn More
+Playwright tests use isolated browser contexts with disposable data. Install test browsers with `npx playwright install chromium` if needed.
 
-To learn more about Next.js, take a look at the following resources:
+## Project context
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Agent instructions](AGENTS.md)
+- [Product requirements](docs/product.md)
+- [V1 spec](docs/v1-spec.md)
+- [Current progress](docs/current-status.md)
+- [GitHub Issues](https://github.com/thawlinnhtet-coding/tiny-habit-garden/issues)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Assets
 
-## Deploy on Vercel
+Original 48×48 transparent sprites are in `public/sprites/`. Regenerate them with Python and Pillow:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```sh
+python scripts/generate_sprites.py public/sprites
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[Pixelify Sans](https://github.com/google/fonts/tree/main/ofl/pixelifysans) is bundled locally under its SIL Open Font License; see `public/fonts/OFL.txt`. Other pixel art in this repository is original to Tiny Habit Garden.

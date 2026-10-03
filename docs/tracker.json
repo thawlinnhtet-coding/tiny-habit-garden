@@ -1,0 +1,34 @@
+{
+  "spec": {
+    "number": 1,
+    "id": 5686290194,
+    "html_url": "https://github.com/thawlinnhtet-coding/tiny-habit-garden/issues/1",
+    "title": "Tiny Habit Garden V1 specification"
+  },
+  "tickets": [
+    {
+      "number": 2,
+      "id": 5686290295,
+      "html_url": "https://github.com/thawlinnhtet-coding/tiny-habit-garden/issues/2",
+      "title": "Plant your first habit"
+    },
+    {
+      "number": 3,
+      "id": 5686290406,
+      "html_url": "https://github.com/thawlinnhtet-coding/tiny-habit-garden/issues/3",
+      "title": "Water a habit and grow its plant"
+    },
+    {
+      "number": 4,
+      "id": 5686290762,
+      "html_url": "https://github.com/thawlinnhtet-coding/tiny-habit-garden/issues/4",
+      "title": "Keep a private garden with Supabase"
+    },
+    {
+      "number": 5,
+      "id": 5686291031,
+      "html_url": "https://github.com/thawlinnhtet-coding/tiny-habit-garden/issues/5",
+      "title": "Verify the cozy V1 experience"
+    }
+  ]
+}
