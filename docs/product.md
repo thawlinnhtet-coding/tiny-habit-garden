@@ -93,7 +93,7 @@ AI, chat, social systems, friends, leaderboards, shops, coins, administration da
 
 ## Requested additions — 2026-10-04
 
-The user requested Google and GitHub OAuth sign-in, automatic day/night garden lighting based on device time, manual mode switching, smooth transitions, and animated night scenery. See [social sign-in and lighting requirements](social-auth-and-lighting.md) and [provider setup](social-auth-setup.md). These extend the original V1 scope without changing the habit, streak, or growth rules.
+The active addition is automatic day/night garden lighting based on device time, manual mode switching, smooth transitions, and animated night scenery. See [lighting requirements](social-auth-and-lighting.md). The user subsequently requested removal of Google and GitHub sign-in; authentication now uses email and password only. See [email-only authentication requirements](email-auth-only.md). Habit, streak, and growth rules remain unchanged.
 
 ## Repository and workflow
 
