@@ -10,7 +10,7 @@ GitHub remains the authoritative tracker. Parent specification #1 stays open. Ti
 
 ## Current authentication
 
-The user requested removal of Google/GitHub sign-in on 2026-10-04. Both account pages now offer email/password authentication only. The social handler, authentication-settings fetch, OAuth callback route, provider artwork, divider, styles, and social-specific errors are removed. Email confirmation, inline validation, cookie sessions, sign-out, private gardens, and day/night lighting remain. See [requirements](email-auth-only.md). Hosted provider settings and existing users are not modified. The public browser regression failed with two provider buttons before removal, then passed. Production build/typechecking, lint, formatting, 19 library tests, and all 26 remaining desktop/Pixel 7 browser checks pass. Desktop/mobile email-only screenshots were inspected. Final review and publication of this removal are pending; real email authentication remains subject to the previously observed Supabase connection failures.
+The user requested removal of Google/GitHub sign-in on 2026-10-04. Both account pages now offer email/password authentication only. The social handler, authentication-settings fetch, OAuth callback route, provider artwork, divider, styles, and social-specific errors are removed. Email confirmation, inline validation, cookie sessions, sign-out, private gardens, and day/night lighting remain. See [requirements](email-auth-only.md). Hosted provider settings and existing users are not modified. The public browser regression failed with two provider buttons before removal, then passed. Production build/typechecking, lint, formatting, 19 library tests, and all 26 remaining desktop/Pixel 7 browser checks pass. Desktop/mobile email-only screenshots were inspected. The final two-axis review at `b35aec7` against the agreed baseline found zero remaining Standards and zero Spec findings; see [review](reviews/email-auth-only.md). Publication uses the connected GitHub main branch. Issue #6 now tracks the retained lighting feature and superseding email-only requirement; real email authentication remains subject to the previously observed Supabase connection failures.
 
 ## Historical social sign-in connection diagnosis
 
@@ -70,7 +70,7 @@ The first production build passed. Anonymous HTTP checks returned 200 for home, 
 
 The final deployment slice at `8169969` passed both review axes against the agreed baseline, reusing the completed application review: zero Standards breaches, zero actionable smells, and zero Spec findings. Deployment notes pass Prettier and the diff has no whitespace errors.
 
-The social-auth/lighting production release at `25939c1` is READY on Vercel and includes feature commit `9e82b73`. Live checks verified Day/Night switching, saved Night after reload, returning to Auto, both provider buttons on `/login`, and HTTP 200 for moon, star, and firefly sprites. Real provider consent and hosted sessions remain pending configuration; issue #6 stays open for that human setup.
+The social-auth/lighting production release at `25939c1` is READY on Vercel and includes feature commit `9e82b73`. Live checks verified Day/Night switching, saved Night after reload, returning to Auto, both provider buttons on `/login`, and HTTP 200 for moon, star, and firefly sprites. At that release, real provider consent and hosted sessions remained pending configuration. The later email-only requirement removes the provider-consent step from issue #6; hosted email sessions remain unverified.
 
 ## Supabase setup
 
