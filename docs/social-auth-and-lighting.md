@@ -25,3 +25,7 @@ Use the previously agreed public browser-flow seam for provider redirects, callb
 ## Visual refinement — 2026-10-04
 
 The user requested actual Google/GitHub icons and a more attractive lighting toggle after reviewing the three-text-button control. Use self-hosted official provider artwork with recorded source attribution. Replace the three-option text strip with a sun/moon landscape switch and a separate visible Auto control. The switch selects the opposite effective lighting and leaves Auto; Auto restores device time. Preserve accessible switch state, keyboard operation, remembered choices, smooth transitions, reduced motion, and responsive layout. Authentication and habit behavior remain unchanged.
+
+## Landing preview refinement — 2026-10-04
+
+The user found the landing garden crowded, with eight large soil tiles and overlapping trees. Give the compact landing preview more breathing room: one inviting empty plot for a new garden, up to three actual plants for an existing garden, smaller scenery, and one short caption. Clearly label a partial preview when the garden contains more than three plants. Remove the redundant message below the frame. Preserve pixel rendering, day/night motion, accessible plot actions, and the complete My Garden scene. Verify desktop and narrow mobile layouts.

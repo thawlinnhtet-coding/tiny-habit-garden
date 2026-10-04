@@ -43,7 +43,9 @@ export function GardenScene({
 }) {
   const { lighting } = useLighting();
   const night = lighting === "night";
-  const slots = Math.max(8, Math.ceil((habits.length + 1) / 4) * 4);
+  const slots = compact
+    ? Math.min(3, habits.length + 1)
+    : Math.max(8, Math.ceil((habits.length + 1) / 4) * 4);
   return (
     <section
       className={`garden-scene ${compact ? "compact-scene" : ""}`}
@@ -81,7 +83,11 @@ export function GardenScene({
               <PixelSprite name="star" size={48} />
             </span>
           ))}
-          <PixelSprite name="moon" size={96} className="pixel-moon" />
+          <PixelSprite
+            name="moon"
+            size={compact ? 48 : 96}
+            className="pixel-moon"
+          />
           <span className="shooting-star">
             <PixelSprite name="star" size={48} />
           </span>
@@ -159,13 +165,20 @@ export function GardenScene({
       </div>
       <div className="scene-caption">
         <span>
-          {habits.length
-            ? "Every plant has a little story. Tap one to see yours."
-            : "An empty patch. A fresh beginning. Your first seed belongs here."}
+          {compact
+            ? habits.length
+              ? "A little peek at your garden."
+              : "Your first little seed belongs here."
+            : habits.length
+              ? "Every plant has a little story. Tap one to see yours."
+              : "An empty patch. A fresh beginning. Your first seed belongs here."}
         </span>
-        <span>
-          {habits.length} {habits.length === 1 ? "plant" : "plants"}
-        </span>
+        {(!compact || habits.length > 0) && (
+          <span>
+            {compact && habits.length > 3 ? "3 of " : ""}
+            {habits.length} {habits.length === 1 ? "plant" : "plants"}
+          </span>
+        )}
       </div>
     </section>
   );

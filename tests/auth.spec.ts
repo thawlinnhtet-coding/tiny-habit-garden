@@ -192,6 +192,14 @@ test("landing page links to dedicated account pages and guest garden", async ({
 }) => {
   await page.goto("/");
   await expect(page.getByLabel("Email", { exact: true })).toHaveCount(0);
+  await page.locator(".landing-world").scrollIntoViewIfNeeded();
+  await page.screenshot({
+    path: test.info().outputPath("landing-page.png"),
+    fullPage: true,
+  });
+  await page.locator(".landing-world").screenshot({
+    path: test.info().outputPath("landing-preview.png"),
+  });
   await page.getByRole("link", { name: "Grow your garden" }).click();
   await expect(page).toHaveURL(/\/signup$/);
   await expect(

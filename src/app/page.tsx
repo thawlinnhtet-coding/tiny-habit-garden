@@ -63,10 +63,6 @@ export default function Page() {
               onSelect={() => router.push("/garden")}
               onPlant={() => router.push("/habits/new")}
             />
-            <div className="world-note">
-              <span className="world-note-dot" /> YOUR NEXT LITTLE WIN IS
-              WAITING
-            </div>
           </div>
         </section>
 

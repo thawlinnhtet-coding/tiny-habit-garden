@@ -881,7 +881,7 @@ h3 {
 }
 .landing-world {
   position: relative;
-  padding: 14px;
+  padding: 18px;
   background: #f2f0df;
   border: 2px solid #d4d6be;
   box-shadow:
@@ -889,8 +889,7 @@ h3 {
     8px 9px 0 #eae9d9;
   animation: world-arrive 0.85s 0.2s both;
 }
-.world-label,
-.world-note {
+.world-label {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -906,19 +905,6 @@ h3 {
 .world-label svg {
   color: #c5984d;
 }
-.world-note {
-  min-height: 31px;
-  justify-content: center;
-  padding-top: 8px;
-  font-size: 8px;
-  letter-spacing: 1.35px;
-}
-.world-note-dot {
-  width: 6px;
-  height: 6px;
-  background: #9aab68;
-  box-shadow: 0 0 0 3px #9aab6826;
-}
 .compact-scene {
   text-align: left;
   box-shadow: 0 3px 0 #d9ddc7;
@@ -927,22 +913,75 @@ h3 {
   display: none;
 }
 .compact-scene .scene-sky {
-  height: 75px;
+  height: 96px;
 }
 .compact-scene .garden-ground {
-  min-height: 225px;
-  padding: 0 60px 47px;
+  min-height: 228px;
+  padding: 58px 24px 76px;
 }
 .compact-scene .garden-beds {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 13px;
-  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 0 auto;
 }
 .compact-scene .garden-plot {
-  min-height: 76px;
+  flex: 0 0 64px;
+  min-height: 64px;
 }
 .compact-scene .scene-caption {
-  min-height: 39px;
+  min-height: 48px;
+  padding: 14px 18px;
+  gap: 12px;
+}
+.compact-scene .plant-name-tag {
+  display: none;
+}
+.compact-scene .decor-tree {
+  width: 96px !important;
+  height: 96px !important;
+  top: -30px;
+}
+.compact-scene .tree-left {
+  left: 0;
+}
+.compact-scene .tree-right {
+  right: 0;
+}
+.compact-scene .decor-rock {
+  width: 48px !important;
+  height: 48px !important;
+  left: 12px;
+  bottom: 64px;
+}
+.compact-scene .cloud {
+  width: 96px !important;
+  height: 96px !important;
+  top: -5px;
+}
+.compact-scene .cloud-one {
+  left: 6%;
+}
+.compact-scene .cloud-two {
+  display: none;
+}
+.compact-scene .cloud-three {
+  right: 6%;
+}
+.compact-scene .pixel-sun {
+  right: 40%;
+  top: 24px;
+}
+.compact-scene .pixel-moon {
+  right: 40%;
+  top: 12px;
+}
+.compact-scene .night-star:nth-child(2n) {
+  display: none;
+}
+.compact-scene .ambient-butterfly {
+  top: 22px;
+  right: 26px;
 }
 .landing-steps {
   display: flex;
@@ -1502,18 +1541,14 @@ h3 {
     font-size: 8px;
   }
   .compact-scene .scene-sky {
-    height: 59px;
+    height: 84px;
   }
   .compact-scene .garden-ground {
-    min-height: 210px;
-    padding: 0 21px 57px;
+    min-height: 228px;
+    padding: 58px 14px 76px;
   }
   .compact-scene .garden-beds {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 17px 10px;
-  }
-  .compact-scene .garden-plot {
-    min-height: 77px;
+    gap: 16px;
   }
   .landing-steps {
     align-items: flex-start;
