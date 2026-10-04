@@ -52,6 +52,8 @@ The first production build passed. Anonymous HTTP checks returned 200 for home, 
 
 The final deployment slice at `8169969` passed both review axes against the agreed baseline, reusing the completed application review: zero Standards breaches, zero actionable smells, and zero Spec findings. Deployment notes pass Prettier and the diff has no whitespace errors.
 
+The social-auth/lighting production release at `25939c1` is READY on Vercel and includes feature commit `9e82b73`. Live checks verified Day/Night switching, saved Night after reload, returning to Auto, both provider buttons on `/login`, and HTTP 200 for moon, star, and firefly sprites. Real provider consent and hosted sessions remain pending configuration; issue #6 stays open for that human setup.
+
 ## Supabase setup
 
 Public configuration is present in the ignored `.env.local`. No service-role key is required. The user reports Supabase setup is complete. The app works with Supabase's default link template. Supabase's built-in mail provider restricts delivery and customization; see `docs/supabase-setup.md` if the project later configures custom SMTP. Apply `supabase/migrations/202610030001_garden.sql` once to a fresh project.

@@ -31,6 +31,12 @@ The Vercel production build passes. Public page routes and a plant sprite return
 
 Private-account persistence, sign-out, account isolation, and concurrent hosted check-ins remain pending until checked with live accounts. See `current-status.md` for the latest evidence. Browser unit/E2E results that mock Supabase do not establish hosted account behavior.
 
+## Social sign-in and lighting release
+
+The social-auth/lighting production release at `25939c1` is READY on Vercel and includes feature commit `9e82b73`. Live checks verified Day/Night switching, saved Night after reload, returning to Auto, both provider buttons on `/login`, and HTTP 200 for moon, star, and firefly sprites. Real provider consent and hosted sessions remain pending configuration; issue #6 stays open for that human setup.
+
+Add the production `/auth/callback` redirect before using Google or GitHub. Follow [provider setup](social-auth-setup.md); this callback supplements the existing email confirmation URL.
+
 ## Future releases
 
 Commit and push the verified changes to `main`. Check the deployment in Vercel and repeat the live core flow. The linked CLI can also deploy with `npx vercel --prod`; Vercel authentication is stored outside this repository. Never paste auth tokens into issue comments or commit them.
