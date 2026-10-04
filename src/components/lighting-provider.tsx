@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
 import { Clock3, Moon, Sun } from "lucide-react";
 
 import {
@@ -94,46 +93,41 @@ export function useLighting() {
 }
 
 export function LightingControl() {
-  const { preference, ready, choose } = useLighting();
-  const reducedMotion = useReducedMotion();
+  const { lighting, preference, ready, choose } = useLighting();
+  const night = lighting === "night";
   return (
     <div className="lighting-control" role="group" aria-label="Garden lighting">
-      {(
-        [
-          { value: "auto", label: "Auto", icon: Clock3 },
-          { value: "day", label: "Day", icon: Sun },
-          { value: "night", label: "Night", icon: Moon },
-        ] as const
-      ).map(({ value, label, icon: Icon }) => (
-        <button
-          key={value}
-          type="button"
-          aria-pressed={preference === value}
-          disabled={!ready}
-          onClick={() => choose(value)}
-          title={
-            value === "auto"
-              ? "Follow device time: day 6am–6pm"
-              : `Keep the garden in ${value} mode`
-          }
-        >
-          {preference === value && (
-            <motion.span
-              className="lighting-selection"
-              layoutId="lighting-selection"
-              transition={
-                reducedMotion
-                  ? { duration: 0 }
-                  : { type: "spring", stiffness: 360, damping: 32 }
-              }
-            />
-          )}
-          <span className="lighting-label">
-            <Icon size={15} aria-hidden="true" />
-            <span>{label}</span>
+      <button
+        className="lighting-switch"
+        type="button"
+        role="switch"
+        aria-label="Night mode"
+        aria-checked={night}
+        disabled={!ready}
+        onClick={() => choose(night ? "day" : "night")}
+        title={night ? "Switch to day" : "Switch to night"}
+      >
+        <span className="switch-landscape" aria-hidden="true">
+          <span className="switch-cloud" />
+          <span className="switch-stars" />
+          <span className="switch-hills" />
+          <span className="switch-thumb">
+            <Sun className="switch-sun" size={21} />
+            <Moon className="switch-moon" size={20} />
           </span>
-        </button>
-      ))}
+        </span>
+      </button>
+      <button
+        className="lighting-auto"
+        type="button"
+        aria-pressed={preference === "auto"}
+        disabled={!ready}
+        onClick={() => choose("auto")}
+        title="Follow device time: day 6am–6pm"
+      >
+        <Clock3 size={14} aria-hidden="true" />
+        Auto
+      </button>
     </div>
   );
 }

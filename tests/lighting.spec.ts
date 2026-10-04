@@ -12,23 +12,24 @@ test("manual lighting survives navigation and reload without changing habits", a
   await page.getByRole("button", { name: "Plant my habit" }).click();
   await page.waitForURL("**/garden");
   const lighting = page.getByRole("group", { name: "Garden lighting" });
-  await lighting.getByRole("button", { name: "Night", exact: true }).click();
+  const nightSwitch = lighting.getByRole("switch", { name: "Night mode" });
+  await nightSwitch.click();
+  await expect(nightSwitch).toBeChecked();
   await expect(
-    lighting.getByRole("button", { name: "Night", exact: true }),
-  ).toHaveAttribute("aria-pressed", "true");
+    lighting.getByRole("button", { name: "Auto", exact: true }),
+  ).toHaveAttribute("aria-pressed", "false");
   await expect(page.getByText("A peaceful night to grow")).toBeAttached();
   await page.getByRole("link", { name: /Today/ }).click();
   await page.waitForURL("**/today");
   await page.reload();
-  await expect(
-    lighting.getByRole("button", { name: "Night", exact: true }),
-  ).toHaveAttribute("aria-pressed", "true");
+  await expect(nightSwitch).toBeChecked();
   await expect(
     page.getByRole("button", { name: "Complete Enjoy a quiet moment" }),
   ).toBeEnabled();
   await page.getByRole("link", { name: "My Garden", exact: true }).click();
   await page.waitForURL("**/garden");
-  await lighting.getByRole("button", { name: "Day", exact: true }).click();
+  await nightSwitch.press("Space");
+  await expect(nightSwitch).not.toBeChecked();
   await expect(page.getByText("A lovely day to grow")).toBeAttached();
   await expect(
     page.getByRole("button", { name: "Enjoy a quiet moment, Oak tree, Seed" }),
@@ -47,7 +48,13 @@ test("Auto follows the device clock at dawn and dusk and resumes after an overri
   await expect(page.getByText("A peaceful night to grow")).toBeAttached();
   await page.clock.fastForward(60000);
   await expect(page.getByText("A lovely day to grow")).toBeAttached();
-  await lighting.getByRole("button", { name: "Day", exact: true }).click();
+  const nightSwitch = lighting.getByRole("switch", { name: "Night mode" });
+  await expect(nightSwitch).not.toBeChecked();
+  await nightSwitch.click();
+  await nightSwitch.click();
+  await expect(
+    lighting.getByRole("button", { name: "Auto", exact: true }),
+  ).toHaveAttribute("aria-pressed", "false");
   await page.clock.setSystemTime(new Date("2026-10-05T11:29:30Z"));
   await page.clock.fastForward(60000);
   await expect(page.getByText("A lovely day to grow")).toBeAttached();
@@ -59,17 +66,14 @@ test("night decoration respects reduced motion and stays within the viewport", a
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.clock.setFixedTime(new Date("2026-10-04T03:30:00Z"));
   await page.goto("/garden");
   const nightButton = page
     .getByRole("group", { name: "Garden lighting" })
-    .getByRole("button", { name: "Night", exact: true });
+    .getByRole("switch", { name: "Night mode" });
   await expect(nightButton).toBeEnabled();
   await nightButton.press("Enter");
-  await expect(
-    page
-      .getByRole("group", { name: "Garden lighting" })
-      .getByRole("button", { name: "Night", exact: true }),
-  ).toHaveAttribute("aria-pressed", "true");
+  await expect(nightButton).toBeChecked();
   await expect(page.locator(".night-sky")).toHaveCSS("opacity", "1");
   await expect(page.locator(".night-star").first()).toHaveCSS(
     "animation-name",

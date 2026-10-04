@@ -72,6 +72,10 @@ test("a disabled provider stays on the account page with a useful retry option",
     }),
   );
   await page.goto("/login");
+  await page.screenshot({
+    path: test.info().outputPath("provider-sign-in.png"),
+    fullPage: true,
+  });
   await page.getByRole("button", { name: "Continue with Google" }).click();
   await expect(
     page

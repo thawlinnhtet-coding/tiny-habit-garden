@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { GitFork } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -183,9 +183,13 @@ export function AuthPanel({ intent }: { intent: AuthIntent }) {
           disabled={pending}
           onClick={() => startSocial("google")}
         >
-          <span className="google-mark" aria-hidden="true">
-            G
-          </span>
+          <Image
+            src="/brands/google.png"
+            alt=""
+            width={20}
+            height={20}
+            unoptimized
+          />
           {socialProvider === "google"
             ? "Connecting to Google…"
             : "Continue with Google"}
@@ -196,7 +200,13 @@ export function AuthPanel({ intent }: { intent: AuthIntent }) {
           disabled={pending}
           onClick={() => startSocial("github")}
         >
-          <GitFork size={18} aria-hidden="true" />
+          <Image
+            src="/brands/github.svg"
+            alt=""
+            width={20}
+            height={20}
+            unoptimized
+          />
           {socialProvider === "github"
             ? "Connecting to GitHub…"
             : "Continue with GitHub"}

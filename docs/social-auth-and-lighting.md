@@ -21,3 +21,7 @@ Growth, daily completion, streaks, and guest/private data remain unchanged.
 ## Verification
 
 Use the previously agreed public browser-flow seam for provider redirects, callback errors, device-time lighting, remembered manual choices, returning to Auto, responsive layout, and reduced motion. Re-run existing habit and auth checks before handoff. Record live provider setup limits in `current-status.md`.
+
+## Visual refinement — 2026-10-04
+
+The user requested actual Google/GitHub icons and a more attractive lighting toggle after reviewing the three-text-button control. Use self-hosted official provider artwork with recorded source attribution. Replace the three-option text strip with a sun/moon landscape switch and a separate visible Auto control. The switch selects the opposite effective lighting and leaves Auto; Auto restores device time. Preserve accessible switch state, keyboard operation, remembered choices, smooth transitions, reduced motion, and responsive layout. Authentication and habit behavior remain unchanged.
