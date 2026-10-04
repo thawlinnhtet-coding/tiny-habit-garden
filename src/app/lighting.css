@@ -1,40 +1,4 @@
 /* Lighting changes colors, never the garden's data or pixel geometry. */
-.social-sign-in {
-  display: grid;
-  gap: 10px;
-  margin: 22px 0 16px;
-}
-.social-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-height: 48px;
-  width: 100%;
-  border: 1px solid #747775;
-  border-radius: 8px;
-  color: #1f1f1f;
-  background: #fff;
-  font-size: var(--type-small);
-}
-.social-button:hover:not(:disabled) {
-  background: #f2f2f2;
-}
-.auth-divider {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin: 18px 0;
-  color: var(--muted-foreground);
-  font-size: var(--type-caption);
-}
-.auth-divider::before,
-.auth-divider::after {
-  content: "";
-  height: 1px;
-  background: var(--border);
-  flex: 1;
-}
 :root[data-garden-theme="day"] {
   color-scheme: light;
 }

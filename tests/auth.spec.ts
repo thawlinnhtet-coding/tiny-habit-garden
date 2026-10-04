@@ -5,6 +5,14 @@ test("auth fields show inline validation and clear as corrected", async ({
 }) => {
   await page.goto("/signup");
 
+  await expect(
+    page.getByRole("button", { name: /Continue with (Google|GitHub)/ }),
+  ).toHaveCount(0);
+  await page.screenshot({
+    path: test.info().outputPath("email-only-signup.png"),
+    fullPage: true,
+  });
+
   await page.getByRole("button", { name: "Create account" }).click();
   await expect(page.locator("#auth-email-error")).toHaveText(
     "Enter your email address.",
@@ -56,6 +64,13 @@ test("account errors are visible and signup sends the confirmation link home", a
     }),
   );
   await page.goto("/login");
+  await expect(
+    page.getByRole("button", { name: /Continue with (Google|GitHub)/ }),
+  ).toHaveCount(0);
+  await page.screenshot({
+    path: test.info().outputPath("email-only-login.png"),
+    fullPage: true,
+  });
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Welcome back, gardener.",
   );

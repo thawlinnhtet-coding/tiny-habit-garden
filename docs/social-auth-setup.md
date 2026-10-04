@@ -1,5 +1,7 @@
 # Enable Google and GitHub sign-in
 
+Superseded on 2026-10-04: the user requested removal of social sign-in. The application now offers email/password authentication only. The instructions below are historical reference, not current setup requirements.
+
 The application handles sign-in through Supabase. Provider credentials belong in the Supabase dashboard; the application's public environment variables stay the same. The existing Vercel address can host the app; this flow does not require purchasing a domain.
 
 ## 1. Supabase redirects

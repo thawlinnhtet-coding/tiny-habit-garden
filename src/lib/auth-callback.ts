@@ -1,10 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-export async function finishAuthCallback(
-  request: NextRequest,
-  flow: "confirmation" | "oauth",
-) {
+export async function finishEmailConfirmation(request: NextRequest) {
   const code = request.nextUrl.searchParams.get("code");
   const tokenHash = request.nextUrl.searchParams.get("token_hash");
   const type = request.nextUrl.searchParams.get("type");
@@ -12,7 +9,7 @@ export async function finishAuthCallback(
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   const response = NextResponse.redirect(new URL("/garden", request.url));
   response.headers.set("Cache-Control", "private, no-store");
-  const emailToken = flow === "confirmation" && tokenHash && type === "email";
+  const emailToken = tokenHash && type === "email";
   if (
     !request.nextUrl.searchParams.has("error") &&
     url &&
@@ -46,7 +43,7 @@ export async function finishAuthCallback(
   }
   response.headers.set(
     "Location",
-    new URL(`/login?auth_error=${flow}`, request.url).toString(),
+    new URL("/login?auth_error=confirmation", request.url).toString(),
   );
   return response;
 }

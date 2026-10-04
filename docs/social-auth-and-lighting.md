@@ -1,5 +1,7 @@
 # Social sign-in and garden lighting
 
+Current scope: Google/GitHub sign-in was removed at the user's request on 2026-10-04; see [email-only requirements](email-auth-only.md). The social sections below record the earlier request. Day/night lighting and the visual refinements remain active.
+
 Requested by the user on 2026-10-04, extending the original V1 scope.
 
 ## Social sign-in

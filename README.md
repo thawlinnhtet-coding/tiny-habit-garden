@@ -13,7 +13,6 @@ Turn small real-life habits into a cozy pixel garden. Each habit starts as a see
 - **Your habits:** create, rename, remove, and choose between oak, sunflower, mushroom, cactus, and wildflower plants.
 - **Cozy animation:** a watering can, droplets, plant bounces, pixel particles, and transformations when a plant reaches its next stage.
 - **Guest or account:** explore a garden in your browser, or sign up and sign in for a private Supabase garden.
-- **Social sign-in:** continue with Google or GitHub once the providers are configured in Supabase, alongside email sign-in.
 - **Day and night:** Auto follows device time (Day 6 a.m.–6 p.m.); choose Day or Night yourself and the browser remembers your preference. Night adds a pixel moon, stars, shooting stars, and fireflies with smooth lighting transitions.
 - **Accessible controls:** responsive layouts, keyboard access, inline form validation, and reduced-motion support.
 
@@ -83,7 +82,7 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_YOUR_KEY
 
 Follow the [Supabase setup guide](docs/supabase-setup.md) to apply `supabase/migrations/202610030001_garden.sql` and configure authentication URLs. Email confirmation depends on your Supabase settings; the current deployment uses immediate signup with confirmation disabled. Keep credentials out of Git. This app does not require a service-role key.
 
-For social sign-in, follow [Google and GitHub setup](docs/social-auth-setup.md). Provider client IDs and secrets are entered in Supabase. Add `/auth/callback` to the Supabase redirect allowlist; no extra public application key is needed. Device-time lighting does not affect habit dates or streaks.
+Authentication uses email and password. Google/GitHub sign-in was removed at the user's request. Device-time lighting does not affect habit dates or streaks.
 
 ```sh
 npm run dev -- --hostname 127.0.0.1
