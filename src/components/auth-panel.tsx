@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { GitFork } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -25,6 +26,9 @@ export function AuthPanel({ intent }: { intent: AuthIntent }) {
   const [fieldErrors, setFieldErrors] = useState<AuthInputErrors>({});
   const [touched, setTouched] = useState({ email: false, password: false });
   const [pending, setPending] = useState(false);
+  const [socialProvider, setSocialProvider] = useState<
+    "google" | "github" | null
+  >(null);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   function readFieldErrors(
@@ -47,13 +51,64 @@ export function AuthPanel({ intent }: { intent: AuthIntent }) {
     }));
   }
   useEffect(() => {
-    if (new URLSearchParams(window.location.search).get("auth_error"))
+    const authError = new URLSearchParams(window.location.search).get(
+      "auth_error",
+    );
+    if (authError)
       queueMicrotask(() =>
         setError(
-          "That link expired. Sign up again to request a fresh confirmation email, or sign in if your email is already confirmed.",
+          authError === "oauth"
+            ? "Social sign-in wasn't completed. Please try again, choose another provider, or sign in with email."
+            : "That link expired. Sign up again to request a fresh confirmation email, or sign in if your email is already confirmed.",
         ),
       );
   }, []);
+  async function startSocial(provider: "google" | "github") {
+    if (pending) return;
+    setError("");
+    setMessage("");
+    setFieldErrors({});
+    setTouched({ email: false, password: false });
+    setPending(true);
+    setSocialProvider(provider);
+    try {
+      const settingsResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/settings`,
+        {
+          headers: {
+            apikey: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+          },
+          cache: "no-store",
+          signal: AbortSignal.timeout(10000),
+        },
+      );
+      if (!settingsResponse.ok)
+        throw new Error(
+          "We couldn't start social sign-in. Please try again or use email.",
+        );
+      const settings = await settingsResponse.json();
+      if (settings?.external?.[provider] !== true)
+        throw new Error(
+          `${provider === "google" ? "Google" : "GitHub"} sign-in isn't available right now. Please use email or try another option.`,
+        );
+      const { error } = await browserSupabase().auth.signInWithOAuth({
+        provider,
+        options: { redirectTo: `${window.location.origin}/auth/callback` },
+      });
+      if (error) throw error;
+    } catch (cause) {
+      setError(
+        cause instanceof Error &&
+          !(cause instanceof TypeError) &&
+          !(cause instanceof DOMException)
+          ? cause.message
+          : "We couldn't connect to social sign-in. Please try again or use email.",
+      );
+    } finally {
+      setPending(false);
+      setSocialProvider(null);
+    }
+  }
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
@@ -116,6 +171,40 @@ export function AuthPanel({ intent }: { intent: AuthIntent }) {
       <span className="eyebrow">YOUR OWN LITTLE WORLD</span>
       <h2>{signUp ? "Create your account" : "Sign in to your garden"}</h2>
       <p>Your private garden follows you across visits.</p>
+      {error && (
+        <p role="alert" className="form-error">
+          {error}
+        </p>
+      )}
+      <div className="social-sign-in">
+        <Button
+          className="social-button"
+          type="button"
+          disabled={pending}
+          onClick={() => startSocial("google")}
+        >
+          <span className="google-mark" aria-hidden="true">
+            G
+          </span>
+          {socialProvider === "google"
+            ? "Connecting to Google…"
+            : "Continue with Google"}
+        </Button>
+        <Button
+          className="social-button"
+          type="button"
+          disabled={pending}
+          onClick={() => startSocial("github")}
+        >
+          <GitFork size={18} aria-hidden="true" />
+          {socialProvider === "github"
+            ? "Connecting to GitHub…"
+            : "Continue with GitHub"}
+        </Button>
+      </div>
+      <div className="auth-divider">
+        <span>or use your email</span>
+      </div>
       <div className="auth-fields">
         <div className="form-field">
           <Label htmlFor="auth-email">Email</Label>
@@ -188,11 +277,6 @@ export function AuthPanel({ intent }: { intent: AuthIntent }) {
           )}
         </div>
       </div>
-      {error && (
-        <p role="alert" className="form-error">
-          {error}
-        </p>
-      )}
       {message && (
         <p role="status" className="auth-message">
           {message}
@@ -204,7 +288,7 @@ export function AuthPanel({ intent }: { intent: AuthIntent }) {
           type="submit"
           disabled={pending}
         >
-          {pending
+          {pending && !socialProvider
             ? "Opening the gate…"
             : signUp
               ? "Create account"

@@ -1,6 +1,6 @@
 # Current status
 
-Updated: 2026-10-03 (Asia/Rangoon).
+Updated: 2026-10-04 (Asia/Rangoon).
 
 ## Approved workflow
 
@@ -9,6 +9,8 @@ The user approved the four vertical tickets, default triage labels, and public g
 GitHub remains the authoritative tracker. Parent specification #1 stays open. Tickets #2 (first habit) and #3 (watering/growth) are complete. Tickets #4 (private Supabase garden) and #5 (final verification and handoff) are implemented, reviewed, and complete. Their hosted-service validation limits remain explicitly recorded. See `docs/tracker.json` for canonical URLs.
 
 ## Implemented
+
+The latest requested addition is [GitHub issue #6](https://github.com/thawlinnhtet-coding/tiny-habit-garden/issues/6): Google/GitHub OAuth with PKCE, shared cookie callbacks and retryable errors, plus device-time Auto/Day/Night lighting with remembered overrides, smooth palette/celestial transitions, and original moon/star/firefly sprites. It is independent of the fixed habit timezone and preserves garden data. See [requirements](social-auth-and-lighting.md) and [provider setup](social-auth-setup.md). The user reports providers are not enabled yet and is following the setup guide. The production build, typechecking, lint, 19 library tests, and all 34 desktop/Pixel 7 browser checks pass. Two keyboard checks passed on targeted rerun after the test waited for hydration before pressing the mode button. Checks cover 6am/6pm device-clock boundaries, manual overrides, persistence, reduced motion, unchanged habit data, Google/GitHub PKCE redirects, disabled providers, and cancelled consent. Desktop/mobile night garden and sign-in layouts were visually inspected. Final review is in progress; real provider consent/session checks remain pending.
 
 The README now introduces the project, live app, features, stack, local setup, deployment, and assets. It explains daily availability, consecutive-day streaks, permanent lifetime growth, missed-day examples, and all five growth milestones. This documents existing behavior; no growth or streak rules changed. All eight existing guest-garden tests passed, including next-day availability, missed-day streak reset with retained growth, and growth milestones. Documentation formatting and whitespace checks passed. The two-axis documentation review found zero Standards and zero Spec findings; a review note clarified that the full browser suite requires public Supabase configuration to enable account forms.
 

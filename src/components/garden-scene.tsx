@@ -1,12 +1,34 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Plus, Sun } from "lucide-react";
+import { Moon, Plus, Sun } from "lucide-react";
 import type { GardenHabit } from "@/lib/garden";
 import { plants, stageNames } from "@/lib/plants";
 import { PixelSprite } from "./pixel-sprite";
 
 import { AnimatedPlant } from "./watering";
+import { useLighting } from "./lighting-provider";
+
+const stars = [
+  [8, 22],
+  [18, 58],
+  [29, 12],
+  [39, 40],
+  [48, 13],
+  [56, 65],
+  [65, 30],
+  [80, 60],
+  [89, 20],
+  [95, 64],
+];
+const fireflies = [
+  [8, 25],
+  [20, 58],
+  [37, 15],
+  [55, 68],
+  [74, 28],
+  [90, 54],
+];
 
 export function GardenScene({
   habits,
@@ -19,6 +41,8 @@ export function GardenScene({
   onPlant?: () => void;
   compact?: boolean;
 }) {
+  const { lighting } = useLighting();
+  const night = lighting === "night";
   const slots = Math.max(8, Math.ceil((habits.length + 1) / 4) * 4);
   return (
     <section
@@ -30,7 +54,12 @@ export function GardenScene({
           <span className="status-dot" /> YOUR LITTLE PATCH
         </span>
         <span>
-          <Sun size={14} /> A lovely day to grow
+          {night ? (
+            <Moon size={14} aria-hidden="true" />
+          ) : (
+            <Sun size={14} aria-hidden="true" />
+          )}{" "}
+          {night ? "A peaceful night to grow" : "A lovely day to grow"}
         </span>
       </div>
       <div className="scene-sky" aria-hidden="true">
@@ -38,6 +67,25 @@ export function GardenScene({
         <PixelSprite name="cloud" size={96} className="cloud cloud-two" />
         <PixelSprite name="cloud" size={144} className="cloud cloud-three" />
         <span className="pixel-sun" />
+        <div className="night-sky">
+          {stars.map(([left, top], index) => (
+            <span
+              key={index}
+              className="night-star"
+              style={{
+                left: `${left}%`,
+                top: `${top}%`,
+                animationDelay: `${index * -0.7}s`,
+              }}
+            >
+              <PixelSprite name="star" size={48} />
+            </span>
+          ))}
+          <PixelSprite name="moon" size={96} className="pixel-moon" />
+          <span className="shooting-star">
+            <PixelSprite name="star" size={48} />
+          </span>
+        </div>
       </div>
       <div className="garden-ground">
         <div className="background-grass" aria-hidden="true" />
@@ -59,6 +107,21 @@ export function GardenScene({
         />
         <PixelSprite name="rock" size={96} className="decor-rock" />
         <PixelSprite name="butterfly" size={48} className="ambient-butterfly" />
+        <div className="night-fireflies" aria-hidden="true">
+          {fireflies.map(([left, top], index) => (
+            <span
+              key={index}
+              className="firefly"
+              style={{
+                left: `${left}%`,
+                top: `${top}%`,
+                animationDelay: `${index * -2.5}s`,
+              }}
+            >
+              <PixelSprite name="firefly" size={48} />
+            </span>
+          ))}
+        </div>
         <div className="garden-beds">
           {Array.from({ length: slots }, (_, index) => {
             const habit = habits[index];

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { GardenProvider } from "@/components/garden-provider";
+import { LightingProvider } from "@/components/lighting-provider";
+import { lightingBootstrap } from "@/lib/lighting";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,12 +16,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" data-garden-theme="day" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: lightingBootstrap }} />
+      </head>
       <body>
         <a href="#main-content" className="skip-link">
           Skip to content
         </a>
-        <GardenProvider>{children}</GardenProvider>
+        <LightingProvider>
+          <GardenProvider>{children}</GardenProvider>
+        </LightingProvider>
       </body>
     </html>
   );

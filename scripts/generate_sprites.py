@@ -81,6 +81,9 @@ sprite('watering-can',lambda r:[r((13,18,30,34),'outline'),r((15,20,28,32),'blue
 sprite('fence',lambda r:[r((0,24,47,28),'outline'),r((0,25,47,26),'bark'),r((0,35,47,39),'outline'),r((0,36,47,37),'trunk')]+[v for x in [5,23,41] for v in [r((x,18,x+5,45),'outline'),r((x+1,16,x+4,45),'outline'),r((x+1,19,x+3,43),'bark'),r((x+1,19,x+1,41),'cream')]])
 sprite('soil',lambda r:[r((0,0,47,47),'soil')]+[r((x,y,x+2,y+1),'darksoil' if (x+y)%3 else 'bark') for y in range(4,48,8) for x in range(2+(y%3)*4,48,12)])
 sprite('sparkle',lambda r:[r((23,16,24,31),'cream'),r((17,23,30,24),'cream'),r((21,21,26,26),'yellow')])
+sprite('moon',lambda r:[r((13,7,34,40),'#a7b9d2'),r((7,13,40,34),'#a7b9d2'),r((10,10,37,37),'#dce6de'),r((14,7,29,38),'#f8f1cd'),r((7,14,34,29),'#f8f1cd'),r((12,11,30,33),'#f8f1cd'),r((13,18,18,22),'#c0d2d2'),r((24,28,29,32),'#c0d2d2'),r((27,12,31,15),'#d3dfd6'),r((14,29,16,31),'#d3dfd6')])
+sprite('star',lambda r:[r((23,15,24,32),'#f6ecc1'),r((15,23,32,24),'#f6ecc1'),r((20,20,27,27),'#f6ecc1'),r((23,20,24,27),'#fffdf0')])
+sprite('firefly',lambda r:[r((22,21,25,30),'#294f4f'),r((18,20,21,24),'#c5dbc1'),r((26,20,29,24),'#c5dbc1'),r((22,26,25,30),'#efd689'),r((23,27,24,29),'#fff0b3')])
 
 contact=Image.new('RGBA',(48*5,48*6),'#e0e6bd')
 for row,kind in enumerate(['oak','sunflower','mushroom','cactus','wildflower']):

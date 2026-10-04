@@ -1,0 +1,23 @@
+# Social sign-in and garden lighting
+
+Requested by the user on 2026-10-04, extending the original V1 scope.
+
+## Social sign-in
+
+Add Continue with Google and Continue with GitHub to both dedicated account pages, alongside the existing email form. Use Supabase OAuth with PKCE and a server callback that saves the session in cookies and opens `/garden`. Handle cancellation and failed callbacks with a useful sign-in message. Keep provider secrets in Supabase, never in browser configuration or Git.
+
+Real provider sign-in requires Google/GitHub OAuth applications and both providers enabled in the hosted Supabase project. Browser tests can verify the provider redirect contract and callback errors; they do not prove real provider consent or hosted session persistence.
+
+## Lighting
+
+Default to Auto: Day from 06:00 inclusive to 18:00 exclusive, Night otherwise, using the device's local time. Refresh an open app when time changes and when it returns to the foreground. This visual clock is independent of the fixed account timezone used for daily completions.
+
+Provide accessible Auto, Day, and Night controls across pages. Remember the preference in this browser; manual choices override the clock until Auto is selected again. Apply the saved setting before the first paint where possible, and handle unavailable browser storage without breaking the app.
+
+Day keeps the sunny pixel scene. Night adds a pixel moon, twinkling stars, a shooting star, and moving fireflies. Keep sprites crisp and garden interactions readable. Smoothly transition the page palette, sky, and celestial elements when lighting changes. Respect reduced-motion preferences and keep ambient decoration out of the accessibility tree and pointer interactions.
+
+Growth, daily completion, streaks, and guest/private data remain unchanged.
+
+## Verification
+
+Use the previously agreed public browser-flow seam for provider redirects, callback errors, device-time lighting, remembered manual choices, returning to Auto, responsive layout, and reduced motion. Re-run existing habit and auth checks before handoff. Record live provider setup limits in `current-status.md`.

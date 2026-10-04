@@ -91,6 +91,10 @@ Provide a usable small-screen experience and keyboard access to the core interac
 
 AI, chat, social systems, friends, leaderboards, shops, coins, administration dashboards, complex statistics, marketplaces, multiplayer, and a game engine.
 
+## Requested additions — 2026-10-04
+
+The user requested Google and GitHub OAuth sign-in, automatic day/night garden lighting based on device time, manual mode switching, smooth transitions, and animated night scenery. See [social sign-in and lighting requirements](social-auth-and-lighting.md) and [provider setup](social-auth-setup.md). These extend the original V1 scope without changing the habit, streak, or growth rules.
+
 ## Repository and workflow
 
 Project directory: `D:\tiny-habit-garden`.
