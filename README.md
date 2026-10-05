@@ -106,9 +106,9 @@ npm run test:e2e
 npm run build
 ```
 
-Guest, lighting, landing, and missing-configuration browser checks run without Clerk keys. Configured Clerk UI checks require Clerk development keys and Google/GitHub enabled; those checks are explicitly skipped when keys are absent. Restart the server after configuring keys.
+Custom account input, guest, lighting, landing, and missing-configuration browser checks can run without Clerk keys. With keys enabled, the configured Clerk SDK must be reachable; do not count local input checks as successful hosted authentication. Restart the server after configuring keys.
 
-Library tests cover public garden operations, growth milestones, daily completion, streak resets, validation, and local PostgreSQL behavior through PGlite. Playwright covers desktop and mobile guest flows and configured Clerk account entry. PostgreSQL tests exercise the migrated owner checks, retained legacy data, and row-level security. Hosted consent, email verification, sessions, and independent-request concurrency require live verification.
+Library tests cover public garden operations, growth milestones, daily completion, streak resets, validation, and local PostgreSQL behavior through PGlite. Playwright covers desktop/mobile guest flows, custom account fields, inline errors, password controls, recovery navigation, and original provider artwork. PostgreSQL tests exercise the migrated owner checks, retained legacy data, and row-level security. Hosted consent, email verification, sessions, and independent-request concurrency require live verification.
 
 The previous Supabase Auth release is live until the Clerk rollout is configured. Hosted Clerk authentication, private-account persistence, sign-out, account isolation, and concurrent check-ins require live verification. See [current status](docs/current-status.md) for the precise evidence and remaining checks.
 
