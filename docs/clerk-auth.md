@@ -31,6 +31,7 @@ Use Clerk for email/password and Google/GitHub authentication on the existing de
 - Clerk's supported account components manage authentication, verification, social redirects, password recovery, and provider artwork. Theme them to the existing garden.
 - Clerk is the only active account-session source. Remove Supabase Auth client, confirmation callback, and cookie refresh logic.
 - Supply fresh Clerk session tokens to the Supabase client using its native access-token option. Retain the owner-checked garden operation.
+- Capture the Clerk session for each garden and reject outgoing tokens whose subject differs from its captured owner. Account changes cannot redirect an in-flight write into another user's garden.
 - Preserve stored rows while supporting text account subjects and using verified JWT subjects for database ownership. Browser input cannot choose the owner.
 - Existing Supabase-to-Clerk owner mappings require verified administrative migration; never infer ownership from a client-supplied email. No existing rows or hosted users are deleted.
 - Missing Clerk configuration keeps the guest garden usable with a clear account-unavailable notice.

@@ -1,15 +1,19 @@
 "use client";
 
-import { ClerkProvider, useAuth, useClerk, useUser } from "@clerk/nextjs";
+import { ClerkProvider, useClerk, useSession } from "@clerk/nextjs";
 import { useCallback, useEffect, useState } from "react";
 import { GardenProvider } from "./garden-provider";
 import { LightingProvider } from "./lighting-provider";
 
 function ClerkGarden({ children }: { children: React.ReactNode }) {
-  const { isLoaded, userId, getToken } = useAuth();
-  const { user, isLoaded: userLoaded } = useUser();
+  const { isLoaded, session } = useSession();
+  const userId = session?.user.id ?? null;
+  const getToken = useCallback(
+    async () => session?.getToken() ?? null,
+    [session],
+  );
   const clerk = useClerk();
-  const ready = isLoaded && userLoaded;
+  const ready = isLoaded;
   const [timedOut, setTimedOut] = useState(false);
   useEffect(() => {
     if (ready) return;
@@ -26,7 +30,7 @@ function ClerkGarden({ children }: { children: React.ReactNode }) {
         configured: true,
         ready,
         userId: userId ?? null,
-        email: user?.primaryEmailAddress?.emailAddress ?? null,
+        email: session?.user.primaryEmailAddress?.emailAddress ?? null,
         error:
           !ready && timedOut
             ? "We couldn't connect to your account. Check your connection and reload. Your private garden has not been replaced."

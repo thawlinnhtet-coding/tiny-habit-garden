@@ -1,5 +1,6 @@
-import { expect, it } from "vitest";
+import { expect, it, vi } from "vitest";
 import { createSupabaseGarden } from "./supabase-garden";
+import { clerkSupabase } from "./supabase/client";
 import { PGlite } from "@electric-sql/pglite";
 import { readFile, readdir } from "node:fs/promises";
 
@@ -129,6 +130,63 @@ it("reports remote failures without substituting a guest garden", async () => {
   await expect(
     garden.create({ name: "Read", plantType: "oak" }),
   ).rejects.toThrow("connection lost");
+});
+
+it("does not send a started private write with another account's token", async () => {
+  vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://garden.example.test");
+  vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "test-public-key");
+  const tokenFor = (subject: string) =>
+    `header.${Buffer.from(JSON.stringify({ sub: subject })).toString("base64url")}.signature`;
+  let currentToken = tokenFor("user_clerk_alice");
+  let releaseToken!: () => void;
+  const tokenReady = new Promise<void>((resolve) => {
+    releaseToken = resolve;
+  });
+  const fetch = vi.fn(
+    async () =>
+      new Response(
+        JSON.stringify({
+          now: "2026-10-05T00:00:00Z",
+          timezone: "UTC",
+          completed: false,
+          changedId: "new-plant",
+          habits: [
+            {
+              id: "new-plant",
+              name: "Read",
+              plantType: "mushroom",
+              createdAt: "2026-10-05T00:00:00Z",
+              completionDates: [],
+            },
+          ],
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      ),
+  );
+  vi.stubGlobal("fetch", fetch);
+  try {
+    const client = clerkSupabase(async () => {
+      await tokenReady;
+      return currentToken;
+    }, "user_clerk_alice");
+    const garden = createSupabaseGarden(
+      (parameters) => client.rpc("garden_operation", parameters),
+      "UTC",
+    );
+    const writing = garden.create({ name: "Read", plantType: "mushroom" });
+    currentToken = tokenFor("user_clerk_bob");
+    releaseToken();
+    await expect(writing).rejects.toThrow("account changed");
+    expect(fetch).not.toHaveBeenCalled();
+    currentToken = tokenFor("user_clerk_alice");
+    expect(
+      await garden.create({ name: "Read", plantType: "mushroom" }),
+    ).toMatchObject({ name: "Read", stage: 1 });
+    expect(fetch).toHaveBeenCalledTimes(1);
+  } finally {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  }
 });
 
 it("keeps Clerk gardens separate and preserves pre-migration plants", async () => {

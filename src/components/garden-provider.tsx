@@ -107,7 +107,7 @@ export function GardenProvider({
       let operations: GardenOperations | null = null;
       try {
         if (userId) {
-          const client = clerkSupabase(getToken);
+          const client = clerkSupabase(getToken, userId);
           operations = createSupabaseGarden(
             (parameters) => client.rpc("garden_operation", parameters),
             Intl.DateTimeFormat().resolvedOptions().timeZone,
