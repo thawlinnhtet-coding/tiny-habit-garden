@@ -42,6 +42,7 @@ type GardenContextValue = Omit<GardenState, "operations"> & {
   complete: (id: string) => Promise<CompletionResult>;
   signOut: () => Promise<void>;
   celebration: GardenCelebration | null;
+  plantingId: string | null;
   authConfigured: boolean;
 };
 const GardenContext = createContext<GardenContextValue | null>(null);
@@ -85,6 +86,7 @@ export function GardenProvider({
   const [celebration, setCelebration] = useState<GardenCelebration | null>(
     null,
   );
+  const [plantingId, setPlantingId] = useState<string | null>(null);
   const generation = useRef(0);
   const readSequence = useRef(0);
   const reducedMotion = useReducedMotion();
@@ -94,6 +96,7 @@ export function GardenProvider({
     queueMicrotask(async () => {
       if (!active) return;
       setCelebration(null);
+      setPlantingId(null);
       const mode = ready ? (userId ? "private" : "guest") : "unavailable";
       setState({
         habits: [],
@@ -185,18 +188,24 @@ export function GardenProvider({
     );
     return () => window.clearTimeout(timer);
   }, [celebration]);
-  async function mutate(
-    action: (operations: GardenOperations) => Promise<unknown>,
-  ) {
+  useEffect(() => {
+    if (!plantingId) return;
+    const timer = window.setTimeout(() => setPlantingId(null), 1600);
+    return () => window.clearTimeout(timer);
+  }, [plantingId]);
+  async function mutate<T>(
+    action: (operations: GardenOperations) => Promise<T>,
+  ): Promise<T> {
     if (!state.operations || state.loading)
       throw new Error("Your garden isn't ready. Please reload and try again.");
     const version = generation.current;
-    await action(state.operations);
+    const result = await action(state.operations);
     if (version !== generation.current)
       throw new Error(
         "Your account changed. Open the current garden before continuing.",
       );
     await refresh();
+    return result;
   }
   async function complete(id: string) {
     if (!state.operations || state.loading)
@@ -233,12 +242,19 @@ export function GardenProvider({
           email: state.email,
           refresh,
           signOut,
-          create: (input) => mutate((operations) => operations.create(input)),
-          edit: (id, input) =>
-            mutate((operations) => operations.edit(id, input)),
+          create: async (input) => {
+            const habit = await mutate((operations) =>
+              operations.create(input),
+            );
+            setPlantingId(habit.id);
+          },
+          edit: async (id, input) => {
+            await mutate((operations) => operations.edit(id, input));
+          },
           remove: (id) => mutate((operations) => operations.remove(id)),
           complete,
           celebration,
+          plantingId,
           authConfigured: account.configured,
         }}
       >

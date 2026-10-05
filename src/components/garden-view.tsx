@@ -64,6 +64,7 @@ export function GardenView() {
       ) : (
         <GardenScene
           habits={garden.habits}
+          plantingId={garden.plantingId}
           onSelect={(habit) => {
             setSelectedId(habit.id);
             setConfirmDelete(false);

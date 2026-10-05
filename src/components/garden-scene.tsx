@@ -34,11 +34,13 @@ export function GardenScene({
   habits,
   onSelect,
   onPlant,
+  plantingId = null,
   compact = false,
 }: {
   habits: GardenHabit[];
   onSelect?: (habit: GardenHabit) => void;
   onPlant?: () => void;
+  plantingId?: string | null;
   compact?: boolean;
 }) {
   const { lighting } = useLighting();
@@ -95,6 +97,11 @@ export function GardenScene({
       </div>
       <div className="garden-ground">
         <div className="background-grass" aria-hidden="true" />
+        <div className="garden-breeze" aria-hidden="true">
+          <span className="breeze-pass breeze-pass-one" />
+          <span className="breeze-pass breeze-pass-two" />
+          <span className="breeze-pass breeze-pass-three" />
+        </div>
         <PixelSprite name="oak-5" size={192} className="decor-tree tree-left" />
         <PixelSprite
           name="oak-5"
@@ -138,11 +145,20 @@ export function GardenScene({
                 initial={{ scale: 0.6, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 type="button"
-                className={`garden-plot planted-plot`}
+                className={`garden-plot planted-plot ${habit.id === plantingId ? "seed-pop-plot" : ""}`}
                 onClick={() => onSelect?.(habit)}
                 aria-label={`${habit.name}, ${plants[habit.plantType].name}, ${stageNames[habit.stage - 1]}`}
               >
                 <AnimatedPlant habit={habit} />
+                {habit.id === plantingId && (
+                  <span className="seed-pop-pixels" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                )}
                 <span className="plant-name-tag">{habit.name}</span>
               </motion.button>
             ) : (

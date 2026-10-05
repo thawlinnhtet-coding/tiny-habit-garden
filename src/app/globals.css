@@ -339,6 +339,57 @@ h3 {
   top: -47px;
   left: 0;
 }
+.garden-breeze {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 3;
+}
+.breeze-pass {
+  position: absolute;
+  left: 0;
+  width: 64%;
+  height: 18px;
+  opacity: 0;
+  animation: garden-breeze-glide 36s cubic-bezier(0.4, 0, 0.25, 1) infinite;
+  will-change: transform, opacity;
+}
+.breeze-pass::before,
+.breeze-pass::after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #edf4c0;
+  box-shadow:
+    7px -4px #dcebad,
+    17px 2px #fff0bb,
+    28px -2px #d7e6a5,
+    42px 4px #f3e7ae;
+  opacity: 0.8;
+}
+.breeze-pass::before {
+  top: 3px;
+  left: 15%;
+}
+.breeze-pass::after {
+  top: 11px;
+  left: 48%;
+  transform: scale(0.75);
+}
+.breeze-pass-one {
+  top: 19%;
+  animation-delay: 1s;
+}
+.breeze-pass-two {
+  top: 47%;
+  animation-delay: 13s;
+}
+.breeze-pass-three {
+  top: 72%;
+  animation-delay: 25s;
+}
 .decor-tree {
   position: absolute;
   pointer-events: none;
@@ -400,6 +451,75 @@ h3 {
 }
 .planted-plot:nth-child(2n) .plant-sprite {
   animation-delay: -2s;
+}
+.seed-pop-plot .animated-plant {
+  position: relative;
+  z-index: 2;
+  animation: seed-plant-pop 1050ms cubic-bezier(0.2, 0.9, 0.3, 1.18) both;
+}
+.seed-pop-plot::before {
+  content: "";
+  position: absolute;
+  left: calc(50% - 3px);
+  bottom: 18px;
+  width: 6px;
+  height: 6px;
+  background: #d6aa70;
+  box-shadow:
+    -13px 5px #b99060,
+    -6px 9px #e1bc80,
+    8px 8px #bb9360,
+    14px 3px #d8b478;
+  opacity: 0;
+  pointer-events: none;
+  animation: seed-soil-puff 850ms ease-out both;
+}
+.seed-pop-pixels {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  overflow: hidden;
+  pointer-events: none;
+}
+.seed-pop-pixels i {
+  position: absolute;
+  left: 50%;
+  bottom: 34px;
+  width: 4px;
+  height: 4px;
+  background: #e6cc83;
+  opacity: 0;
+  animation: seed-pixel-rise 850ms cubic-bezier(0.15, 0.7, 0.3, 1) both;
+}
+.seed-pop-pixels i:nth-child(1) {
+  --pop-x: -20px;
+  --pop-y: -18px;
+  animation-delay: 55ms;
+}
+.seed-pop-pixels i:nth-child(2) {
+  --pop-x: -11px;
+  --pop-y: -31px;
+  background: #edf2b3;
+  animation-delay: 110ms;
+}
+.seed-pop-pixels i:nth-child(3) {
+  --pop-x: 18px;
+  --pop-y: -21px;
+  animation-delay: 85ms;
+}
+.seed-pop-pixels i:nth-child(4) {
+  --pop-x: 11px;
+  --pop-y: -37px;
+  background: #f1dfa0;
+  animation-delay: 145ms;
+}
+.seed-pop-pixels i:nth-child(5) {
+  --pop-x: 0px;
+  --pop-y: -44px;
+  width: 3px;
+  height: 3px;
+  background: #d8e9a9;
+  animation-delay: 190ms;
 }
 .plant-name-tag {
   position: absolute;
@@ -1261,6 +1381,72 @@ h3 {
     transform: rotate(1.3deg);
   }
 }
+@keyframes garden-breeze-glide {
+  0%,
+  7% {
+    transform: translateX(-125%);
+    opacity: 0;
+  }
+  11% {
+    opacity: 0.42;
+  }
+  27% {
+    opacity: 0.32;
+  }
+  34%,
+  100% {
+    transform: translateX(180%);
+    opacity: 0;
+  }
+}
+@keyframes seed-plant-pop {
+  0% {
+    transform: translateY(5px) scale(0.64);
+    filter: brightness(1.3);
+  }
+  58% {
+    transform: translateY(-5px) scale(1.12);
+    filter: brightness(1.12);
+  }
+  78% {
+    transform: translateY(1px) scale(0.97);
+    filter: brightness(1.04);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    filter: none;
+  }
+}
+@keyframes seed-soil-puff {
+  0%,
+  100% {
+    transform: translateY(2px) scale(0.55);
+    opacity: 0;
+  }
+  24% {
+    opacity: 0.95;
+  }
+  72% {
+    transform: translateY(-6px) scale(1);
+    opacity: 0.75;
+  }
+}
+@keyframes seed-pixel-rise {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(0.6);
+    opacity: 0;
+  }
+  22% {
+    opacity: 1;
+  }
+  78% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(var(--pop-x), var(--pop-y)) scale(0.85);
+  }
+}
 @keyframes butterfly-float {
   0%,
   100% {
@@ -1428,6 +1614,11 @@ h3 {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .garden-breeze,
+  .seed-pop-plot::before,
+  .seed-pop-pixels {
+    display: none;
+  }
   *,
   *::before,
   *::after {

@@ -1,3 +1,9 @@
+# Garden ambience and planting feedback — 2026-10-05
+
+The current branch adds three staggered, slow pixel-mote breeze passes to the garden scene and a one-time soil-and-sparkle pop for the habit that was just created. The planting effect is keyed to the ID returned from the saved habit, lasts briefly, and clears across account changes; opening the garden later does not replay it. Both effects are decorative, layout-neutral, work with the day/night palette, and are hidden when reduced motion is requested. Habit persistence, completion, streaks, and growth rules are unchanged.
+
+Implementation is complete on `garden-breeze-seed-pop`, based on deployed `main` commit `83ab90b`. Lint, typecheck, formatting, and the optimized production build pass. GitHub issue creation is blocked: the authenticated CLI timed out during its API TLS handshake, and the connected GitHub integration returned 403 (`Resource not accessible by integration`); no issue number has been confirmed. Production remains at the deployed main commit until this feature is reviewed and released.
+
 # Mobile header and text reflow — 2026-10-05
 
 The user reported the mobile account header wrapping into three rows. The shared header now keeps logo and lighting/account controls together, with navigation below, at standard phone widths from 320px. At 390px its height drops from about 181px to 133px. Compact switch widths preserve the smooth sun/moon animation; Auto keeps its accessible name when its visual label collapses. Account and navigation tap targets are at least 44px, and the account heading uses less mobile spacing.
