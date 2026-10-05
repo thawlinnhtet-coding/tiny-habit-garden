@@ -2,6 +2,10 @@
 
 The pixel-art resolution, mobile sky overlap, and day/night animation changes are on GitHub `main` at `85161f2`. GitHub reports that the Vercel deployment for this commit completed successfully. Production: [tiny-habit-garden.vercel.app](https://tiny-habit-garden.vercel.app).
 
+# OAuth cancellation recovery — 2026-10-05
+
+The SSO callback now routes OAuth error returns, including provider-denied/canceled attempts, back to the dedicated `/login` page. It shows a short retry notice and keeps the Google/GitHub options available instead of leaving the user in the incomplete callback flow. A public browser regression first failed on the callback URL and passes after the redirect; the retry notice and both provider buttons are verified on desktop and mobile. Live provider sessions are not part of this check.
+
 # Mobile sky overlap correction — 2026-10-05
 
 The user's mobile night screenshot exposed a gap in earlier geometry checks: they checked scene containment but not overlap between decorations. A new rendered-sky regression fails on the previous layout at 390px (`full night: cloud-two overlaps the moon`) even with cloud movement paused. The cause was independent cloud and celestial positions with no clear central space. Sun and moon now share a centered position. Garden-width container queries reduce side clouds and their drift in narrow scenes, hide the extra cloud when space is limited, and keep stars out of the moon's central area. Full gardens and compact previews are checked in day and night across 11 widths from 280px to 1920px, sampling the whole cloud path against the sprites' opaque bounds. Existing celestial travel and reduced-motion behavior are preserved. This correction is included in production commit `85161f2`.

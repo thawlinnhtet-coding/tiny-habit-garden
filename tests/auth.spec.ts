@@ -146,6 +146,26 @@ test("custom account forms validate each field and keep official provider artwor
   }
 });
 
+test("cancelled OAuth returns to sign-in with retry choices", async ({
+  page,
+}) => {
+  await page.goto(
+    "/auth/sso-callback?error=access_denied&error_description=User%20cancelled",
+  );
+
+  await expect(page).toHaveURL(/\/login\?auth_error=social_cancelled$/);
+  await expect(
+    page.getByRole("button", { name: "Continue with Google" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Continue with GitHub" }),
+  ).toBeVisible();
+  await expect(page.locator(".auth-code-notice")).toHaveText(
+    "Sign-in was canceled. You can retry with Google or GitHub, or use email instead.",
+  );
+  await expect(page.getByText(/sign-in wasn't completed/i)).toHaveCount(0);
+});
+
 test("account forms focus invalid fields and recovery keeps inline validation", async ({
   page,
 }) => {

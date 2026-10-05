@@ -9,9 +9,11 @@ import { useGarden } from "@/components/garden-provider";
 export function AccountPage({
   intent,
   callback = false,
+  notice,
 }: {
   intent: AuthIntent;
   callback?: boolean;
+  notice?: string;
 }) {
   const signUp = intent === "sign-up";
   const { mode } = useGarden();
@@ -35,6 +37,11 @@ export function AccountPage({
               : "Your little garden is ready when you are."}
           </p>
         </div>
+        {notice && (
+          <p role="status" className="auth-code-notice">
+            {notice}
+          </p>
+        )}
         <AuthPanel intent={intent} callback={callback} />
         {mode === "guest" && (
           <Link href="/garden" className="guest-garden-link">
