@@ -4,6 +4,10 @@ Production: https://tiny-habit-garden.vercel.app
 
 Vercel project: `thawlinnhtet52-2489s-projects/tiny-habit-garden`. The user authorized deployment on 2026-10-03. The project is connected to `thawlinnhtet-coding/tiny-habit-garden`; pushes to `main` trigger production builds.
 
+## Latest release
+
+Commit `85161f2` (pixel art, mobile sky layout, and day/night animations) is on `main`. GitHub reports the Vercel deployment completed successfully.
+
 ## Project settings
 
 - Framework: Next.js
