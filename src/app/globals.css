@@ -440,7 +440,7 @@ h3 {
 .plant-sprite {
   margin-top: -21px;
   position: relative;
-  animation: plant-sway 5s steps(2, end) infinite;
+  animation: plant-sway 5s steps(1, end) infinite;
 }
 .planted-plot:nth-child(2n) .plant-sprite {
   animation-delay: -2s;
@@ -448,7 +448,7 @@ h3 {
 .seed-pop-plot .animated-plant {
   position: relative;
   z-index: 2;
-  animation: seed-plant-pop 1050ms steps(8, end) both;
+  animation: seed-plant-pop 1050ms steps(1, end) both;
 }
 .seed-pop-plot::before {
   content: "";
@@ -1258,7 +1258,7 @@ h3 {
   --particle-y: -46px;
 }
 .celebrating-plot .plant-sprite {
-  animation: water-bounce 0.55s steps(4) 2;
+  animation: water-bounce 0.55s steps(1, end) 2;
 }
 .growth-message {
   position: fixed;
@@ -1353,15 +1353,20 @@ h3 {
   }
 }
 @keyframes water-bounce {
-  0%,
-  100% {
+  0% {
     transform: translateY(0);
+    animation-timing-function: steps(5, end);
   }
   30% {
     transform: translateY(-5px);
+    animation-timing-function: steps(3, end);
   }
   70% {
     transform: translateY(-2px);
+    animation-timing-function: steps(2, end);
+  }
+  100% {
+    transform: translateY(0);
   }
 }
 @keyframes plant-sway {
@@ -1391,14 +1396,17 @@ h3 {
   0% {
     transform: translateY(5px);
     filter: brightness(1.3);
+    animation-timing-function: steps(10, end);
   }
   58% {
     transform: translateY(-5px);
     filter: brightness(1.12);
+    animation-timing-function: steps(6, end);
   }
   78% {
     transform: translateY(1px);
     filter: brightness(1.04);
+    animation-timing-function: steps(1, end);
   }
   100% {
     transform: translateY(0);

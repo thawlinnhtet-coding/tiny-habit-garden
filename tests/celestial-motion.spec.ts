@@ -103,3 +103,52 @@ test("reduced motion fades celestial sprites without travel", async ({
     "0.2s",
   );
 });
+
+test("plant sway, seed pop, and watering bounce stay on whole pixels", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const scene = page.locator(".garden-scene");
+  await expect(scene).toBeVisible();
+  const positions = await scene.evaluate((element) => {
+    const results: { name: string; x: number; y: number }[] = [];
+    for (const state of ["planted-plot", "seed-pop-plot", "celebrating-plot"]) {
+      const plot = document.createElement("button");
+      plot.className = `garden-plot ${state}`;
+      const plant = document.createElement("span");
+      plant.className = "animated-plant";
+      const sprite = document.createElement("img");
+      sprite.className = "pixel-sprite plant-sprite";
+      sprite.src = "/sprites/oak-1.png";
+      plant.append(sprite);
+      plot.append(plant);
+      element.append(plot);
+      for (const target of [plant, sprite]) {
+        for (const animation of target.getAnimations()) {
+          animation.pause();
+          const duration = Number(animation.effect!.getTiming().duration);
+          for (let time = 0; time <= duration; time += 17) {
+            animation.currentTime = time;
+            const matrix = new DOMMatrixReadOnly(
+              getComputedStyle(target).transform,
+            );
+            results.push({ name: state, x: matrix.m41, y: matrix.m42 });
+          }
+        }
+      }
+      plot.remove();
+    }
+    return results;
+  });
+  expect(positions.length).toBeGreaterThan(0);
+  for (const position of positions) {
+    expect(
+      Number.isInteger(position.x),
+      `${position.name} x=${position.x}`,
+    ).toBe(true);
+    expect(
+      Number.isInteger(position.y),
+      `${position.name} y=${position.y}`,
+    ).toBe(true);
+  }
+});
