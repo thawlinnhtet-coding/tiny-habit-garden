@@ -67,9 +67,21 @@ export function GardenScene({
         </span>
       </div>
       <div className="scene-sky" aria-hidden="true">
-        <PixelSprite name="cloud" size={144} className="cloud cloud-one" />
-        <PixelSprite name="cloud" size={96} className="cloud cloud-two" />
-        <PixelSprite name="cloud" size={144} className="cloud cloud-three" />
+        <PixelSprite
+          name="cloud-detailed"
+          size={144}
+          className="cloud cloud-one"
+        />
+        <PixelSprite
+          name="cloud-detailed"
+          size={96}
+          className="cloud cloud-two"
+        />
+        <PixelSprite
+          name="cloud-detailed"
+          size={144}
+          className="cloud cloud-three"
+        />
         <span className="pixel-sun" />
         <div className="night-sky">
           {stars.map(([left, top], index) => (
@@ -102,10 +114,14 @@ export function GardenScene({
           <span className="breeze-pass breeze-pass-two" />
           <span className="breeze-pass breeze-pass-three" />
         </div>
-        <PixelSprite name="oak-5" size={192} className="decor-tree tree-left" />
         <PixelSprite
-          name="oak-5"
+          name="oak-canopy"
           size={144}
+          className="decor-tree tree-left"
+        />
+        <PixelSprite
+          name="oak-canopy"
+          size={128}
           className="decor-tree tree-right"
         />
         <PixelSprite

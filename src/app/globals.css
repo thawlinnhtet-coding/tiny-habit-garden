@@ -395,12 +395,12 @@ h3 {
   pointer-events: none;
 }
 .tree-left {
-  left: -7px;
-  top: -76px;
+  left: -4px;
+  top: -114px;
 }
 .tree-right {
-  right: 0;
-  top: -56px;
+  right: -4px;
+  top: -108px;
 }
 .decor-rock {
   position: absolute;
@@ -419,7 +419,7 @@ h3 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 17px 18px;
   max-width: 640px;
-  margin: 22px auto 0;
+  margin: 32px auto 0;
   position: relative;
   z-index: 2;
 }
@@ -523,15 +523,16 @@ h3 {
 }
 .plant-name-tag {
   position: absolute;
-  left: 50%;
+  left: 4px;
+  right: 4px;
   bottom: -12px;
-  transform: translateX(-50%);
-  padding: 2px 7px;
+  padding: 2px 4px;
   background: #f3edcd;
   color: #655a3b;
   font-size: 9px;
   line-height: 1.6;
-  max-width: 115px;
+  min-width: 0;
+  text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1060,7 +1061,7 @@ h3 {
 .compact-scene .decor-tree {
   width: 96px !important;
   height: 96px !important;
-  top: -30px;
+  top: -39px;
 }
 .compact-scene .tree-left {
   left: 0;
@@ -1473,6 +1474,14 @@ h3 {
   .tree-right {
     right: -34px;
   }
+  .garden-scene:not(.compact-scene) .decor-tree {
+    top: -100px;
+    width: 128px !important;
+    height: 128px !important;
+  }
+  .garden-beds {
+    margin-top: 36px;
+  }
   .garden-below {
     gap: 18px;
   }
@@ -1529,16 +1538,18 @@ h3 {
   .garden-plot {
     min-height: 96px;
   }
-  .tree-left {
-    width: 144px !important;
-    height: 144px !important;
-    left: -40px;
-    top: -75px;
+  .garden-scene:not(.compact-scene) .tree-left {
+    width: 112px !important;
+    height: 112px !important;
+    left: -36px;
+    top: -91px;
     opacity: 0.9;
   }
-  .tree-right {
-    right: -40px;
-    top: -75px;
+  .garden-scene:not(.compact-scene) .tree-right {
+    width: 112px !important;
+    height: 112px !important;
+    right: -36px;
+    top: -91px;
   }
   .decor-rock {
     display: none;

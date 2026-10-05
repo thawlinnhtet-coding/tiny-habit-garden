@@ -1,3 +1,9 @@
+# Responsive garden composition and sprite detail — 2026-10-05
+
+The mobile/tablet screenshots showed the oak decorations entering the top planting row and long plant labels spilling beyond their plots. Full-garden trees are now smaller and raised at desktop, tablet, and phone breakpoints, with a reserved gap before the beds. Labels stay within their plots and ellipsize. The ambient cloud and decorative oak now use transparent 96×96 detailed pixel sprites, quantized to a compact palette and rendered with pixelated sampling; the five-stage plant assets remain unchanged. Responsive scene structure and habit behavior are unchanged.
+
+Validation for this slice: source lint, TypeScript typecheck, Prettier check, and production build pass. The production preview was visually checked at desktop width; the phone and tablet spacing was checked against the responsive breakpoint rules and the supplied screenshots.
+
 # Garden ambience and planting feedback — 2026-10-05
 
 The current branch adds three staggered, slow pixel-mote breeze passes to the garden scene and a one-time soil-and-sparkle pop for the habit that was just created. The planting effect is keyed to the ID returned from the saved habit, lasts briefly, and clears across account changes; opening the garden later does not replay it. Both effects are decorative, layout-neutral, work with the day/night palette, and are hidden when reduced motion is requested. Habit persistence, completion, streaks, and growth rules are unchanged.
