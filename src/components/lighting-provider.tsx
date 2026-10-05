@@ -120,13 +120,14 @@ export function LightingControl() {
       <button
         className="lighting-auto"
         type="button"
+        aria-label="Auto"
         aria-pressed={preference === "auto"}
         disabled={!ready}
         onClick={() => choose("auto")}
         title="Follow device time: day 6am–6pm"
       >
         <Clock3 size={14} aria-hidden="true" />
-        Auto
+        <span className="lighting-auto-label">Auto</span>
       </button>
     </div>
   );

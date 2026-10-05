@@ -52,8 +52,9 @@
   gap: 8px;
 }
 .lighting-switch {
+  --lighting-switch-width: 104px;
   position: relative;
-  width: 104px;
+  width: var(--lighting-switch-width);
   height: 44px;
   flex-shrink: 0;
   padding: 0;
@@ -187,7 +188,7 @@
   border-color: #678597;
 }
 :root[data-garden-theme="night"] .switch-thumb {
-  transform: translateX(60px);
+  transform: translateX(calc(var(--lighting-switch-width) - 44px));
   background: #e8eddb;
   color: #637f9a;
 }
@@ -545,10 +546,15 @@
   }
 }
 @media (max-width: 600px) {
+  .lighting-switch {
+    --lighting-switch-width: 80px;
+  }
   .header-tools {
     gap: 5px;
   }
   .header-tools .account-trigger {
+    min-width: 44px;
+    justify-content: center;
     padding: 6px;
   }
   .account-trigger > span:not(.account-avatar),
@@ -562,6 +568,31 @@
   }
   .night-star:nth-child(2n) {
     display: none;
+  }
+}
+@media (max-width: 400px) {
+  .lighting-auto {
+    width: 44px;
+    padding: 0;
+  }
+  .lighting-auto-label {
+    display: none;
+  }
+}
+@media (max-width: 360px) {
+  :root .site-header {
+    column-gap: 4px;
+  }
+  .brand .pixel-sprite {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .lighting-switch {
+    --lighting-switch-width: 64px;
+  }
+  .header-tools,
+  .lighting-control {
+    gap: 3px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

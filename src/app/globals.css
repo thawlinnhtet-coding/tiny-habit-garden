@@ -1311,6 +1311,7 @@ h3 {
     gap: 10px;
   }
   .main-nav a {
+    min-height: 44px;
     padding: 8px 16px;
   }
   .main-content {
@@ -1365,8 +1366,11 @@ h3 {
     font-size: 10px;
   }
   .garden-below {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 18px;
+  }
+  .garden-note > div {
+    min-width: 0;
   }
   .garden-note p {
     max-width: none;
@@ -1740,6 +1744,10 @@ h3 {
   }
   .account-page .auth-paper {
     padding: 20px 16px;
+    margin-top: 18px;
+  }
+  .account-page-heading {
+    margin-top: 16px;
   }
 }
 

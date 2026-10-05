@@ -4,6 +4,7 @@
 }
 .auth-welcome {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 18px;
   margin-bottom: 26px;
@@ -65,6 +66,7 @@
     2px 2px 0 #f5cf70;
 }
 .auth-welcome-copy {
+  flex: 1 1 8rem;
   min-width: 0;
 }
 .auth-welcome-copy h2 {
@@ -180,6 +182,7 @@
   margin-left: auto;
 }
 .auth-submit {
+  white-space: normal;
   width: 100%;
   justify-content: center;
   margin: 22px 0 0;
