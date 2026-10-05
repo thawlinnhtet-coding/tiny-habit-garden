@@ -35,6 +35,12 @@
       "id": 5700178144,
       "html_url": "https://github.com/thawlinnhtet-coding/tiny-habit-garden/issues/6",
       "title": "Add animated day/night garden lighting"
+    },
+    {
+      "number": 7,
+      "id": 5704968973,
+      "html_url": "https://github.com/thawlinnhtet-coding/tiny-habit-garden/issues/7",
+      "title": "Migrate authentication to Clerk with Google and GitHub"
     }
   ]
 }

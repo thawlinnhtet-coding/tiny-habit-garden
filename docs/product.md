@@ -14,7 +14,7 @@ The intended feeling is: “I did something good in real life, and my little vir
 
 - Next.js and TypeScript
 - Tailwind CSS and shadcn/ui
-- Supabase Auth and Supabase PostgreSQL
+- Clerk authentication and Supabase PostgreSQL (auth replaced at the user's request on 2026-10-05)
 - Motion / Framer Motion
 - Lucide React
 
@@ -58,7 +58,7 @@ Use Motion for UI transitions and CSS sprite animations where appropriate. Add s
 
 ### Authentication
 
-Email sign-up, sign-in, and sign-out through Supabase Auth. Authenticated garden data belongs to its user.
+Email sign-up, verification, sign-in, recovery, and sign-out through Clerk, plus Google and GitHub sign-in with original provider icons. Authenticated garden data belongs to its user. Supabase PostgreSQL remains the data store.
 
 ### Habit management
 
@@ -93,7 +93,7 @@ AI, chat, social systems, friends, leaderboards, shops, coins, administration da
 
 ## Requested additions — 2026-10-04
 
-The active addition is automatic day/night garden lighting based on device time, manual mode switching, smooth transitions, and animated night scenery. See [lighting requirements](social-auth-and-lighting.md). The user subsequently requested removal of Google and GitHub sign-in; authentication now uses email and password only. See [email-only authentication requirements](email-auth-only.md). Habit, streak, and growth rules remain unchanged.
+The active addition is automatic day/night garden lighting based on device time, manual mode switching, smooth transitions, and animated night scenery. See [lighting requirements](social-auth-and-lighting.md). The 2026-10-04 [email-only requirement](email-auth-only.md) records the previous release. The user superseded it on 2026-10-05 by requesting Clerk and Google/GitHub sign-in; see [Clerk requirements](clerk-auth.md). Habit, streak, and growth rules remain unchanged. The user selected a Clerk development instance on the existing Vercel URL for now; a production Clerk instance requires an owned domain.
 
 ## Repository and workflow
 

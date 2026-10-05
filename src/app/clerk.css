@@ -1,0 +1,43 @@
+.clerk-account {
+  width: min(100%, 460px);
+  margin-inline: auto;
+}
+.garden-auth-root,
+.garden-auth-card-box {
+  width: 100%;
+  max-width: 100%;
+}
+.garden-auth-card-box {
+  border: 1px solid var(--border);
+  box-shadow: 4px 4px 0 #304c3e18;
+}
+.garden-auth-card {
+  padding: clamp(20px, 5vw, 32px);
+  box-shadow: none;
+}
+.garden-auth-title {
+  font-family: Pixelify, monospace;
+  font-size: clamp(1.65rem, 5vw, 2rem);
+  font-weight: 500;
+}
+.garden-auth-input,
+.garden-auth-submit,
+.garden-auth-social-button {
+  min-height: 44px;
+  font-size: 1rem;
+}
+.garden-auth-provider-icon {
+  width: 20px;
+  height: 20px;
+}
+.garden-auth-submit {
+  box-shadow: 0 3px 0 #304c3e;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .garden-auth-card,
+  .garden-auth-card-box {
+    transition:
+      background-color 700ms ease,
+      color 700ms ease;
+  }
+}

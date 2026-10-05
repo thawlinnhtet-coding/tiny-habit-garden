@@ -12,6 +12,7 @@ Turn small real-life habits into a cozy pixel garden. Each habit starts as a see
 - **Today:** daily habits, watering feedback, growth progress, and consecutive-day streaks.
 - **Your habits:** create, rename, remove, and choose between oak, sunflower, mushroom, cactus, and wildflower plants.
 - **Cozy animation:** a watering can, droplets, plant bounces, pixel particles, and transformations when a plant reaches its next stage.
+- **Clerk accounts:** email/password, verification codes, password recovery, and Google/GitHub sign-in with Clerk’s original provider icons.
 - **Guest or account:** explore a garden in your browser, or sign up and sign in for a private Supabase garden.
 - **Day and night:** Auto follows device time (Day 6 a.m.–6 p.m.); choose Day or Night yourself and the browser remembers your preference. Night adds a pixel moon, stars, shooting stars, and fireflies with smooth lighting transitions.
 - **Accessible controls:** responsive layouts, keyboard access, inline form validation, and reduced-motion support.
@@ -61,7 +62,7 @@ Guest and private gardens are separate. Signing in does not automatically import
 
 ## Tech stack
 
-Next.js App Router · React · TypeScript · Tailwind CSS · shadcn/ui with Base UI · Supabase Auth and PostgreSQL · Motion · Lucide React
+Next.js App Router · React · TypeScript · Tailwind CSS · shadcn/ui with Base UI · Clerk Auth and Supabase PostgreSQL · Motion · Lucide React
 
 ## Run locally
 
@@ -73,16 +74,20 @@ cd tiny-habit-garden
 npm ci
 ```
 
-The guest garden can run without Supabase configuration. To enable accounts, copy `.env.example` to `.env.local` and set your project's public configuration:
+The guest garden runs without account configuration. To enable Clerk accounts and private storage, copy `.env.example` to `.env.local` and set:
 
 ```dotenv
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_YOUR_KEY
+CLERK_SECRET_KEY=sk_test_YOUR_SECRET
 NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_YOUR_KEY
 ```
 
-Follow the [Supabase setup guide](docs/supabase-setup.md) to apply `supabase/migrations/202610030001_garden.sql` and configure authentication URLs. Email confirmation depends on your Supabase settings; the current deployment uses immediate signup with confirmation disabled. Keep credentials out of Git. This app does not require a service-role key.
+Follow the [Clerk setup guide](docs/clerk-setup.md) to enable Google/GitHub, connect Clerk to Supabase's native third-party authentication, and apply both database migrations in filename order. Existing projects need only the new Clerk migration. Existing private garden rows are preserved, but a verified administrator mapping is required to transfer old Supabase ownership to a Clerk account. Passwords and old sessions are not automatically migrated.
 
-Authentication uses email and password. Google/GitHub sign-in was removed at the user's request. Device-time lighting does not affect habit dates or streaks.
+Keep credentials out of Git. The secret key is server-only; this app does not use a Supabase service-role key. Device-time lighting does not affect habit dates or streaks.
+
+The current migration targets Clerk **Development** on the existing Vercel URL at the user's request. This is a demo setup: Clerk production requires a domain you own. See the setup guide before deploying.
 
 ```sh
 npm run dev -- --hostname 127.0.0.1
@@ -101,15 +106,15 @@ npm run test:e2e
 npm run build
 ```
 
-The full browser suite requires both public Supabase variables in `.env.local` so the account forms are enabled. Restart the development server after setting them. The guest app and library tests can run without this configuration.
+Guest, lighting, landing, and missing-configuration browser checks run without Clerk keys. Configured Clerk UI checks require Clerk development keys and Google/GitHub enabled; those checks are explicitly skipped when keys are absent. Restart the server after configuring keys.
 
-Library tests cover public garden operations, growth milestones, daily completion, streak resets, validation, and local PostgreSQL behavior through PGlite. Playwright covers desktop and mobile user flows using disposable browser data and mocked Supabase Auth responses.
+Library tests cover public garden operations, growth milestones, daily completion, streak resets, validation, and local PostgreSQL behavior through PGlite. Playwright covers desktop and mobile guest flows and configured Clerk account entry. PostgreSQL tests exercise the migrated owner checks, retained legacy data, and row-level security. Hosted consent, email verification, sessions, and independent-request concurrency require live verification.
 
-The live production build and guest planting/watering flow have passed. Hosted private-account persistence, sign-out, account isolation, and concurrent check-ins still require live verification. See [current status](docs/current-status.md) for the precise evidence and remaining checks.
+The previous Supabase Auth release is live until the Clerk rollout is configured. Hosted Clerk authentication, private-account persistence, sign-out, account isolation, and concurrent check-ins require live verification. See [current status](docs/current-status.md) for the precise evidence and remaining checks.
 
 ## Deploy to Vercel
 
-The live project is connected to this GitHub repository. Pushes to `main` trigger production builds. Set the two public Supabase variables in Vercel and use matching Supabase Site and Redirect URLs. See [deployment notes](docs/vercel-deployment.md) for the current settings and release checks.
+The live project is connected to this GitHub repository. Pushes to `main` trigger production builds. Set both Clerk keys and both public Supabase variables in Vercel, enable the native integration, and apply the Clerk database migration before publishing. The previous deployment notes describe the Supabase Auth release; use [Clerk setup](docs/clerk-setup.md) for this migration. Keep development Clerk keys for the current demo URL; use an owned domain and production Clerk instance for a production launch.
 
 ## Pixel assets
 

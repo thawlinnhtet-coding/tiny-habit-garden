@@ -1,6 +1,6 @@
 # Current status
 
-Updated: 2026-10-04 (Asia/Rangoon).
+Updated: 2026-10-05 (Asia/Rangoon).
 
 ## Approved workflow
 
@@ -8,7 +8,17 @@ The user approved the four vertical tickets, default triage labels, and public g
 
 GitHub remains the authoritative tracker. Parent specification #1 stays open. Tickets #2 (first habit) and #3 (watering/growth) are complete. Tickets #4 (private Supabase garden) and #5 (final verification and handoff) are implemented, reviewed, and complete. Their hosted-service validation limits remain explicitly recorded. See `docs/tracker.json` for canonical URLs.
 
-## Current authentication
+## Clerk migration — setup pending
+
+The user requested Clerk authentication with Google/GitHub and original provider icons on 2026-10-05, superseding the previous email-only release. The user chose a Clerk development instance on the current Vercel URL; production Clerk requires an owned domain. [Issue #7](https://github.com/thawlinnhtet-coding/tiny-habit-garden/issues/7) tracks [requirements](clerk-auth.md). Clerk's themed account components handle provider artwork, email verification, recovery, and inline errors. Supabase PostgreSQL remains the database, accessed with fresh Clerk session tokens through the native integration. Account-load/database failures preserve unavailable/private mode; account changes invalidate stale garden responses.
+
+The new transactional migration preserves existing rows, replaces UUID ownership with text JWT subjects, and keeps RLS and owner-checked writes. The public-operation regression failed before implementation with a Clerk subject rejected as a UUID, then passed. The local database test verifies Clerk CRUD/watering, one completion per date, cross-owner rejection, direct-table isolation/write denial, anonymous rejection, and pre-migration plant/completion retention. An administrator-only transfer script is available for independently verified legacy-to-Clerk mappings; no automatic email-based claim is exposed. The local database check also verifies placeholder rejection, rejection of a target with existing plants, and a successful transfer preserving completions and the original timezone.
+
+Production build/typechecking and lint pass; 12 library tests pass. The production browser run passed 20 desktop/Pixel 7 checks; 2 configured Clerk UI checks are explicitly skipped because Clerk keys are absent. Guest habits, watering, persistence, lighting, landing, damaged-storage behavior, and missing-account configuration were checked. Actual Clerk account UI, email codes, social consent, sessions, hosted storage, and the administrator transfer script still need configured/live validation. Final two-axis review is pending.
+
+The keys-presence check found neither Clerk key in the ignored local environment. Clerk application setup, native third-party integration, hosted migration, and whether existing private gardens need verified mappings are pending user input. See [setup guide](clerk-setup.md). Keep the existing production release unchanged until this setup is ready; do not push this migration to the connected main branch yet. Changing Auth does not repair the previously observed Supabase database connection failures.
+
+## Historical email-only authentication release
 
 The user requested removal of Google/GitHub sign-in on 2026-10-04. Both account pages now offer email/password authentication only. The social handler, authentication-settings fetch, OAuth callback route, provider artwork, divider, styles, and social-specific errors are removed. Email confirmation, inline validation, cookie sessions, sign-out, private gardens, and day/night lighting remain. See [requirements](email-auth-only.md). Hosted provider settings and existing users are not modified. The public browser regression failed with two provider buttons before removal, then passed. Production build/typechecking, lint, formatting, 19 library tests, and all 26 remaining desktop/Pixel 7 browser checks pass. Desktop/mobile email-only screenshots were inspected. The final two-axis review at `b35aec7` against the agreed baseline found zero remaining Standards and zero Spec findings; see [review](reviews/email-auth-only.md). Publication uses the connected GitHub main branch. Issue #6 now tracks the retained lighting feature and superseding email-only requirement; real email authentication remains subject to the previously observed Supabase connection failures.
 

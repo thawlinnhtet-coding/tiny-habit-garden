@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { ArrowLeft, Leaf } from "lucide-react";
-import type { AuthIntent } from "@/lib/auth-input";
-import { AuthPanel } from "@/components/auth-panel";
+import { AuthPanel, type AuthIntent } from "@/components/auth-panel";
 import { GardenShell } from "@/components/garden-shell";
 import { useGarden } from "@/components/garden-provider";
 

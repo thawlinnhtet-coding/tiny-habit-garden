@@ -1,4 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
+import { existsSync } from "node:fs";
+import { loadEnvFile } from "node:process";
+if (existsSync(".env.local")) loadEnvFile(".env.local");
 const port = process.env.E2E_PORT ?? "3000";
 const baseURL = `http://127.0.0.1:${port}`;
 const distDir = process.env.NEXT_DIST_DIR ?? ".next";
