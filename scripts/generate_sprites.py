@@ -5,12 +5,93 @@ import sys
 root = Path(sys.argv[1])
 root.mkdir(parents=True, exist_ok=True)
 palette = {'outline':'#29483f','leaf':'#4e9563','light':'#83bc70','shine':'#bbd989','trunk':'#986347','bark':'#c58c58','red':'#d86653','pink':'#efaa8c','yellow':'#f5cc66','cream':'#fff0b5','soil':'#aa7953','darksoil':'#785443','blue':'#6ab6c8'}
+SCALE = 2
+SIZE = 48 * SCALE
+sprite_names = []
 
-def sprite(name, paint, size=(48,48)):
+def sprite(name, paint, size=(SIZE,SIZE)):
     im=Image.new('RGBA',size,(0,0,0,0)); d=ImageDraw.Draw(im)
-    def r(box,color): d.rectangle(box,fill=palette.get(color,color))
+    def r(box,color):
+        x1,y1,x2,y2=box
+        d.rectangle((x1*SCALE,y1*SCALE,(x2+1)*SCALE-1,(y2+1)*SCALE-1),fill=palette.get(color,color))
     paint(r)
+    add_details(name,im)
     im.save(root / f'{name}.png')
+    sprite_names.append(name)
+
+def add_details(name,im):
+    """Add deliberate one-pixel accents on the doubled pixel grid."""
+    d=ImageDraw.Draw(im)
+    def p(x,y,color):
+        if 0<=x<im.width and 0<=y<im.height and im.getpixel((x,y))[3]:
+            d.point((x,y),fill=palette.get(color,color))
+    def q(x,y,color):
+        for px in range(x,x+2):
+            for py in range(y,y+2): p(px,py,color)
+    def seed_detail():
+        p(21*SCALE,37*SCALE,'shine'); p(28*SCALE,40*SCALE,'outline')
+    if name.startswith('oak-') and name[-1].isdigit():
+        stage=int(name[-1])
+        if stage>=4:
+            h=18 if stage==4 else 25; y=42-h
+            for x,yy,c in [(18,y+5,'shine'),(24,y+3,'light'),(31,y+7,'shine'),(13,y+10,'shine'),(35,y+11,'light'),(20,y+14,'light'),(28,y+16,'shine')]: p(x*2,yy*2,c)
+            for x,yy in [(22,28),(24,33),(26,37)]: p(x*2,yy*2,'outline')
+        elif stage==1:
+            seed_detail()
+        else:
+            for x,yy,c in [(16,27,'shine'),(18,29,'light'),(29,25,'shine'),(32,27,'light')]: p(x*2,yy*2,c)
+    elif name.startswith(('sunflower-','wildflower-')):
+        stage=int(name.rsplit('-',1)[1])
+        if stage>=4:
+            flower_color='cream' if name.startswith('sunflower') else 'pink'
+            for x,yy in [(20,12),(27,16),(15,18),(32,23),(23,28)]: p(x*2,yy*2,flower_color)
+            for x,yy in [(24,18),(24,22),(24,26),(18,33),(30,35)]: p(x*2,yy*2,'shine')
+        elif stage in (2,3):
+            for x,yy in [(16,23),(17,24),(31,22),(32,23),(23,30)]: p(x*2,yy*2,'shine')
+        else:
+            seed_detail()
+    elif name.startswith('mushroom-'):
+        stage=int(name.rsplit('-',1)[1])
+        if stage>=2:
+            for x,yy in [(21,19),(27,18),(30,21),(20,26),(28,27),(12,32),(37,29)]: q(x*2,yy*2,'cream')
+            for x,yy in [(23,33),(24,36),(25,39)]: p(x*2,yy*2,'bark')
+        else:
+            seed_detail()
+    elif name.startswith('cactus-'):
+        stage=int(name.rsplit('-',1)[1])
+        if stage>=2:
+            for yy in range(17,38,5):
+                p(24*SCALE+1,yy*SCALE,'shine')
+                p(27*SCALE-1,(yy+2)*SCALE,'#397c56')
+            if stage>=4:
+                for x,yy in [(23,12),(24,10),(25,12),(22,13),(26,13)]: p(x*SCALE,yy*SCALE,'pink' if yy!=10 else 'cream')
+        else:
+            seed_detail()
+    elif name=='cloud':
+        for x,yy,c in [(16,12,'#ffffff'),(19,11,'#ffffff'),(29,16,'#ffffff'),(13,22,'#dce8d3'),(34,23,'#dce8d3')]: q(x*SCALE,yy*SCALE,c)
+    elif name=='rock':
+        for x,yy,c in [(19,32,'#e0e5d0'),(28,35,'#89988c'),(23,38,'#9eab9c'),(16,36,'#c5cdbf')]: p(x*SCALE,yy*SCALE,c)
+    elif name=='grass':
+        for x,yy,c in [(12,34,'shine'),(16,30,'shine'),(20,34,'#397c56'),(28,32,'light'),(32,36,'shine')]: q(x*SCALE,yy*SCALE,c)
+    elif name=='butterfly':
+        for x,yy,c in [(14,19,'cream'),(30,19,'cream'),(17,27,'yellow'),(28,27,'pink'),(20,14,'outline'),(27,14,'outline')]: q(x*SCALE,yy*SCALE,c)
+    elif name=='drop':
+        for x,yy,c in [(22,22,'#d7f4f1'),(20,25,'#a1dbe0'),(25,29,'#4e9fb7')]: p(x*SCALE,yy*SCALE,c)
+    elif name=='watering-can':
+        for x,yy,c in [(17,22,'#c7e5d9'),(20,21,'#e6f1d5'),(26,28,'#509ab0'),(9,20,'#83bc70')]: q(x*SCALE,yy*SCALE,c)
+    elif name=='fence':
+        for x in (6,24,42):
+            q(x*SCALE+1,21*SCALE,'#f0d391')
+            p(x*SCALE+1,40*SCALE,'#e0a06b')
+    elif name=='soil':
+        for x,yy,c in [(4,6,'#d1a16a'),(17,3,'#8a634a'),(31,9,'#c39461'),(42,5,'#d1a16a'),(8,18,'#8a634a'),(24,22,'#d1a16a'),(39,28,'#8a634a'),(14,36,'#d1a16a'),(33,41,'#8a634a')]: q(x*SCALE,yy*SCALE,c)
+    elif name=='moon':
+        for x,yy,c in [(19,15,'#fffdf0'),(27,23,'#c0d2d2'),(18,29,'#e7edce'),(31,17,'#fffdf0')]: q(x*SCALE,yy*SCALE,c)
+    elif name in ('sparkle','star'):
+        color='white' if name=='star' else 'cream'
+        for x,yy in [(23,17),(18,23),(29,24),(24,30)]: p(x*SCALE,yy*SCALE,color)
+    elif name=='firefly':
+        for x,yy,c in [(18,21,'#eff8ce'),(29,22,'#eff8ce'),(21,30,'#fff0b5'),(27,29,'#efd689')]: q(x*SCALE,yy*SCALE,c)
 
 def seed(r):
     r((18,36,29,42),'outline');r((16,38,31,40),'outline');r((19,36,28,41),'trunk');r((20,36,24,38),'bark')
@@ -85,8 +166,8 @@ sprite('moon',lambda r:[r((13,7,34,40),'#a7b9d2'),r((7,13,40,34),'#a7b9d2'),r((1
 sprite('star',lambda r:[r((23,15,24,32),'#f6ecc1'),r((15,23,32,24),'#f6ecc1'),r((20,20,27,27),'#f6ecc1'),r((23,20,24,27),'#fffdf0')])
 sprite('firefly',lambda r:[r((22,21,25,30),'#294f4f'),r((18,20,21,24),'#c5dbc1'),r((26,20,29,24),'#c5dbc1'),r((22,26,25,30),'#efd689'),r((23,27,24,29),'#fff0b3')])
 
-contact=Image.new('RGBA',(48*5,48*6),'#e0e6bd')
+contact=Image.new('RGBA',(SIZE*5,SIZE*6),'#e0e6bd')
 for row,kind in enumerate(['oak','sunflower','mushroom','cactus','wildflower']):
-    for col in range(5):contact.alpha_composite(Image.open(root / f'{kind}-{col+1}.png'),(col*48,row*48))
-contact.resize((720,864),Image.Resampling.NEAREST).save(root/'contact-sheet.png')
-print(f'Generated {len(list(root.glob("*.png")))} original pixel sprites in {root}')
+    for col in range(5):contact.alpha_composite(Image.open(root / f'{kind}-{col+1}.png'),(col*SIZE,row*SIZE))
+contact.save(root/'contact-sheet.png')
+print(f'Generated {len(sprite_names)} crisp {SIZE}x{SIZE} pixel sprites and a contact sheet in {root}')

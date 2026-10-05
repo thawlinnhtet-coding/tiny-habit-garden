@@ -32,7 +32,7 @@
 }
 .auth-welcome-scene::after {
   height: 8px;
-  background: #aa7953 url("/sprites/soil.png") repeat-x bottom / 48px 48px;
+  background: #aa7953 url("/sprites/soil.png") repeat-x bottom / 96px 96px;
   image-rendering: pixelated;
 }
 .auth-welcome-scene img {

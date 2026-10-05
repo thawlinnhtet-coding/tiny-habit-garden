@@ -1,8 +1,8 @@
-# Responsive garden composition and sprite detail — 2026-10-05
+# Full pixel-art resolution pass — 2026-10-05
 
-The mobile/tablet screenshots showed the oak decorations entering the top planting row and long plant labels spilling beyond their plots. Full-garden trees are now smaller and raised at desktop, tablet, and phone breakpoints, with a reserved gap before the beds. Labels stay within their plots and ellipsize. The ambient cloud and decorative oak now use transparent 96×96 detailed pixel sprites, quantized to a compact palette and rendered with pixelated sampling; the five-stage plant assets remain unchanged. Responsive scene structure and habit behavior are unchanged.
+After the user clarified the resolution request covers the whole game, the sprite generator now exports all 37 plant and scene sprites at 96×96 with additional crisp pixel accents, plus a matching contact sheet. This includes every type and growth stage, seeds, soil, fence, grass, trees, clouds, rocks, butterflies, and watering/night effects. Image rendering remains pixelated; 36 sprites retain transparency and the soil tile remains opaque. The responsive spacing and plant growth behavior are unchanged.
 
-Validation for this slice: source lint, TypeScript typecheck, Prettier check, and production build pass. The production preview was visually checked at desktop width; the phone and tablet spacing was checked against the responsive breakpoint rules and the supplied screenshots.
+The previous responsive pass also raises/reduces the scene trees at phone and tablet breakpoints and keeps habit labels inside their plots. Validation for this slice: all 37 sprites are 96×96 PNGs, 36 transparent and the soil tile opaque; the generated assets match a second clean generator run byte-for-byte, and the plant/scene contact sheets were inspected. Source lint, TypeScript typecheck, Prettier check, diff check, and production build pass. The Playwright garden viewport check remains unavailable because the local test browser stalls at Clerk initialization before the garden renders.
 
 # Garden ambience and planting feedback — 2026-10-05
 
