@@ -1,3 +1,11 @@
+# Mobile header and text reflow — 2026-10-05
+
+The user reported the mobile account header wrapping into three rows. The shared header now keeps logo and lighting/account controls together, with navigation below, at standard phone widths from 320px. At 390px its height drops from about 181px to 133px. Compact switch widths preserve the smooth sun/moon animation; Auto keeps its accessible name when its visual label collapses. Account and navigation tap targets are at least 44px, and the account heading uses less mobile spacing.
+
+Enlarged text is allowed to wrap. The account welcome and submit action reflow inside the card, and the garden note moves beneath its sprite when needed. All six primary routes fit at 320px with doubled text size. Day/night phone screenshots and layout geometry at 320, 360, 375, 390, 430, 600, 768, 1050, and 1280px were inspected.
+
+The header regression failed against the previous build (controls were 58px below the logo). The enlarged-text regression exposed garden-note overflow, which was corrected and rechecked. Final production build/typechecking, lint, formatting, all 16 library tests, and 26 desktop/mobile browser checks pass; 2 missing-configuration checks are skipped because Clerk keys are present. The final review at `a081f26` against `939a5d1` found zero Standards and zero Spec findings; see [review](reviews/mobile-header.md). Draft PR #8 and issue #7 remain the handoff. Preview is available on port 3112; production stays unchanged pending hosted authentication and private-storage validation.
+
 # Account welcome refinement — 2026-10-05
 
 Replaced the circular sprout badge and generic greeting with a compact pixel garden beside clear Sign in/Create account wording. Native tree/flower/cloud sprites, pixel soil, subtle swaying, and matching night colors keep the header cozy while reducing vertical space. Form validation and Clerk authentication behavior are unchanged.
