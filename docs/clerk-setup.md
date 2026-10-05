@@ -4,7 +4,7 @@ The user chose a Clerk development instance on the existing Vercel URL. This is 
 
 ## 1. Create the application
 
-Open [Clerk Dashboard](https://dashboard.clerk.com), create **Tiny Habit Garden**, and select email/password, Google, and GitHub. Keep it in **Development**. In the sign-up settings, require email verification by code. Clerk's account components handle verification, password recovery, inline errors, and the providers' original icons.
+Open [Clerk Dashboard](https://dashboard.clerk.com), create **Tiny Habit Garden**, and select email/password, Google, and GitHub. Keep it in **Development**. In the sign-up settings, require email verification by code. Our custom pages handle input validation, verification-code entry, password recovery, and original provider icons through Clerk's custom-flow APIs. Do not enable required username, first/last name, phone, organization selection, or MFA enrollment tasks for this V1. Email device-trust codes and existing authenticator codes are supported; other factors/tasks display an explicit unsupported-setup message. Keep Clerk's signup bot protection enabled; the custom forms include its CAPTCHA mount.
 
 Copy the development keys from **API keys** into the ignored `D:\tiny-habit-garden\.env.local`:
 
@@ -29,7 +29,7 @@ For an existing garden, independently verify the original Supabase account and i
 
 ## 3. Vercel development demo
 
-Add the same two Clerk development keys to the Vercel project's environment variables. The publishable key is public; mark the secret key sensitive. Keep the Supabase variables. Redeploy after saving. The app keeps `/login`, `/signup`, and redirects successful authentication to `/garden`.
+Add the same two Clerk development keys to the Vercel project's environment variables. The publishable key is public; mark the secret key sensitive. Keep the Supabase variables. Redeploy after saving. The app keeps `/login`, `/signup`, and uses `/auth/sso-callback` for unfinished social flows. Successful authentication redirects to `/garden`. Set the application sign-in/sign-up URLs to our routes, not the hosted Account Portal.
 
 Google/GitHub development connections can use Clerk's shared credentials. Production will need an owned domain, production Clerk keys, and your own OAuth credentials; the previous Supabase callback URLs are not used by Clerk. [Environment guide](https://clerk.com/docs/guides/development/managing-environments).
 

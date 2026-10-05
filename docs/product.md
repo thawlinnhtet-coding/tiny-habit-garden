@@ -58,7 +58,7 @@ Use Motion for UI transitions and CSS sprite animations where appropriate. Add s
 
 ### Authentication
 
-Email sign-up, verification, sign-in, recovery, and sign-out through Clerk, plus Google and GitHub sign-in with original provider icons. Authenticated garden data belongs to its user. Supabase PostgreSQL remains the data store.
+Email sign-up, verification, sign-in, recovery, and sign-out through Clerk, plus Google and GitHub sign-in with original provider icons. The dedicated `/login` and `/signup` pages use manually written forms and inline validation; do not use Clerk's default account pages. Authenticated garden data belongs to its user. Supabase PostgreSQL remains the data store.
 
 ### Habit management
 

@@ -12,7 +12,7 @@ Turn small real-life habits into a cozy pixel garden. Each habit starts as a see
 - **Today:** daily habits, watering feedback, growth progress, and consecutive-day streaks.
 - **Your habits:** create, rename, remove, and choose between oak, sunflower, mushroom, cactus, and wildflower plants.
 - **Cozy animation:** a watering can, droplets, plant bounces, pixel particles, and transformations when a plant reaches its next stage.
-- **Clerk accounts:** email/password, verification codes, password recovery, and Google/GitHub sign-in with Clerk’s original provider icons.
+- **Clerk accounts:** email/password, verification codes, password recovery, and Google/GitHub sign-in through our custom login/signup pages, with original Google/GitHub icons and inline validation.
 - **Guest or account:** explore a garden in your browser, or sign up and sign in for a private Supabase garden.
 - **Day and night:** Auto follows device time (Day 6 a.m.–6 p.m.); choose Day or Night yourself and the browser remembers your preference. Night adds a pixel moon, stars, shooting stars, and fireflies with smooth lighting transitions.
 - **Accessible controls:** responsive layouts, keyboard access, inline form validation, and reduced-motion support.

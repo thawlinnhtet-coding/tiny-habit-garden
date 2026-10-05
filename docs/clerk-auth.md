@@ -28,7 +28,10 @@ Use Clerk for email/password and Google/GitHub authentication on the existing de
 
 ## Implementation Decisions
 
-- Clerk's supported account components manage authentication, verification, social redirects, password recovery, and provider artwork. Theme them to the existing garden.
+- Use our dedicated, manually written `/login` and `/signup` pages. The user explicitly rejected Clerk's default/prebuilt account screens on 2026-10-05. Clerk v7 custom-flow hooks supply email/password, email codes, device trust, authenticator codes, password recovery, and social authentication behind our own form controls.
+- Keep field-level errors, password visibility, accessible focus, loading feedback, and resend cooldowns. The custom `/auth/sso-callback` consumes social results, transfers between sign-in/sign-up when appropriate, and collects a missing provider email.
+- Use the self-hosted, original Google and GitHub brand artwork in `public/brands`; retain source/license attribution. Render Clerk's CAPTCHA mount for signup and OAuth transfers.
+- Required extra profile fields, unsupported verification factors, and session tasks must produce an explicit error rather than bypass authentication. Configure the app for the supported email/password/code and social flows.
 - Clerk is the only active account-session source. Remove Supabase Auth client, confirmation callback, and cookie refresh logic.
 - Supply fresh Clerk session tokens to the Supabase client using its native access-token option. Retain the owner-checked garden operation.
 - Capture the Clerk session for each garden and reject outgoing tokens whose subject differs from its captured owner. Account changes cannot redirect an in-flight write into another user's garden.

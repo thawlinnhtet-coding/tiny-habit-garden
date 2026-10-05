@@ -1,27 +1,67 @@
 "use client";
 
 import Link from "next/link";
-import { SignIn, SignUp } from "@clerk/nextjs";
+import { useState } from "react";
 import { useGarden } from "./garden-provider";
-import { useLighting } from "./lighting-provider";
+import { AuthForm } from "./auth-form";
+import { ClerkAuthForm } from "./clerk-auth-form";
+import type { AuthIntent } from "@/lib/auth-input";
+export type { AuthIntent } from "@/lib/auth-input";
 
-export type AuthIntent = "sign-up" | "sign-in";
+function UnconfiguredForm({
+  intent,
+  unavailable,
+  busy = false,
+}: {
+  intent: AuthIntent;
+  unavailable?: string;
+  busy?: boolean;
+}) {
+  const [message, setMessage] = useState("");
+  const [recovery, setRecovery] = useState(false);
+  return (
+    <AuthForm
+      key={String(recovery)}
+      intent={intent}
+      step={recovery ? "recovery-email" : "credentials"}
+      configured={false}
+      busy={busy}
+      availabilityNotice={unavailable}
+      message={message}
+      onSubmit={async () =>
+        setMessage(
+          unavailable ??
+            "Account sign-in isn't available yet. Please use a guest garden for now.",
+        )
+      }
+      onRecovery={() => {
+        setMessage("");
+        setRecovery(true);
+      }}
+      onRestart={async () => {
+        setMessage("");
+        setRecovery(false);
+      }}
+    />
+  );
+}
 
-export function AuthPanel({ intent }: { intent: AuthIntent }) {
+export function AuthPanel({
+  intent,
+  callback = false,
+}: {
+  intent: AuthIntent;
+  callback?: boolean;
+}) {
   const garden = useGarden();
-  const { lighting } = useLighting();
-  if (!garden.authConfigured)
-    return (
-      <div className="auth-paper">
-        <h2>Account gardens are being prepared.</h2>
-        <p>Try your little guest garden for now.</p>
-      </div>
-    );
+  if (!garden.authConfigured) return <UnconfiguredForm intent={intent} />;
   if (garden.mode === "unavailable")
     return (
-      <p role={garden.error ? "alert" : "status"}>
-        {garden.error || "Opening the garden gate…"}
-      </p>
+      <UnconfiguredForm
+        intent={intent}
+        unavailable={garden.error || "Connecting to your account…"}
+        busy={!garden.error}
+      />
     );
   if (garden.mode === "private")
     return (
@@ -33,49 +73,5 @@ export function AuthPanel({ intent }: { intent: AuthIntent }) {
         </Link>
       </div>
     );
-  const night = lighting === "night";
-  const appearance = {
-    variables: {
-      colorPrimary: night ? "#acc88c" : "#52734b",
-      colorBackground: night ? "#203741" : "#fffdf5",
-      colorForeground: night ? "#ecedcc" : "#304c3e",
-      colorMutedForeground: night ? "#bdc6af" : "#72816a",
-      colorInput: night ? "#172d35" : "#fffdf5",
-      colorInputForeground: night ? "#ecedcc" : "#304c3e",
-      colorDanger: night ? "#ffb6a4" : "#a33d31",
-      fontFamily: "Arial, sans-serif",
-      fontSize: "1rem",
-      borderRadius: "4px",
-    },
-    layout: { socialButtonsVariant: "blockButton" as const },
-    elements: {
-      rootBox: "garden-auth-root",
-      cardBox: "garden-auth-card-box",
-      card: "garden-auth-card",
-      headerTitle: "garden-auth-title",
-      formButtonPrimary: "garden-auth-submit",
-      formFieldInput: "garden-auth-input",
-      socialButtonsBlockButton: "garden-auth-social-button",
-      socialButtonsProviderIcon: "garden-auth-provider-icon",
-    },
-  };
-  return (
-    <div className="clerk-account" aria-label="Account authentication">
-      {intent === "sign-up" ? (
-        <SignUp
-          routing="hash"
-          signInUrl="/login"
-          forceRedirectUrl="/garden"
-          appearance={appearance}
-        />
-      ) : (
-        <SignIn
-          routing="hash"
-          signUpUrl="/signup"
-          forceRedirectUrl="/garden"
-          appearance={appearance}
-        />
-      )}
-    </div>
-  );
+  return <ClerkAuthForm intent={intent} callback={callback} />;
 }

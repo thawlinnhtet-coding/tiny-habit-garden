@@ -1,43 +1,183 @@
-.clerk-account {
-  width: min(100%, 460px);
-  margin-inline: auto;
-}
-.garden-auth-root,
-.garden-auth-card-box {
-  width: 100%;
-  max-width: 100%;
-}
-.garden-auth-card-box {
-  border: 1px solid var(--border);
-  box-shadow: 4px 4px 0 #304c3e18;
-}
-.garden-auth-card {
+.manual-auth {
+  width: min(100%, 440px);
   padding: clamp(20px, 5vw, 32px);
-  box-shadow: none;
 }
-.garden-auth-title {
-  font-family: Pixelify, monospace;
-  font-size: clamp(1.65rem, 5vw, 2rem);
-  font-weight: 500;
+.auth-motif {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  background: #e9eedc;
+  border: 1px solid #d4debe;
+  border-radius: 50%;
+  margin-bottom: 14px;
 }
-.garden-auth-input,
-.garden-auth-submit,
-.garden-auth-social-button {
-  min-height: 44px;
+.auth-motif img {
+  image-rendering: pixelated;
+}
+.manual-auth h2 {
+  margin-bottom: 8px;
+}
+.manual-auth .auth-intro {
+  color: var(--muted-foreground);
+  margin-bottom: 24px;
+}
+.auth-social {
+  display: grid;
+  gap: 10px;
+}
+.auth-provider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 46px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #304c3e;
+  background: #fff;
+  border: 1px solid #d8d5bd;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.auth-provider:hover:not(:disabled) {
+  border-color: #52734b;
+  box-shadow: 0 2px 0 #304c3e14;
+}
+.auth-provider:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.auth-divider {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--muted-foreground);
+  font-size: 0.8125rem;
+  margin: 23px 0;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  height: 1px;
+  background: var(--border);
+  flex: 1;
+}
+.auth-input-wrap {
+  position: relative;
+}
+.manual-auth input {
+  width: 100%;
+  min-height: 46px;
   font-size: 1rem;
 }
-.garden-auth-provider-icon {
-  width: 20px;
-  height: 20px;
+.manual-auth input[name="password"] {
+  padding-right: 50px;
 }
-.garden-auth-submit {
-  box-shadow: 0 3px 0 #304c3e;
+.manual-auth input[name="code"] {
+  letter-spacing: 0.35em;
+  font-size: 1.25rem;
+}
+.manual-auth input[aria-invalid="true"] {
+  border-color: #a33d31;
+}
+.auth-password-eye {
+  position: absolute;
+  inset: 0 2px 0 auto;
+  width: 44px;
+  display: grid;
+  place-items: center;
+  color: var(--muted-foreground);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.manual-auth .auth-field-error {
+  margin: 7px 0 0;
+  color: #a33d31;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+.manual-auth small {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted-foreground);
+  font-size: 0.8125rem;
+}
+.auth-text-button {
+  background: transparent;
+  border: 0;
+  color: #496845;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+.auth-text-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+.auth-forgot {
+  display: block;
+  margin-left: auto;
+}
+.auth-submit {
+  width: 100%;
+  justify-content: center;
+  margin: 22px 0 0;
+}
+.auth-forgot + .auth-submit {
+  margin-top: 8px;
+}
+.auth-email {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-wrap: anywhere;
+}
+.auth-email svg {
+  flex-shrink: 0;
+}
+.auth-resend,
+.auth-restart {
+  display: block;
+  margin: 6px auto 0;
+}
+.auth-configuration {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 22px;
+  color: var(--muted-foreground);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+.auth-configuration svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.auth-code-notice {
+  text-align: center;
+  color: var(--foreground);
+  font-size: 0.875rem;
+}
+:root[data-garden-theme="night"] .auth-motif {
+  background: #30484b;
+  border-color: #587477;
+}
+:root[data-garden-theme="night"] .auth-text-button {
+  color: #c7dca9;
+}
+:root[data-garden-theme="night"] .auth-field-error {
+  color: #ffb6a4;
+}
+:root[data-garden-theme="night"] .manual-auth input[aria-invalid="true"] {
+  border-color: #ffb6a4;
 }
 @media (prefers-reduced-motion: no-preference) {
-  .garden-auth-card,
-  .garden-auth-card-box {
-    transition:
-      background-color 700ms ease,
-      color 700ms ease;
+  .auth-motif img {
+    animation: plant-sway 5s ease-in-out infinite;
   }
 }

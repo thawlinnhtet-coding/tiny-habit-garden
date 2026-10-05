@@ -6,7 +6,13 @@ import { AuthPanel, type AuthIntent } from "@/components/auth-panel";
 import { GardenShell } from "@/components/garden-shell";
 import { useGarden } from "@/components/garden-provider";
 
-export function AccountPage({ intent }: { intent: AuthIntent }) {
+export function AccountPage({
+  intent,
+  callback = false,
+}: {
+  intent: AuthIntent;
+  callback?: boolean;
+}) {
   const signUp = intent === "sign-up";
   const { mode } = useGarden();
 
@@ -29,7 +35,7 @@ export function AccountPage({ intent }: { intent: AuthIntent }) {
               : "Your little garden is ready when you are."}
           </p>
         </div>
-        <AuthPanel intent={intent} />
+        <AuthPanel intent={intent} callback={callback} />
         {mode === "guest" && (
           <Link href="/garden" className="guest-garden-link">
             Continue with a guest garden

@@ -1,3 +1,11 @@
+# Custom Clerk account pages — 2026-10-05
+
+The user requested dedicated, manually written login/signup pages instead of Clerk prebuilt screens. The custom forms now support email/password, inline field errors, password visibility, signup codes, resend cooldowns, device-trust email codes, existing authenticator codes, password reset, and original self-hosted Google/GitHub icons. A custom OAuth callback handles transfers and missing email; unsupported account requirements are reported explicitly. Signup retains the Clerk CAPTCHA mount. Pending session tasks cannot open a private garden.
+
+The public form regression failed against the prior account UI (manual Email field absent) and passes with custom forms. All 16 library tests pass, including credential/code rules and the existing private-operation/RLS checks. Twelve focused desktop/Pixel 7 account checks pass. Final build, full browser regression, visual inspection, and two-axis review are in progress.
+
+Both Clerk keys are now present in the ignored local environment; neither value was displayed. The Clerk browser SDK request to the configured public instance timed out from this computer, so actual hosted email/OTP/recovery/social authentication remains unverified. The configured browser attempt did not load Clerk and is a connectivity failure, not a passing auth check. Native database integration, hosted migration, and any verified legacy-owner mapping still require confirmation. Keep draft PR #8 on the migration branch and production unchanged until configured/live checks pass.
+
 # Current status
 
 Updated: 2026-10-05 (Asia/Rangoon).

@@ -15,7 +15,7 @@ export default defineConfig({
     { name: "mobile", use: { ...devices["Pixel 7"] } },
   ],
   webServer: {
-    command: `npm run dev -- --hostname 127.0.0.1 --port ${port}`,
+    command: `"${process.execPath}" node_modules/next/dist/bin/next dev --port ${port}`,
     url: baseURL,
     env: { NEXT_DIST_DIR: distDir },
     reuseExistingServer: !process.env.CI,

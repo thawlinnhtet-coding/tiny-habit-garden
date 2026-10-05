@@ -13,7 +13,8 @@ function ClerkGarden({ children }: { children: React.ReactNode }) {
     [session],
   );
   const clerk = useClerk();
-  const ready = isLoaded;
+  const pendingTask = Boolean(session?.currentTask);
+  const ready = isLoaded && !pendingTask;
   const [timedOut, setTimedOut] = useState(false);
   useEffect(() => {
     if (ready) return;
@@ -31,8 +32,9 @@ function ClerkGarden({ children }: { children: React.ReactNode }) {
         ready,
         userId: userId ?? null,
         email: session?.user.primaryEmailAddress?.emailAddress ?? null,
-        error:
-          !ready && timedOut
+        error: pendingTask
+          ? "Your account needs an additional setup step. Please contact the app owner before continuing."
+          : !ready && timedOut
             ? "We couldn't connect to your account. Check your connection and reload. Your private garden has not been replaced."
             : "",
         getToken,
