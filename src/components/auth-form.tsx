@@ -129,28 +129,42 @@ export function AuthForm({
   const details =
     step === "credentials"
       ? {
-          title: signUp ? "Plant your first seed." : "Come on in.",
+          title: signUp ? "Create account" : "Sign in",
           description: signUp
-            ? "A few little details, a world of possibility."
-            : "Sign in to care for your little world.",
+            ? "Start small. Grow something lovely."
+            : "Pick up where your garden left off.",
           action: signUp ? "Create my account" : "Sign in",
         }
       : copy[step];
 
   return (
     <div className="auth-paper manual-auth">
-      <div className="auth-motif" aria-hidden="true">
-        <Image
-          src="/sprites/oak-2.png"
-          alt=""
-          width={48}
-          height={48}
-          unoptimized
-          loading="eager"
-        />
+      <div className="auth-welcome">
+        <div className="auth-welcome-scene" aria-hidden="true">
+          <span className="auth-welcome-light" />
+          {[
+            { sprite: "cloud", className: "auth-welcome-cloud" },
+            { sprite: "oak-5", className: "auth-welcome-tree" },
+            { sprite: "sunflower-5", className: "auth-welcome-flower" },
+          ].map(({ sprite, className }) => (
+            <Image
+              key={sprite}
+              src={`/sprites/${sprite}.png`}
+              alt=""
+              width={48}
+              height={48}
+              className={className}
+              unoptimized
+              loading="eager"
+              draggable={false}
+            />
+          ))}
+        </div>
+        <div className="auth-welcome-copy">
+          <h2>{details.title}</h2>
+          <p className="auth-intro">{details.description}</p>
+        </div>
       </div>
-      <h2>{details.title}</h2>
-      <p className="auth-intro">{details.description}</p>
       {step === "credentials" && (
         <>
           <div className="auth-social">

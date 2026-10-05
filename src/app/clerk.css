@@ -2,25 +2,81 @@
   width: min(100%, 440px);
   padding: clamp(20px, 5vw, 32px);
 }
-.auth-motif {
-  width: 64px;
-  height: 64px;
-  display: grid;
-  place-items: center;
-  background: #e9eedc;
-  border: 1px solid #d4debe;
-  border-radius: 50%;
-  margin-bottom: 14px;
+.auth-welcome {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 26px;
 }
-.auth-motif img {
+.auth-welcome-scene {
+  position: relative;
+  flex: 0 0 88px;
+  height: 72px;
+  overflow: hidden;
+  background: #e5edcf;
+  border: 1px solid #cbd7b3;
+  border-radius: 4px;
+  box-shadow: 0 3px 0 #d9dec5;
+}
+.auth-welcome-scene::before,
+.auth-welcome-scene::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+}
+.auth-welcome-scene::before {
+  height: 20px;
+  background: #b6cd8b;
+  border-top: 3px solid #a4bd76;
+}
+.auth-welcome-scene::after {
+  height: 8px;
+  background: #aa7953 url("/sprites/soil.png") repeat-x bottom / 48px 48px;
   image-rendering: pixelated;
 }
-.manual-auth h2 {
-  margin-bottom: 8px;
+.auth-welcome-scene img {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+}
+.auth-welcome-cloud {
+  top: -8px;
+  right: -4px;
+  opacity: 0.85;
+}
+.auth-welcome-tree {
+  left: 0;
+  bottom: 12px;
+}
+.auth-welcome-flower {
+  right: -2px;
+  bottom: 12px;
+}
+.auth-welcome-light {
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  width: 8px;
+  height: 8px;
+  background: #f5cf70;
+  box-shadow:
+    -2px 2px 0 #f5cf70,
+    2px 2px 0 #f5cf70;
+}
+.auth-welcome-copy {
+  min-width: 0;
+}
+.auth-welcome-copy h2 {
+  margin: 0 0 6px;
+  font-size: clamp(1.5rem, 4vw, 1.75rem);
+  line-height: 1.15;
 }
 .manual-auth .auth-intro {
   color: var(--muted-foreground);
-  margin-bottom: 24px;
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 .auth-social {
   display: grid;
@@ -163,9 +219,25 @@
   color: var(--foreground);
   font-size: 0.875rem;
 }
-:root[data-garden-theme="night"] .auth-motif {
-  background: #30484b;
-  border-color: #587477;
+:root[data-garden-theme="night"] .auth-welcome-scene {
+  background: #233c49;
+  border-color: #58746b;
+  box-shadow: 0 3px 0 #142b32;
+}
+:root[data-garden-theme="night"] .auth-welcome-scene::before {
+  background: #466344;
+  border-color: #647c4b;
+}
+:root[data-garden-theme="night"] .auth-welcome-cloud {
+  opacity: 0.22;
+}
+:root[data-garden-theme="night"] .auth-welcome-light {
+  width: 4px;
+  height: 4px;
+  background: #f5edb8;
+  box-shadow:
+    4px 4px 0 #f5edb8,
+    22px -3px 0 #bccda4;
 }
 :root[data-garden-theme="night"] .auth-text-button {
   color: #c7dca9;
@@ -177,7 +249,20 @@
   border-color: #ffb6a4;
 }
 @media (prefers-reduced-motion: no-preference) {
-  .auth-motif img {
+  .auth-welcome-tree,
+  .auth-welcome-flower {
     animation: plant-sway 5s ease-in-out infinite;
+  }
+  .auth-welcome-flower {
+    animation-delay: -2.5s;
+  }
+  .auth-welcome-scene,
+  .auth-welcome-scene::before,
+  .auth-welcome-cloud,
+  .auth-welcome-light {
+    transition:
+      background-color 700ms ease,
+      border-color 700ms ease,
+      opacity 700ms ease;
   }
 }
