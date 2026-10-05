@@ -75,7 +75,9 @@ test("primary pages reflow at 320px with doubled text size", async ({
     });
     await page.evaluate(() => document.fonts.ready);
     await expect
-      .poll(() => page.evaluate(() => document.documentElement.scrollWidth))
+      .poll(() => page.evaluate(() => document.documentElement.scrollWidth), {
+        message: `The ${route} page must reflow without horizontal scrolling`,
+      })
       .toBeLessThanOrEqual(320);
   }
 });
