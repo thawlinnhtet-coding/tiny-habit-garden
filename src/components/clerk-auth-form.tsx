@@ -8,6 +8,16 @@ import { AuthForm } from "./auth-form";
 import type { AuthIntent, AuthStep, AuthValues } from "@/lib/auth-input";
 
 class FlowError extends Error {}
+const unsupportedFactor =
+  "This account uses a verification method this garden doesn't support yet. Please contact the app owner.";
+function verificationStep(
+  factors: readonly { strategy: string }[],
+): "totp" | "email-code" | null {
+  if (factors.some((factor) => factor.strategy === "totp")) return "totp";
+  if (factors.some((factor) => factor.strategy === "email_code"))
+    return "email-code";
+  return null;
+}
 async function checked(
   result: Promise<{ error: { longMessage?: string } | null }>,
 ) {
@@ -40,16 +50,20 @@ export function ClerkAuthForm({
         signIn.status ?? "",
       )
     )
-      return signIn.supportedSecondFactors.some((f) => f.strategy === "totp")
-        ? "totp"
-        : "email-code";
+      return verificationStep(signIn.supportedSecondFactors) ?? "credentials";
     return "credentials";
   });
   const [email, setEmail] = useState(
     signUp.emailAddress ?? signIn.identifier ?? "",
   );
   const [busy, setBusy] = useState(callback);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(() =>
+    ["needs_client_trust", "needs_second_factor"].includes(
+      signIn.status ?? "",
+    ) && !verificationStep(signIn.supportedSecondFactors)
+      ? unsupportedFactor
+      : "",
+  );
   const [notice, setNotice] = useState("");
   const inFlight = useRef(false);
   const resumed = useRef(false);
@@ -77,20 +91,11 @@ export function ClerkAuthForm({
         signIn.status ?? "",
       )
     ) {
-      if (signIn.supportedSecondFactors.some((f) => f.strategy === "totp")) {
-        setStep("totp");
-        return;
-      }
-      if (
-        signIn.supportedSecondFactors.some((f) => f.strategy === "email_code")
-      ) {
-        setStep("email-code");
-        await checked(signIn.mfa.sendEmailCode());
-        return;
-      }
-      throw new FlowError(
-        "This account uses a verification method this garden doesn't support yet. Please contact the app owner.",
-      );
+      const nextStep = verificationStep(signIn.supportedSecondFactors);
+      if (!nextStep) throw new FlowError(unsupportedFactor);
+      setStep(nextStep);
+      if (nextStep === "email-code") await checked(signIn.mfa.sendEmailCode());
+      return;
     }
     if (signIn.status === "needs_first_factor") {
       setStep("credentials");
