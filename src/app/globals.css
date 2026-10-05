@@ -287,6 +287,7 @@ h3 {
   letter-spacing: 0.3px;
 }
 .scene-sky {
+  container: garden-sky / inline-size;
   height: 104px;
   position: relative;
   overflow: hidden;
@@ -301,7 +302,7 @@ h3 {
   animation: cloud-drift 42s steps(30, end) infinite alternate;
 }
 .cloud-two {
-  left: 49%;
+  left: 27%;
   top: -4px;
   animation: cloud-drift 51s steps(30, end) infinite alternate-reverse;
 }
@@ -312,7 +313,7 @@ h3 {
 }
 .sun-orbit {
   position: absolute;
-  right: 28%;
+  left: calc(50% - 48px);
   top: 0;
 }
 .garden-ground {
@@ -1082,14 +1083,6 @@ h3 {
 .compact-scene .cloud-three {
   right: 6%;
 }
-.compact-scene .sun-orbit {
-  right: 40%;
-  top: 0;
-}
-.compact-scene .moon-orbit {
-  right: 40%;
-  top: 0;
-}
 .compact-scene .night-star:nth-child(2n) {
   display: none;
 }
@@ -1193,6 +1186,11 @@ h3 {
 @keyframes cloud-drift {
   to {
     transform: translateX(30px);
+  }
+}
+@keyframes cloud-drift-small {
+  to {
+    transform: translateX(12px);
   }
 }
 .watering-sprites {
@@ -1652,6 +1650,40 @@ h3 {
   .scene-caption {
     align-items: flex-start;
     gap: 8px;
+  }
+}
+/* Use the garden's width: a narrow landing preview needs the same clear sky
+   as a full garden on a phone, regardless of the page's viewport width. */
+@container garden-sky (max-width: 800px) {
+  .garden-scene .cloud-two {
+    display: none;
+  }
+}
+@container garden-sky (max-width: 640px) {
+  .garden-scene .night-star:nth-child(3) {
+    display: none;
+  }
+  .garden-scene .cloud {
+    width: 72px !important;
+    height: 72px !important;
+    top: -4px;
+    animation-name: cloud-drift-small;
+    animation-timing-function: steps(12, end);
+  }
+  .garden-scene .cloud-one {
+    left: 0;
+  }
+  .garden-scene .cloud-three {
+    right: 0;
+  }
+  .garden-scene :is(.sun-orbit, .moon-orbit) {
+    left: calc(50% - 36px);
+    width: 72px;
+    height: 72px;
+  }
+  .garden-scene :is(.sun-orbit, .moon-orbit) .pixel-sprite {
+    width: 72px !important;
+    height: 72px !important;
   }
 }
 @media (prefers-reduced-motion: reduce) {
