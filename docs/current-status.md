@@ -1,3 +1,9 @@
+# Account welcome refinement — 2026-10-05
+
+Replaced the circular sprout badge and generic greeting with a compact pixel garden beside clear Sign in/Create account wording. Native tree/flower/cloud sprites, pixel soil, subtle swaying, and matching night colors keep the header cozy while reducing vertical space. Form validation and Clerk authentication behavior are unchanged.
+
+Production build/typechecking, lint, formatting, and all 16 library tests pass. The full Clerk-configured browser run passes 22 desktop/Pixel 7 checks; 2 missing-configuration checks are skipped because keys are present. The final review at `2a23b72` against `939a5d1` found zero Standards and zero Spec findings; see [review](reviews/auth-welcome.md). Draft PR #8 remains the migration handoff, and production stays unchanged pending hosted authentication/private-storage validation.
+
 # Custom Clerk account pages — 2026-10-05
 
 The user requested dedicated, manually written login/signup pages instead of Clerk prebuilt screens. The custom forms now support email/password, inline field errors, password visibility, signup codes, resend cooldowns, device-trust email codes, existing authenticator codes, password reset, and original self-hosted Google/GitHub icons. A custom OAuth callback handles transfers and missing email; unsupported account requirements are reported explicitly. Signup retains the Clerk CAPTCHA mount. Pending session tasks cannot open a private garden.
