@@ -1,42 +1,30 @@
-import { createServerClient } from "@supabase/ssr";
-import { NextResponse, type NextRequest } from "next/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
+import {
+  NextResponse,
+  type NextRequest,
+  type NextFetchEvent,
+} from "next/server";
 
-export async function proxy(request: NextRequest) {
-  let response = NextResponse.next({ request });
-  response.headers.set("Cache-Control", "private, no-store");
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (
-    !url ||
-    !key ||
-    !request.cookies
-      .getAll()
-      .some(
-        (cookie) =>
-          cookie.name.startsWith("sb-") && cookie.name.includes("auth-token"),
-      )
-  )
-    return response;
-  const supabase = createServerClient(url, key, {
-    cookies: {
-      getAll: () => request.cookies.getAll(),
-      setAll(cookies, headers) {
-        cookies.forEach(({ name, value }) => request.cookies.set(name, value));
-        response = NextResponse.next({ request });
-        cookies.forEach(({ name, value, options }) =>
-          response.cookies.set(name, value, options),
-        );
-        Object.entries(headers).forEach(([name, value]) =>
-          response.headers.set(name, value),
-        );
-        response.headers.set("Cache-Control", "private, no-store");
-      },
-    },
-  });
-  await supabase.auth.getClaims();
+const authenticate = clerkMiddleware();
+
+export default async function proxy(
+  request: NextRequest,
+  event: NextFetchEvent,
+) {
+  const configured = Boolean(
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
+    process.env.CLERK_SECRET_KEY,
+  );
+  const response = configured
+    ? await authenticate(request, event)
+    : NextResponse.next();
+  if (response) response.headers.set("Cache-Control", "private, no-store");
   return response;
 }
 
 export const config = {
-  matcher: ["/", "/garden", "/today", "/habits/:path*", "/auth/:path*"],
+  matcher: [
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/(api|trpc)(.*)",
+  ],
 };

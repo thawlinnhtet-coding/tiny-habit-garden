@@ -1,4 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
+import { existsSync } from "node:fs";
+import { loadEnvFile } from "node:process";
+if (existsSync(".env.local")) loadEnvFile(".env.local");
 const port = process.env.E2E_PORT ?? "3000";
 const baseURL = `http://127.0.0.1:${port}`;
 const distDir = process.env.NEXT_DIST_DIR ?? ".next";
@@ -12,7 +15,7 @@ export default defineConfig({
     { name: "mobile", use: { ...devices["Pixel 7"] } },
   ],
   webServer: {
-    command: `npm run dev -- --hostname 127.0.0.1 --port ${port}`,
+    command: `"${process.execPath}" node_modules/next/dist/bin/next dev --port ${port}`,
     url: baseURL,
     env: { NEXT_DIST_DIR: distDir },
     reuseExistingServer: !process.env.CI,

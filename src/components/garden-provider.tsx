@@ -9,7 +9,6 @@ import {
   useState,
 } from "react";
 import { MotionConfig, useReducedMotion } from "motion/react";
-import type { User } from "@supabase/supabase-js";
 import {
   createGuestGarden,
   type CompletionResult,
@@ -18,7 +17,7 @@ import {
   type HabitInput,
 } from "@/lib/garden";
 import { createSupabaseGarden } from "@/lib/supabase-garden";
-import { browserSupabase, supabaseConfigured } from "@/lib/supabase/client";
+import { clerkSupabase } from "@/lib/supabase/client";
 
 export type GardenCelebration = {
   id: string;
@@ -43,10 +42,38 @@ type GardenContextValue = Omit<GardenState, "operations"> & {
   complete: (id: string) => Promise<CompletionResult>;
   signOut: () => Promise<void>;
   celebration: GardenCelebration | null;
+  authConfigured: boolean;
 };
 const GardenContext = createContext<GardenContextValue | null>(null);
 
-export function GardenProvider({ children }: { children: React.ReactNode }) {
+export type GardenAccount = {
+  configured: boolean;
+  ready: boolean;
+  userId: string | null;
+  email: string | null;
+  getToken: () => Promise<string | null>;
+  signOut: () => Promise<void>;
+  error?: string;
+};
+const guestAccount: GardenAccount = {
+  configured: false,
+  ready: true,
+  userId: null,
+  email: null,
+  getToken: async () => null,
+  signOut: async () => {
+    throw new Error("You are using a guest garden.");
+  },
+};
+export function GardenProvider({
+  children,
+  account = guestAccount,
+}: {
+  children: React.ReactNode;
+  account?: GardenAccount;
+}) {
+  const { ready, userId, email, getToken, error: accountError = "" } = account;
+
   const [state, setState] = useState<GardenState>({
     habits: [],
     operations: null,
@@ -63,104 +90,58 @@ export function GardenProvider({ children }: { children: React.ReactNode }) {
   const reducedMotion = useReducedMotion();
   useEffect(() => {
     let active = true;
-    let currentUserId: string | null | undefined;
-    function invalidate() {
-      active = false;
-      generation.current++;
-    }
-    function open(user: User | null) {
-      if (!active || currentUserId === (user?.id ?? null)) return;
-      currentUserId = user?.id ?? null;
-      const version = ++generation.current;
-      const mode = user ? "private" : "guest";
-      const email = user?.email ?? null;
+    const version = ++generation.current;
+    queueMicrotask(async () => {
+      if (!active) return;
       setCelebration(null);
+      const mode = ready ? (userId ? "private" : "guest") : "unavailable";
       setState({
         habits: [],
         operations: null,
-        loading: true,
-        error: "",
+        loading: !accountError,
+        error: accountError,
         mode,
         email,
       });
-      // Auth events must return before making another Supabase request.
-      queueMicrotask(async () => {
-        if (!active || generation.current !== version) return;
-        let operations: GardenOperations | null = null;
-        try {
-          if (user) {
-            const client = browserSupabase();
-            operations = createSupabaseGarden(
-              (parameters) => client.rpc("garden_operation", parameters),
-              Intl.DateTimeFormat().resolvedOptions().timeZone,
-            );
-          } else operations = createGuestGarden(window.localStorage);
-          const habits = await operations.read();
-          if (active && generation.current === version)
-            setState({
-              habits,
-              operations,
-              loading: false,
-              error: "",
-              mode,
-              email,
-            });
-        } catch (cause) {
-          if (active && generation.current === version)
-            setState({
-              habits: [],
-              operations,
-              loading: false,
-              mode,
-              email,
-              error: user
-                ? `${cause instanceof Error ? cause.message : "Your private garden couldn't be opened."} Check the Supabase setup, then reload.`
-                : "We couldn't open your saved guest garden. Its data has been preserved. Check browser storage permissions and reload.",
-            });
-        }
-      });
-    }
-    if (!supabaseConfigured) {
-      queueMicrotask(() => open(null));
-      return invalidate;
-    }
-    const client = browserSupabase();
-    const initialVersion = generation.current;
-    const { data: subscription } = client.auth.onAuthStateChange(
-      (event, session) => {
-        if (event !== "INITIAL_SESSION") open(session?.user ?? null);
-      },
-    );
-    client.auth
-      .getUser()
-      .then(({ data, error }) => {
-        if (!active || generation.current !== initialVersion) return;
-        if (error && error.name !== "AuthSessionMissingError") {
+      if (!ready) return;
+      let operations: GardenOperations | null = null;
+      try {
+        if (userId) {
+          const client = clerkSupabase(getToken, userId);
+          operations = createSupabaseGarden(
+            (parameters) => client.rpc("garden_operation", parameters),
+            Intl.DateTimeFormat().resolvedOptions().timeZone,
+          );
+        } else operations = createGuestGarden(window.localStorage);
+        const habits = await operations.read();
+        if (active && generation.current === version)
+          setState({
+            habits,
+            operations,
+            loading: false,
+            error: "",
+            mode,
+            email,
+          });
+      } catch (cause) {
+        if (active && generation.current === version)
           setState({
             habits: [],
-            operations: null,
+            operations,
             loading: false,
-            mode: "unavailable",
-            email: null,
-            error:
-              "We couldn't verify your account. Check your connection and reload. Your private garden hasn't been replaced with a guest garden.",
+            mode,
+            email,
+            error: userId
+              ? `${cause instanceof Error ? cause.message : "Your private garden couldn't be opened."} Please try again when your connection is ready.`
+              : "We couldn't open your saved guest garden. Its data has been preserved. Check browser storage permissions and reload.",
           });
-        } else open(data.user);
-      })
-      .catch(() => {
-        if (active && generation.current === initialVersion)
-          setState((previous) => ({
-            ...previous,
-            loading: false,
-            error:
-              "We couldn't connect to your account. Please reload when you're online.",
-          }));
-      });
+      }
+    });
     return () => {
-      invalidate();
-      subscription.subscription.unsubscribe();
+      active = false;
+      generation.current = version + 1;
     };
-  }, []);
+  }, [ready, userId, email, getToken, accountError]);
   const refresh = useCallback(async () => {
     if (!state.operations) return;
     const version = generation.current;
@@ -239,8 +220,7 @@ export function GardenProvider({ children }: { children: React.ReactNode }) {
     return result;
   }
   async function signOut() {
-    const { error } = await browserSupabase().auth.signOut({ scope: "local" });
-    if (error) throw new Error(error.message);
+    await account.signOut();
   }
   return (
     <MotionConfig reducedMotion="user">
@@ -259,6 +239,7 @@ export function GardenProvider({ children }: { children: React.ReactNode }) {
           remove: (id) => mutate((operations) => operations.remove(id)),
           complete,
           celebration,
+          authConfigured: account.configured,
         }}
       >
         {children}

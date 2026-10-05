@@ -20,7 +20,7 @@ The loop is create a habit, choose its plant, complete the real-life habit, wate
 
 Keep V1 to landing/authentication, Today, My Garden, and create/edit habit. Each habit owns one plant; My Garden is a pixel scene with clickable plants. Completing a habit once per local day adds permanent growth and updates its streak. A missed day resets the streak while preserving the plant and lifetime completions.
 
-The authorized stack is Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui, Supabase Auth and PostgreSQL, Motion, and Lucide React. Check `package.json` for installed versions. Read the relevant bundled Next.js guide under `node_modules/next/dist/docs/` before using framework APIs.
+The authorized stack is Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui, Clerk authentication, Supabase PostgreSQL, Motion, and Lucide React. The user replaced Supabase Auth with Clerk on 2026-10-05. Check `package.json` for installed versions. Read the relevant bundled Next.js guide under `node_modules/next/dist/docs/` before using framework APIs.
 
 ## Pixel assets and motion
 
@@ -32,7 +32,7 @@ On completion, show the watering can, droplets, a plant bounce, particles, updat
 
 ## Data integrity
 
-Use Supabase Auth to identify users and PostgreSQL row-level security to isolate gardens. Keep server-only credentials on the server; commit an environment example with placeholders rather than credentials.
+Use Clerk sessions and Supabase's native third-party authentication integration to identify users; PostgreSQL row-level security and the owner-checked RPC isolate gardens. Keep server-only credentials on the server; commit an environment example with placeholders rather than credentials. Before auth rollout or existing-account migration, read `docs/clerk-setup.md` for deployment and owner-mapping requirements. Preserve old garden rows until a verified account migration is complete.
 
 Enforce one completion per habit per local date in the database, including concurrent requests. Derive the date from the user's timezone and server time. Keep streak and lifetime growth separate. Authenticated gardens and any guest preview must have distinct storage and clear UI labels.
 

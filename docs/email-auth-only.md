@@ -1,5 +1,7 @@
 # Email-only authentication
 
+Superseded on 2026-10-05 by [Clerk authentication](clerk-auth.md). This document records the earlier email-only Supabase Auth release.
+
 Requested by the user on 2026-10-04: “so please remove that social provider.” This supersedes the Google/GitHub sign-in portion of issue #6.
 
 Remove Google and GitHub sign-in from both account pages, including the social flow, provider artwork, divider, styles, OAuth callback route, and social-specific error messages. The application must no longer request `/auth/v1/settings` to start authentication.

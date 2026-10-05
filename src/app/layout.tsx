@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { GardenProvider } from "@/components/garden-provider";
-import { LightingProvider } from "@/components/lighting-provider";
+import { AppProviders } from "@/components/app-providers";
 import { lightingBootstrap } from "@/lib/lighting";
 import "./globals.css";
+import "./clerk.css";
 
 export const metadata: Metadata = {
   title: "Tiny Habit Garden",
@@ -24,9 +24,14 @@ export default function RootLayout({
         <a href="#main-content" className="skip-link">
           Skip to content
         </a>
-        <LightingProvider>
-          <GardenProvider>{children}</GardenProvider>
-        </LightingProvider>
+        <AppProviders
+          clerkEnabled={Boolean(
+            process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
+            process.env.CLERK_SECRET_KEY,
+          )}
+        >
+          {children}
+        </AppProviders>
       </body>
     </html>
   );
