@@ -17,3 +17,13 @@ No remaining Spec findings. The full sprite library, responsive plots, rounded p
 Lint, typecheck, formatting, 16 library tests, and the production build pass. Two responsive geometry checks and six desktop/mobile celestial and whole-pixel animation checks pass. Generated contact sheets and browser day/twilight/night screenshots were inspected. Rendered-CSS tests avoid hosted-auth hydration; they do not certify hosted authentication or the separate public lighting-switch flow.
 
 Total findings: Standards 0 remaining; Spec 0. GitHub issue creation remains blocked by integration 403; production deployment is pending.
+
+## Mobile sky follow-up
+
+Reviewed `9039c81` against the user's `939a5d1` baseline, reusing historical reviews and inspecting `git diff 25aa407...9039c81`.
+
+**Standards:** Zero remaining findings. No documented-rule violations or actionable Fowler smells.
+
+**Spec:** Zero remaining findings. Shared centered celestial positions, garden-width cloud sizing and drift, and star spacing satisfy the added clear-sky requirement. Celestial transitions, reduced motion, and habit behavior remain intact.
+
+The regression reproduced the earlier full-garden night overlap at 390px before the fix. Ten focused desktop/mobile rendering checks pass, with the strengthened sky check also validating visible celestial bodies and containment. Lint, typecheck, formatting, 16 library tests, and the production build pass. Mobile and tablet screenshots were inspected. Changes remain local and have not been deployed.
