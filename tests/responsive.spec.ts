@@ -81,3 +81,149 @@ test("primary pages reflow at 320px with doubled text size", async ({
       .toBeLessThanOrEqual(320);
   }
 });
+
+test("garden plots and pixel sprites fit from narrow phones through wide screens", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const scene = page.locator(".garden-scene.compact-scene");
+  await expect(scene).toBeVisible();
+  // Promote the server-rendered landing preview to the full-scene layout and
+  // fill its beds. This keeps the geometry check independent of account auth.
+  await scene.evaluate((element) => {
+    element.classList.remove("compact-scene");
+    const beds = element.querySelector<HTMLElement>(".garden-beds");
+    if (!beds) throw new Error("Landing garden has no beds.");
+    beds.replaceChildren(
+      ...Array.from({ length: 8 }, (_, index) => {
+        const plot = document.createElement("button");
+        plot.className = "garden-plot planted-plot";
+        plot.type = "button";
+        const sprite = document.createElement("img");
+        sprite.className = "pixel-sprite plant-sprite";
+        sprite.src = `/sprites/${index % 2 ? "sunflower-5" : "oak-5"}.png`;
+        sprite.width = 144;
+        sprite.height = 144;
+        const label = document.createElement("span");
+        label.className = "plant-name-tag";
+        label.textContent = `A wonderfully long plant name ${index + 1}`;
+        plot.append(sprite, label);
+        return plot;
+      }),
+    );
+  });
+  const fullScene = page.locator(".garden-scene:not(.compact-scene)");
+  await expect(fullScene).toBeVisible();
+  await fullScene.scrollIntoViewIfNeeded();
+  await fullScene.evaluate((element) => {
+    for (const sprite of element.querySelectorAll("img"))
+      sprite.loading = "eager";
+  });
+  await expect
+    .poll(() =>
+      fullScene.evaluate((element) =>
+        [...element.querySelectorAll("img")].every(
+          (sprite) => sprite.complete && sprite.naturalWidth === 144,
+        ),
+      ),
+    )
+    .toBe(true);
+
+  for (const width of [
+    280, 320, 340, 360, 390, 430, 600, 601, 680, 681, 768, 900, 1050, 1280,
+    1920,
+  ]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.evaluate(() => document.fonts.ready);
+    const layout = await page.evaluate(() => {
+      const sceneElement = document.querySelector<HTMLElement>(
+        ".garden-scene:not(.compact-scene)",
+      );
+      const beds = document.querySelector<HTMLElement>(".garden-beds");
+      if (!sceneElement || !beds) return null;
+      const sceneBox = sceneElement.getBoundingClientRect();
+      const plots = [...document.querySelectorAll<HTMLElement>(".garden-plot")];
+      const sprites = [
+        ...sceneElement.querySelectorAll<HTMLImageElement>("img"),
+      ];
+      const columns = getComputedStyle(beds)
+        .gridTemplateColumns.split(" ")
+        .filter(Boolean).length;
+      return {
+        documentWidth: document.documentElement.scrollWidth,
+        sceneLeft: sceneBox.left,
+        sceneRight: sceneBox.right,
+        columns,
+        plots: plots.map((plot) => {
+          const box = plot.getBoundingClientRect();
+          const tag = plot
+            .querySelector<HTMLElement>(".plant-name-tag")
+            ?.getBoundingClientRect();
+          const sprite = plot
+            .querySelector<HTMLImageElement>("img")
+            ?.getBoundingClientRect();
+          return {
+            left: box.left,
+            right: box.right,
+            tagLeft: tag?.left,
+            tagRight: tag?.right,
+            spriteLeft: sprite?.left,
+            spriteRight: sprite?.right,
+          };
+        }),
+        sprites: sprites.map((sprite) => ({
+          loaded: sprite.complete && sprite.naturalWidth === 144,
+          rendering: getComputedStyle(sprite).imageRendering,
+          source: new URL(sprite.currentSrc || sprite.src, document.baseURI)
+            .pathname,
+        })),
+      };
+    });
+
+    expect(layout, `garden should render at ${width}px`).not.toBeNull();
+    if (!layout) throw new Error("Garden scene did not render.");
+    expect(
+      layout.documentWidth,
+      `page must fit at ${width}px`,
+    ).toBeLessThanOrEqual(width);
+    expect(layout.columns, `plot columns at ${width}px`).toBe(
+      width <= 340 ? 2 : width <= 680 ? 3 : 4,
+    );
+    for (const plot of layout.plots) {
+      expect(plot.left, `plot left edge at ${width}px`).toBeGreaterThanOrEqual(
+        layout.sceneLeft,
+      );
+      expect(plot.right, `plot right edge at ${width}px`).toBeLessThanOrEqual(
+        layout.sceneRight,
+      );
+      if (plot.spriteLeft !== undefined && plot.spriteRight !== undefined) {
+        expect(
+          plot.spriteLeft,
+          `plant left edge at ${width}px`,
+        ).toBeGreaterThanOrEqual(plot.left);
+        expect(
+          plot.spriteRight,
+          `plant right edge at ${width}px`,
+        ).toBeLessThanOrEqual(plot.right);
+      }
+      if (plot.tagLeft !== undefined && plot.tagRight !== undefined) {
+        expect(
+          plot.tagLeft,
+          `plant label left edge at ${width}px`,
+        ).toBeGreaterThanOrEqual(plot.left);
+        expect(
+          plot.tagRight,
+          `plant label right edge at ${width}px`,
+        ).toBeLessThanOrEqual(plot.right);
+      }
+    }
+    expect(layout.sprites.length).toBeGreaterThan(0);
+    for (const sprite of layout.sprites) {
+      expect(
+        sprite.loaded,
+        `${sprite.source} should load at 144px source resolution`,
+      ).toBe(true);
+      expect(sprite.rendering).toBe("pixelated");
+    }
+  }
+});

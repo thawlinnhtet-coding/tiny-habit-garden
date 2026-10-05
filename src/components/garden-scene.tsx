@@ -70,7 +70,9 @@ export function GardenScene({
         <PixelSprite name="cloud" size={144} className="cloud cloud-one" />
         <PixelSprite name="cloud" size={96} className="cloud cloud-two" />
         <PixelSprite name="cloud" size={144} className="cloud cloud-three" />
-        <span className="pixel-sun" />
+        <div className="sun-orbit">
+          <PixelSprite name="sun" size={96} className="pixel-sun" />
+        </div>
         <div className="night-sky">
           {stars.map(([left, top], index) => (
             <span
@@ -85,14 +87,12 @@ export function GardenScene({
               <PixelSprite name="star" size={48} />
             </span>
           ))}
-          <PixelSprite
-            name="moon"
-            size={compact ? 48 : 96}
-            className="pixel-moon"
-          />
           <span className="shooting-star">
             <PixelSprite name="star" size={48} />
           </span>
+        </div>
+        <div className="moon-orbit">
+          <PixelSprite name="moon" size={96} className="pixel-moon" />
         </div>
       </div>
       <div className="garden-ground">
@@ -142,8 +142,8 @@ export function GardenScene({
               <motion.button
                 key={habit.id}
                 layout
-                initial={{ scale: 0.6, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 type="button"
                 className={`garden-plot planted-plot ${habit.id === plantingId ? "seed-pop-plot" : ""}`}
                 onClick={() => onSelect?.(habit)}

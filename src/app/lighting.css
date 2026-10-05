@@ -36,10 +36,10 @@
     .landing-copy h1 span
   ) {
   transition:
-    background-color 700ms ease,
+    background-color 1400ms ease,
     color 700ms ease,
-    border-color 700ms ease,
-    box-shadow 700ms ease;
+    border-color 1400ms ease,
+    box-shadow 1400ms ease;
 }
 .header-tools {
   display: flex;
@@ -210,21 +210,38 @@
   inset: 0;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(12px);
-  transition:
-    opacity 850ms ease,
-    transform 850ms ease;
+  transition: opacity 1400ms ease;
 }
-.pixel-sun {
-  transition:
-    transform 850ms ease,
-    opacity 700ms ease;
+.sun-orbit,
+.moon-orbit {
+  pointer-events: none;
+  width: 96px;
+  height: 96px;
 }
-.pixel-moon {
+.moon-orbit {
   position: absolute;
   right: 21%;
   top: -4px;
-  animation: moon-float 9s ease-in-out infinite alternate;
+  opacity: 0;
+  transform: translateY(112px);
+}
+/* 112 one-pixel steps over 1.4s keep raster edges crisp while moving smoothly.
+   Separate wrappers let the moon's ambient float continue independently. */
+:root[data-theme-ready="true"] :is(.sun-orbit, .moon-orbit) {
+  transition:
+    transform 1400ms steps(112, end),
+    opacity 1100ms ease;
+}
+.sun-orbit {
+  opacity: 1;
+  transform: translateY(0);
+}
+.sun-orbit .pixel-sprite,
+.moon-orbit .pixel-sprite {
+  display: block;
+}
+.pixel-moon {
+  animation: moon-float 9s steps(6, end) infinite alternate;
 }
 .night-star {
   position: absolute;
@@ -237,7 +254,7 @@
   position: absolute;
   top: -15px;
   left: 60%;
-  animation: shooting-star 17s ease-in-out infinite;
+  animation: shooting-star 17s steps(5, end) infinite;
 }
 .shooting-star::after {
   content: "";
@@ -262,7 +279,7 @@
 }
 .firefly {
   position: absolute;
-  animation: firefly-drift 13s ease-in-out infinite;
+  animation: firefly-drift 13s steps(2, end) infinite;
 }
 .cloud,
 .decor-tree,
@@ -278,9 +295,6 @@
 :root[data-garden-theme="night"] .night-fireflies {
   opacity: 1;
 }
-:root[data-garden-theme="night"] .night-sky {
-  transform: translateY(0);
-}
 .night-star,
 .pixel-moon,
 .shooting-star,
@@ -291,9 +305,13 @@
   :is(.night-star, .pixel-moon, .shooting-star, .firefly) {
   animation-play-state: running;
 }
-:root[data-garden-theme="night"] .pixel-sun {
+:root[data-garden-theme="night"] .sun-orbit {
   opacity: 0;
-  transform: translateY(85px) rotate(35deg);
+  transform: translateY(112px);
+}
+:root[data-garden-theme="night"] .moon-orbit {
+  opacity: 1;
+  transform: translateY(0);
 }
 :root[data-garden-theme="night"] :is(.garden-scene, .scene-sky) {
   background-color: #21364b;
@@ -561,8 +579,16 @@
   .account-trigger .account-chevron {
     display: none;
   }
-  .garden-scene:not(.compact-scene) .pixel-moon {
+  .garden-scene:not(.compact-scene) .moon-orbit {
     right: 17%;
+  }
+  .sun-orbit,
+  .moon-orbit {
+    width: 72px;
+    height: 72px;
+  }
+  .sun-orbit .pixel-sprite,
+  .moon-orbit .pixel-sprite {
     width: 72px !important;
     height: 72px !important;
   }
@@ -596,6 +622,14 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  :root[data-theme-ready="true"] :is(.sun-orbit, .moon-orbit, .night-sky) {
+    transition: opacity 200ms ease !important;
+  }
+  .sun-orbit,
+  .moon-orbit,
+  :root[data-garden-theme="night"] :is(.sun-orbit, .moon-orbit) {
+    transform: none;
+  }
   .shooting-star {
     display: none;
   }

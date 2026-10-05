@@ -96,8 +96,8 @@ export function AnimatedPlant({
     <span className={`animated-plant ${event ? "celebrating-plot" : ""}`}>
       <motion.span
         key={stage}
-        initial={event ? { scale: 0.82, opacity: 0.6 } : false}
-        animate={{ scale: 1, opacity: 1 }}
+        initial={event ? { opacity: 0.6 } : false}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.35 }}
       >
         <PixelSprite

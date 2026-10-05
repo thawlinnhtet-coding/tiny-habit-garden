@@ -15,8 +15,8 @@ export function PixelSprite({
     <Image
       src={`/sprites/${name}.png`}
       alt={alt}
-      width={48}
-      height={48}
+      width={144}
+      height={144}
       unoptimized
       draggable={false}
       className={`pixel-sprite ${className}`}
